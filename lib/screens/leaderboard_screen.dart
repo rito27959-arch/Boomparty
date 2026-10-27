@@ -95,7 +95,7 @@ class _Row extends StatelessWidget {
       ),
       child: Row(children: [
         SizedBox(width: 9 * k),
-        SizedBox(width: 26 * k, height: 26 * k, child: rank <= 3 ? Illustration('medal_$rank', scale: 1.5) : Center(child: Text('$rank', style: BoomText.ui800(12.5 * k)))),
+        SizedBox(width: 26 * k, height: 26 * k, child: rank <= 3 ? Illustration('medal_$rank', scale: 2.1) : Center(child: Text('$rank', style: BoomText.ui800(12.5 * k)))),
         SizedBox(width: 8 * k),
         PlayerAvatar(index: p.avatar, size: 30 * k),
         SizedBox(width: 9 * k),

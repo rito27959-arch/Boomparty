@@ -81,13 +81,13 @@ class _ModeCardContent extends StatelessWidget {
     Widget? icon;
     switch (spec.icon) {
       case _Icon.globe:
-        icon = SizedBox.square(dimension: 46 * k, child: const Illustration('cat_pays'));
+        icon = SizedBox.square(dimension: 46 * k, child: const Illustration('cat_pays', scale: 1.45));
       case _Icon.hearts:
-        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF2C6FE0), child: const Illustration('icon_hearts'));
+        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF2C6FE0), child: const Illustration('icon_hearts', scale: 1.5));
       case _Icon.bolt:
-        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF16A63F), child: const Illustration('icon_bolt'));
+        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF16A63F), child: const Illustration('icon_bolt', scale: 1.5));
       case _Icon.boltPurple:
-        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF7E3CF0), child: const Illustration('icon_bolt_purple'));
+        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF7E3CF0), child: const Illustration('icon_bolt_purple', scale: 1.5));
       case _Icon.none:
         icon = null;
     }
@@ -102,14 +102,14 @@ class _ModeCardContent extends StatelessWidget {
         child: _Mascot(spec: spec),
       ),
       Positioned(
-        left: spec.textLeft * k, right: 52 * k, top: 0, bottom: 0,
+        left: spec.textLeft * k, right: 40 * k, top: 0, bottom: 0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(spec.title, maxLines: 1, style: BoomText.ui800(12.6 * k, color: spec.titleColor, height: 1.05).copyWith(shadows: shadow))),
             SizedBox(height: 1.5 * k),
-            Text(spec.subtitle, style: BoomText.ui600(7.6 * k, color: spec.subColor, height: 1.2).copyWith(shadows: shadow)),
+            Text(spec.subtitle, style: BoomText.ui600(6.9 * k, color: spec.subColor, height: 1.2).copyWith(shadows: shadow)),
           ],
         ),
       ),
