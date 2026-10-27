@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_routes.dart';
+import '../services/ads_service.dart';
 import '../design/avatars.dart';
 import '../design/backgrounds.dart';
 import '../design/candy_button.dart';
@@ -52,7 +53,7 @@ class LeaderboardScreen extends StatelessWidget {
             child: CandyButton(
               height: r.y(40), depth: r.y(4),
               top: BoomColors.yellowTop, bottom: BoomColors.yellowBottom, edge: BoomColors.yellowEdge,
-              onPressed: () => Navigator.pushReplacementNamed(context, AppRoutes.game),
+              onPressed: () => AdsService.beforeNextGame(() => Navigator.pushReplacementNamed(context, AppRoutes.game)),
               child: Text('Rejouer', style: BoomText.ui800(15.5 * k)),
             ),
           ),

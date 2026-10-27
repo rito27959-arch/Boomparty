@@ -66,7 +66,7 @@ class KnowledgeRepository {
   static KnowledgeRepository open(String path) {
     final db = sqlite3.open(path, mode: OpenMode.readOnly);
     try {
-      return KnowledgeRepository._()..._load(db);
+      return KnowledgeRepository._().._load(db);
     } finally {
       db.dispose();
     }

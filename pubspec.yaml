@@ -21,6 +21,7 @@ dependencies:
   sherpa_onnx: ^1.12.40
   archive: ^3.6.1
   crypto: ^3.0.3
+  google_mobile_ads: ^5.2.0
 
 dev_dependencies:
   flutter_test:

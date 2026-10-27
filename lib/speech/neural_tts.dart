@@ -60,6 +60,7 @@ class NeuralTts {
 
   void dispose() {
     _to?.send('quit');
+    _iso?.kill(priority: Isolate.beforeNextEvent);
     _iso = null;
     _ready = false;
   }

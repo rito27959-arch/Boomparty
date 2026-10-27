@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../app_routes.dart';
+import '../services/ads_service.dart';
 import '../character/bomb_game.dart';
 import '../character/bomb_state.dart';
 import '../design/avatars.dart';
@@ -100,7 +101,7 @@ class CelebrationScreen extends StatelessWidget {
             left: r.x(32), right: r.x(28), top: r.y(397), height: r.y(35),
             child: GreyPillButton(
               label: 'Rejouer', k: k,
-              onTap: () => Navigator.pushNamedAndRemoveUntil(context, AppRoutes.game, (route) => route.isFirst),
+              onTap: () => AdsService.beforeNextGame(() => Navigator.pushNamedAndRemoveUntil(context, AppRoutes.game, (route) => route.isFirst)),
             ),
           ),
         ]);

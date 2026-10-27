@@ -15,6 +15,10 @@ if 'android.speech.RecognitionService' not in s:
         s = s.replace('<queries>', q.rstrip('\n').replace('</queries>', ''), 1)
     else:
         s = s.replace('</manifest>', '    ' + q + '</manifest>')
+# AdMob : identifiant d'application (TEST public Google, à remplacer avant publication)
+if 'com.google.android.gms.ads.APPLICATION_ID' not in s:
+    s = s.replace('</application>', '    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID"\n'
+                  '            android:value="ca-app-pub-3940256099942544~3347511713"/>\n    </application>', 1)
 s = re.sub(r'android:label="[^"]*"', 'android:label="BOOM PARTY"', s, count=1)
 if 'android:screenOrientation' not in s:
     s = s.replace('android:name=".MainActivity"', 'android:name=".MainActivity"\n            android:screenOrientation="portrait"', 1)

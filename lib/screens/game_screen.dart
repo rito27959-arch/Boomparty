@@ -14,6 +14,7 @@ import '../design/tokens.dart';
 import '../engine/game_engine.dart';
 import '../game/game_controller.dart';
 import '../personality/personality_engine.dart';
+import '../services/ads_service.dart';
 import '../services/app_services.dart';
 import '../services/settings_store.dart';
 import '../services/wallet.dart';
@@ -85,6 +86,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     if (ctl.phase == Phase.exploding) _explodeToken++;
     if (ctl.phase == Phase.finished) {
       AppState.instance.lastResult = ctl.result;
+      AdsService.gameFinished();
       Wallet.instance.reward(winnerOnDevice: true);
       Navigator.pushReplacementNamed(context, AppRoutes.leaderboard);
     }

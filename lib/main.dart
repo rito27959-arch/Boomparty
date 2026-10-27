@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'app.dart';
 import 'character/bomb_game.dart';
+import 'services/ads_service.dart';
 import 'services/app_services.dart';
 import 'services/settings_store.dart';
 import 'services/wallet.dart';
@@ -18,4 +19,5 @@ Future<void> main() async {
   await AppServices.init();
   SettingsStore.instance.addListener(AppServices.applySettings);
   runApp(const BoomPartyApp());
+  AdsService.init(); // en arrière-plan, n'empêche jamais de jouer
 }
