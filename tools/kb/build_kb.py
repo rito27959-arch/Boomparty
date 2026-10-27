@@ -23,7 +23,7 @@ from collections import defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from kb_config import CATEGORIES, CHALLENGES, CLASSES  # noqa: E402
+from kb_config import CATEGORIES, CHALLENGES, CLASSES, EXCLUDE_PATTERN, EXCLUDE_QIDS  # noqa: E402
 from normalize import fold, normalize, plural, strip_leading  # noqa: E402
 
 ENDPOINT = 'https://query.wikidata.org/sparql'
@@ -178,6 +178,10 @@ def main():
         for qid, sl in pools[cat['id']].items():
             d = details.get(qid)
             if not d or not d['label']:
+                continue
+            if qid in EXCLUDE_QIDS or re.search(EXCLUDE_PATTERN, d['label'], re.I) or \
+                    (cat.get('exclude') and re.search(cat['exclude'], d['label'], re.I)):
+                report['warnings'].append(f"{cat['id']}: exclu « {d['label']} » [{qid}]")
                 continue
             if d['label'] in d['taxon'] or (d['taxon'] and re.fullmatch(r'[A-Z][a-z]+ [a-z]+', d['label'])):
                 continue                     # pas de nom vernaculaire français : inutilisable en jeu

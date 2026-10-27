@@ -95,6 +95,21 @@ SELECT DISTINCT ?item ?sl WHERE {
   ?item wikibase:sitelinks ?sl .
 }"""
 
+# Les 118 éléments du tableau périodique (numéro atomique connu).
+ELEMENTS = """
+SELECT DISTINCT ?item ?sl WHERE {
+  ?item wdt:P31 wd:Q11344 ; wdt:P1086 ?z . FILTER(?z >= 1 && ?z <= 118)
+  ?item wikibase:sitelinks ?sl .
+}"""
+
+# Jeu familial : contenus exclus quelle que soit la catégorie (contenu adulte,
+# armement) et entrées hors sujet repérées dans les rapports.
+EXCLUDE_QIDS = {
+    'Q185529', 'Q488111', 'Q10807', 'Q1639034', 'Q515463',  # contenu adulte
+    'Q322348', 'Q831765',                                    # course aux armements, pendule d'échecs
+}
+EXCLUDE_PATTERN = r'porno|pénien|godemich|érotique|sexuel|fétich|missile|lance-roquettes|ogive'
+
 S = lambda *words: list(words)  # noqa: E731
 
 CATEGORIES = [
@@ -298,6 +313,7 @@ CATEGORIES = [
         'id': 'vehicules', 'name': 'Véhicules', 'game': 'vehicules',
         'prompts': [('Cite des', 'VÉHICULES', 'qui roulent, volent ou naviguent !')],
         'queries': [SUBCLASS.format(cls='Q42889', min=40)],
+        'exclude': r'satellite|astromobile|sonde|militaire|blindé|d\'attaque|cuirassé|^BUK',
         'seeds': [
             S('voiture', 'auto', 'automobile', 'bagnole'), S('moto', 'motocyclette'), S('vélo', 'bicyclette', 'bécane'),
             S('bus', 'autobus'), S('car', 'autocar'), S('camion', 'poids lourd'), S('train'), S('tramway', 'tram'),
@@ -398,7 +414,7 @@ CATEGORIES = [
     {
         'id': 'elements', 'name': 'Éléments chimiques', 'game': 'autres',
         'prompts': [('Cite des', 'ÉLÉMENTS', 'chimiques !')],
-        'queries': [INSTANCE.format(cls='Q11344', min=0)],
+        'queries': [ELEMENTS],
         'seeds': [],
     },
 ]
