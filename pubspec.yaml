@@ -17,7 +17,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.24
   path_provider: ^2.1.4
   audioplayers: ^6.1.0
-  record: ^5.1.2
+  record: ^7.0.0
   sherpa_onnx: ^1.12.40
   archive: ^3.6.1
   crypto: ^3.0.3
