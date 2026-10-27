@@ -64,23 +64,21 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 borderRadius: BorderRadius.circular(r.y(16)),
                 boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 8, offset: Offset(0, 2))],
               ),
-              child: Row(children: [
-                SizedBox(width: 10 * k),
-                Icon(Icons.search_rounded, size: 14 * k, color: const Color(0xFF7D6FA0)),
-                SizedBox(width: 5 * k),
-                Expanded(
-                  child: TextField(
-                    onChanged: (v) => setState(() => _query = v),
-                    style: BoomText.ui600(9.2 * k),
-                    decoration: InputDecoration(
-                      isCollapsed: true,
-                      border: InputBorder.none,
-                      hintText: 'Rechercher une catégorie...',
-                      hintStyle: BoomText.ui600(9.2 * k, color: const Color(0xFF8C7FB0)),
-                    ),
-                  ),
+              alignment: Alignment.center,
+              child: TextField(
+                onChanged: (v) => setState(() => _query = v),
+                style: BoomText.ui600(9.2 * k),
+                textAlignVertical: TextAlignVertical.center,
+                decoration: InputDecoration(
+                  isDense: true,
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  prefixIcon: Icon(Icons.search_rounded, size: 14 * k, color: const Color(0xFF7D6FA0)),
+                  prefixIconConstraints: BoxConstraints(minWidth: 30 * k),
+                  hintText: 'Rechercher une catégorie...',
+                  hintStyle: BoomText.ui600(9.2 * k, color: const Color(0xFF8C7FB0)),
                 ),
-              ]),
+              ),
             ),
           ),
           // grille

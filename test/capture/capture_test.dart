@@ -168,9 +168,11 @@ void main() {
       final ex = tester.takeException();
       if (ex != null) errors.add(ex.toString());
       var log = errors.isEmpty ? 'OK' : errors.join('\n\n');
-      if (s.name == '04_categories') {
-        log += '\n\n--- render tree ---\n${key.currentContext!.findRenderObject()!.toStringDeep(minLevel: DiagnosticLevel.info)}';
-      }
+      // Contrôle automatique : débordements de mise en page (bandes jaunes/noires
+      // en debug, et peinture interrompue dans les captures).
+      final tree = key.currentContext!.findRenderObject()!.toStringDeep(minLevel: DiagnosticLevel.info);
+      final overflow = RegExp(r'^.*OVERFLOWING.*\$', multiLine: true).allMatches(tree).map((m) => m.group(0)!.trim()).toList();
+      if (overflow.isNotEmpty) log += '\n\nDÉBORDEMENTS :\n${overflow.join('\n')}';
       File('build/captures/${s.name}.log').writeAsStringSync(log);
     });
   }
