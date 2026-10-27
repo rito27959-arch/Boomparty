@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_routes.dart';
 import '../design/candy_button.dart';
-import '../design/category_icons.dart';
+import '../design/illustration.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../engine/word_bank.dart';
@@ -106,7 +106,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     child: Stack(children: [
                       Align(
                         alignment: Alignment(0, s.label == null ? 0.1 : -0.45),
-                        child: CategoryIcon(c.id, size: (s.label == null ? 52 : 40) * k),
+                        child: SizedBox.square(dimension: (s.label == null ? 56 : 44) * k, child: Illustration('cat_${c.id}')),
                       ),
                       if (s.label != null)
                         Align(

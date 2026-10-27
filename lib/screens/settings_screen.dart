@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../character/bomb_frame.dart';
-import '../character/bomb_state.dart';
+import '../design/illustration.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../services/audio_director.dart';
@@ -51,6 +50,7 @@ class SettingsScreen extends StatelessWidget {
                         _VoiceTile(
                           label: v.label, k: k, selected: s.voice == v.id,
                           style: _voiceStyle[v.id]!,
+                          voiceArt: 'voice_${v.id}',
                           onTap: () => s.update((x) => x.voice = v.id),
                         ),
                     ]),
@@ -141,7 +141,8 @@ class SettingsScreen extends StatelessWidget {
 }
 
 class _VoiceTile extends StatelessWidget {
-  const _VoiceTile({required this.label, required this.k, required this.selected, required this.style, required this.onTap});
+  const _VoiceTile({required this.label, required this.k, required this.selected, required this.style, required this.onTap, required this.voiceArt});
+  final String voiceArt;
   final String label;
   final double k;
   final bool selected;
@@ -150,7 +151,7 @@ class _VoiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (top, bottom, tint) = style;
+    final (top, bottom, _) = style;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -171,7 +172,7 @@ class _VoiceTile extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.only(top: 3 * k),
-              child: BombFrame(state: BombState.happy, frame: 1, tint: tint == null ? null : BombFrame.skin(tint), zoom: 1.3),
+              child: Illustration(voiceArt, scale: 1.2, alignment: Alignment.bottomCenter),
             ),
           ),
           SizedBox(height: 4 * k),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../character/bomb_frame.dart';
-import '../character/bomb_state.dart';
+import '../design/illustration.dart';
 import '../character/skins.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
@@ -109,7 +108,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
               child: Stack(children: [
                 Positioned(
                   left: 6 * k, right: 6 * k, top: 2 * k, bottom: 22 * k,
-                  child: BombFrame(state: BombState.happy, frame: 0, tint: s.filter, zoom: 1.35),
+                  child: Illustration('skin_${s.id}', scale: 1.25, alignment: Alignment.bottomCenter),
                 ),
                 Positioned(
                   left: 0, right: 0, bottom: 0, height: (equipped ? 30 : 24) * k,
@@ -122,7 +121,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
                             style: BoomText.ui800((equipped ? 10 : 12) * k, color: Colors.white, height: 1.0)
                                 .copyWith(shadows: [Shadow(color: Colors.black.withValues(alpha: 0.4), offset: Offset(0, 1 * k), blurRadius: 2 * k)]))
                         : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            Icon(Icons.diamond_rounded, size: 13 * k, color: const Color(0xFF5FD0FF)),
+                            SizedBox(width: 15 * k, height: 15 * k, child: const Illustration('gem')),
                             SizedBox(width: 3 * k),
                             Text('${s.price}', style: BoomText.ui800(12 * k, color: Colors.white)),
                           ]),
@@ -157,5 +156,13 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
         ]),
         SizedBox(height: 6 * k),
         Text("Réduit le flash et le nombre de particules de l'explosion.", style: BoomText.ui600(9 * k, color: const Color(0xFF6B5E8A))),
+        SizedBox(height: 16 * k),
+        Row(children: [
+          Expanded(child: Text('Graphismes allégés', style: BoomText.ui700(11 * k))),
+          CandySwitch(value: s.lowGraphics, onChanged: (v) => s.update((x) => x.lowGraphics = v), width: 34 * k),
+        ]),
+        SizedBox(height: 6 * k),
+        Text('Pour les téléphones modestes : animations en demi-résolution (mémoire ÷ 4). '
+            'Pris en compte au prochain lancement.', style: BoomText.ui600(9 * k, color: const Color(0xFF6B5E8A))),
       ]);
 }

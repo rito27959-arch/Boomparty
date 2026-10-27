@@ -41,7 +41,8 @@ class GameController extends ChangeNotifier {
   double get fuse => engine.fuseFraction;
 
   BombState get bombState => switch (phase) {
-        Phase.listening => BombState.talking,
+        // la bombe pose la question (parle) puis écoute le joueur
+        Phase.listening => _phaseT < 1.6 ? BombState.talking : BombState.listening,
         Phase.correct => BombState.happy,
         Phase.repeated => BombState.angry,
         Phase.invalid => BombState.confused,
@@ -70,8 +71,10 @@ class GameController extends ChangeNotifier {
   }
 
   void tick(double dt) {
+    final before = bombState;
     _phaseT += dt;
     engine.tick(dt);
+    if (phase == Phase.listening && before != bombState) notifyListeners();
     if (phase == Phase.correct && _phaseT >= correctPause) {
       _set(_slowPending ? Phase.tooSlow : Phase.listening);
       _slowPending = false;

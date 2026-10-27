@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_routes.dart';
-import '../character/bomb_frame.dart';
-import '../character/bomb_state.dart';
-import '../design/illustrations.dart';
+import '../design/illustration.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../engine/game_engine.dart';
@@ -82,13 +80,13 @@ class _ModeCardContent extends StatelessWidget {
     Widget? icon;
     switch (spec.icon) {
       case _Icon.globe:
-        icon = SizedBox.square(dimension: 44 * k, child: const CustomPaint(painter: GlobePainter()));
+        icon = SizedBox.square(dimension: 46 * k, child: const Illustration('cat_pays'));
       case _Icon.hearts:
-        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF2C6FE0), child: const CustomPaint(painter: HeartsPainter()));
+        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF2C6FE0), child: const Illustration('icon_hearts'));
       case _Icon.bolt:
-        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF16A63F), child: const CustomPaint(painter: BoltPainter(Color(0xFFFFE94D), Color(0xFFF5B400))));
+        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF16A63F), child: const Illustration('icon_bolt'));
       case _Icon.boltPurple:
-        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF7E3CF0), child: const CustomPaint(painter: BoltPainter(Color(0xFFEBD9FF), Color(0xFFB993FF))));
+        icon = GlossyDisc(size: 44 * k, color: const Color(0xFF7E3CF0), child: const Illustration('icon_bolt_purple'));
       case _Icon.none:
         icon = null;
     }
@@ -122,27 +120,19 @@ class _Mascot extends StatelessWidget {
   const _Mascot({required this.spec});
   final _ModeSpec spec;
 
+  static const _art = {
+    GameMode.cultureGenerale: 'mode_culture',
+    GameMode.completementFou: 'mode_fou',
+    GameMode.entreAmis: 'mode_amis',
+    GameMode.reflexes: 'mode_reflexes',
+    GameMode.extreme: 'mode_extreme',
+  };
+
   @override
   Widget build(BuildContext context) {
-    final extreme = spec.mode == GameMode.extreme;
     return LayoutBuilder(builder: (context, c) {
       final h = c.maxHeight;
-      return SizedBox(
-        width: h * 0.84,
-        child: Stack(clipBehavior: Clip.none, children: [
-          Positioned.fill(
-            child: BombFrame(
-              state: spec.bomb,
-              frame: spec.frame,
-              tint: extreme ? BombFrame.skin(const Color(0xFF8A3CFF)) : null,
-            ),
-          ),
-          if (spec.mode == GameMode.completementFou)
-            Positioned(left: h * 0.36, top: -h * 0.02, width: h * 0.34, height: h * 0.24, child: const CustomPaint(painter: CrownPainter())),
-          if (extreme)
-            Positioned(left: h * 0.12, top: h * 0.16, width: h * 0.62, height: h * 0.22, child: const CustomPaint(painter: HornsPainter())),
-        ]),
-      );
+      return SizedBox(width: h * 0.95, child: Illustration(_art[spec.mode]!, scale: 1.15, alignment: Alignment.bottomCenter));
     });
   }
 }

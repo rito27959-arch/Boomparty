@@ -12,6 +12,7 @@ import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../engine/game_engine.dart';
 import '../state/app_state.dart';
+import '../design/illustration.dart';
 import 'leaderboard_screen.dart';
 
 /// Écran 14 — Célébration finale. Référence : reference/14_celebration.png (238 × 450).
@@ -45,7 +46,7 @@ class CelebrationScreen extends StatelessWidget {
             ),
           const Positioned.fill(
             child: BombStage(
-              placement: BombPlacement(feet: Offset(0.55, 0.60), bodyWidth: 0.45),
+              placement: BombPlacement(feet: Offset(0.55, 0.66), bodyWidth: 0.48),
               state: BombState.celebration,
               confetti: 26,
             ),
@@ -72,7 +73,7 @@ class CelebrationScreen extends StatelessWidget {
               child: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 for (final (icon, text) in stats)
                   Row(children: [
-                    SizedBox(width: 14 * k, height: 14 * k, child: CustomPaint(painter: _StatPainter(icon))),
+                    SizedBox(width: 16 * k, height: 16 * k, child: Illustration(_statArt[icon]!)),
                     SizedBox(width: 22 * k),
                     Text(text, style: BoomText.ui600(10.5 * k, color: const Color(0xFF1E1838))),
                   ]),
@@ -112,27 +113,7 @@ class CelebrationScreen extends StatelessWidget {
 
 enum _StatIcon { trophy, bomb, medal }
 
-class _StatPainter extends CustomPainter {
-  const _StatPainter(this.icon);
-  final _StatIcon icon;
-  @override
-  void paint(Canvas c, Size s) {
-    switch (icon) {
-      case _StatIcon.trophy:
-        const TrophyPainter().paint(c, s);
-      case _StatIcon.medal:
-        const MedalPainter(1).paint(c, s);
-      case _StatIcon.bomb:
-        final o = Offset(s.width / 2, s.height * 0.58);
-        c.drawCircle(o, s.width * 0.4, Paint()..color = const Color(0xFF2A2440));
-        c.drawRect(Rect.fromLTWH(s.width * 0.42, s.height * 0.08, s.width * 0.16, s.height * 0.16), Paint()..color = const Color(0xFF2A2440));
-        c.drawCircle(Offset(s.width * 0.66, s.height * 0.08), s.width * 0.1, Paint()..color = const Color(0xFFFFB020));
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant _StatPainter old) => old.icon != icon;
-}
+const _statArt = {_StatIcon.trophy: 'trophy', _StatIcon.bomb: 'voice_classique', _StatIcon.medal: 'medal_1'};
 
 class _PartyBackgroundPainter extends CustomPainter {
   const _PartyBackgroundPainter();

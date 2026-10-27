@@ -23,6 +23,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/sprites/
+    - assets/illustrations/
   fonts:
     - family: Lilita
       fonts:

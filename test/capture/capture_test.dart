@@ -6,6 +6,7 @@ import 'dart:ui' as ui;
 import 'dart:math';
 
 import 'package:boom_party/character/bomb_game.dart';
+import 'package:boom_party/character/bomb_state.dart';
 import 'package:boom_party/engine/game_engine.dart';
 import 'package:boom_party/engine/word_bank.dart';
 import 'package:boom_party/game/game_controller.dart';
@@ -118,7 +119,7 @@ void main() {
 
   for (final s in shots) {
     testWidgets('capture ${s.name}', (tester) async {
-      await tester.runAsync(BombAssets.ensureLoaded);
+      await tester.runAsync(() => BombAssets.ensureStates(BombState.values));
       final logicalH = logicalWidth * s.refH / s.refW;
       tester.view.physicalSize = Size(logicalWidth * dpr, logicalH * dpr);
       tester.view.devicePixelRatio = dpr;

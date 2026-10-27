@@ -19,16 +19,40 @@ const avatarSpecs = <AvatarSpec>[
   AvatarSpec(ring: Color(0xFFF7B620), skin: Color(0xFFFBD3B5), hair: Color(0xFF8A3A16), style: HairStyle.sidePigtails, accent: Color(0xFFE2661D)),
 ];
 
+/// Avatar d'un joueur : buste 3D rendu dans Blender (tools/blender/render_avatars.py)
+/// dans un médaillon à anneau coloré.
 class PlayerAvatar extends StatelessWidget {
   const PlayerAvatar({super.key, required this.index, required this.size});
   final int index;
   final double size;
 
+  static const _files = ['emma', 'leo', 'sarah', 'max', 'ines'];
+
   @override
-  Widget build(BuildContext context) => SizedBox.square(
-        dimension: size,
-        child: CustomPaint(painter: AvatarPainter(avatarSpecs[index % avatarSpecs.length])),
-      );
+  Widget build(BuildContext context) {
+    final spec = avatarSpecs[index % avatarSpecs.length];
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: RadialGradient(colors: [Color.lerp(spec.ring, Colors.white, 0.25)!, spec.ring]),
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: size * 0.08, offset: Offset(0, size * 0.04))],
+      ),
+      padding: EdgeInsets.all(size * 0.07),
+      child: ClipOval(
+        child: DecoratedBox(
+          decoration: BoxDecoration(color: Color.lerp(spec.ring, Colors.white, 0.72)),
+          child: Transform.scale(
+            scale: 1.25,
+            alignment: const Alignment(0, -0.2),
+            child: Image.asset('assets/illustrations/avatar_${_files[index % _files.length]}.png',
+                fit: BoxFit.cover, filterQuality: FilterQuality.medium),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class AvatarPainter extends CustomPainter {

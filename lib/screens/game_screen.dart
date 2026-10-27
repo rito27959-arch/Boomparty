@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 
 import '../app_routes.dart';
 import '../character/bomb_game.dart';
+import '../character/bomb_state.dart';
 import '../design/avatars.dart';
 import '../design/candy_button.dart';
 import '../design/cartoon_title.dart';
@@ -21,6 +22,12 @@ import '../state/app_state.dart';
 /// Écrans 5 à 10 : une seule route de jeu dont l'affichage suit la phase
 /// du [GameController]. La bombe (Flame) reste la même instance d'un état
 /// à l'autre pour la continuité de l'animation.
+/// États de la bombe utilisés pendant une partie (préchargés à l'ouverture).
+const gameStates = {
+  BombState.talking, BombState.listening, BombState.happy, BombState.angry, BombState.confused,
+  BombState.panic, BombState.countdown, BombState.explosion, BombState.defeated,
+};
+
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key, this.controller, this.frozen = false});
 
@@ -83,6 +90,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
 
   @override
   void dispose() {
+    BombAssets.release({BombState.idle, BombState.celebration});
     _ticker.dispose();
     ctl.removeListener(_onPhase);
     if (widget.controller == null) {
@@ -96,11 +104,11 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   // Placements calés par superposition de la silhouette du sprite sur la
   // maquette (tools/fit_bomb.py + tools/show_fit.py).
   BombPlacement get _placement => switch (ctl.phase) {
-        Phase.listening => const BombPlacement(feet: Offset(0.45, 0.81), bodyWidth: 0.62),
-        Phase.correct => const BombPlacement(feet: Offset(0.51, 0.67), bodyWidth: 0.6),
-        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.47, 0.65), bodyWidth: 0.62),
-        Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.47, 0.74), bodyWidth: 0.56),
-        Phase.exploded || Phase.finished => const BombPlacement(feet: Offset(0.49, 0.66), bodyWidth: 0.46),
+        Phase.listening => const BombPlacement(feet: Offset(0.48, 0.78), bodyWidth: 0.66),
+        Phase.correct => const BombPlacement(feet: Offset(0.55, 0.64), bodyWidth: 0.64),
+        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.5, 0.64), bodyWidth: 0.7),
+        Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.48, 0.66), bodyWidth: 0.5),
+        Phase.exploded || Phase.finished => const BombPlacement(feet: Offset(0.5, 0.66), bodyWidth: 0.46),
       };
 
   @override
@@ -123,6 +131,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               explodeToken: _explodeToken,
               reducedMotion: ctl.reducedMotion,
               tint: skinById(SettingsStore.instance.skin).filter,
+              preload: gameStates,
             ),
           ),
           ..._foreground(context, p, size),

@@ -10,10 +10,9 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  await Future.wait([
-    BombAssets.ensureLoaded(), // spritesheets chargées une seule fois au démarrage
-    SettingsStore.instance.load(),
-    Wallet.instance.load(),
-  ]);
+  await Future.wait([SettingsStore.instance.load(), Wallet.instance.load()]);
+  // qualité graphique adaptative : planches décodées à 50 % si « graphismes allégés »
+  BombAssets.quality = SettingsStore.instance.lowGraphics ? 0.5 : 1.0;
+  await BombAssets.ensureLoaded();
   runApp(const BoomPartyApp());
 }

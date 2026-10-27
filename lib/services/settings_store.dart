@@ -17,6 +17,7 @@ class SettingsStore extends ChangeNotifier {
   bool subtitles = true;
   bool darkMode = false;
   bool reducedMotion = false;
+  bool lowGraphics = false;
   String language = 'fr';
   String skin = 'classique';
 
@@ -29,6 +30,7 @@ class SettingsStore extends ChangeNotifier {
     subtitles = p.getBool('subtitles') ?? subtitles;
     darkMode = p.getBool('darkMode') ?? darkMode;
     reducedMotion = p.getBool('reducedMotion') ?? reducedMotion;
+    lowGraphics = p.getBool('lowGraphics') ?? lowGraphics;
     language = p.getString('language') ?? language;
     skin = p.getString('skin') ?? skin;
     notifyListeners();
@@ -46,6 +48,7 @@ class SettingsStore extends ChangeNotifier {
       p.setBool('subtitles', subtitles),
       p.setBool('darkMode', darkMode),
       p.setBool('reducedMotion', reducedMotion),
+      p.setBool('lowGraphics', lowGraphics),
       p.setString('language', language),
       p.setString('skin', skin),
     ]);

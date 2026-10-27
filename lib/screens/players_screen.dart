@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../app_routes.dart';
 import '../design/avatars.dart';
 import '../design/candy_button.dart';
-import '../design/illustrations.dart';
+import '../design/illustration.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../engine/game_engine.dart';
@@ -91,7 +91,7 @@ class _PlayerRow extends StatelessWidget {
             SizedBox(width: 9 * k),
             Expanded(child: Text(player.name, style: BoomText.ui700(12.5 * k), overflow: TextOverflow.ellipsis)),
             if (index == 0)
-              SizedBox(width: 26 * k, height: 22 * k, child: const CustomPaint(painter: CrownPainter()))
+              SizedBox(width: 28 * k, height: 26 * k, child: const Illustration('crown'))
             else
               _CircleIconButton(
                 size: 24 * k,

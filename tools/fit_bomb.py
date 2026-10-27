@@ -2,7 +2,7 @@
 corps en fraction) qui superpose au mieux la silhouette du sprite sur la
 maquette. Même convention que BombGame._layout : frame 420×500, ancre
 (0.5, 0.97), corps = 244 px de large dans la frame."""
-import json, sys
+import sys, json
 import numpy as np
 from PIL import Image
 
@@ -10,8 +10,17 @@ def dark(rgb):
     a = rgb.astype(int); lum = a.mean(-1); sat = a.max(-1) - a.min(-1)
     return ((lum < 75) & (sat < 70)).astype(np.float32)
 
+def frame_box(sheet, idx):
+    meta = json.load(open('assets/sprites/bomb_animations.json'))
+    name = sheet.split('/')[-1]
+    st = next(v for v in meta['states'].values() if v['image'] == name)
+    cols = st.get('columns', st['frames'])
+    fw, fh = meta['frameWidth'], meta['frameHeight']
+    return ((idx % cols) * fw, (idx // cols) * fh, (idx % cols + 1) * fw, (idx // cols + 1) * fh)
+
+
 def sprite_mask(sheet, idx):
-    im = np.asarray(Image.open(sheet).convert('RGBA'))[:, idx * 420:(idx + 1) * 420]
+    im = np.asarray(Image.open(sheet).convert('RGBA').crop(frame_box(sheet, idx)))
     m = (im[..., 3] > 200) & (im[..., :3].astype(int).mean(-1) < 90)
     return Image.fromarray((m * 255).astype(np.uint8))
 
@@ -27,7 +36,7 @@ def fit(ref_path, sheet, idx, y_max=1.0):
         M = np.asarray(M0.resize((fw, fh))) > 127
         for fx in np.arange(0.30, 0.70, 0.01):
             for fy in np.arange(0.40, 1.0, 0.01):
-                x0 = round(W * fx - fw * 0.5); y0 = round(H * fy - fh * 0.97)
+                x0 = round(W * fx - fw * 0.5); y0 = round(H * fy - fh * 0.955)
                 cx0, cy0 = max(0, x0), max(0, y0); cx1, cy1 = min(W, x0 + fw), min(H, y0 + fh)
                 if cx1 <= cx0 or cy1 <= cy0: continue
                 sub = M[cy0 - y0:cy1 - y0, cx0 - x0:cx1 - x0]
