@@ -46,7 +46,10 @@ class BombGame extends FlameGame {
     BombState initialState = BombState.idle,
     this.confetti = 0,
     this.seed = 7,
+    this.tint,
   }) : _initialState = initialState;
+
+  final ColorFilter? tint;
 
   BombPlacement placement;
   BombPlacement? _from;
@@ -64,6 +67,7 @@ class BombGame extends FlameGame {
     await BombAssets.ensureLoaded();
     if (confetti > 0) add(ConfettiField(count: confetti, seed: seed));
     bomb = BombCharacter(_initialState);
+    if (tint != null) bomb.paint.colorFilter = tint;
     add(bomb);
     _layout();
   }
@@ -379,6 +383,7 @@ class BombStage extends StatefulWidget {
     this.animatePlacement = true,
     this.explodeToken = 0,
     this.reducedMotion = false,
+    this.tint,
   });
   final BombPlacement placement;
   final BombState state;
@@ -389,12 +394,15 @@ class BombStage extends StatefulWidget {
   final int explodeToken;
   final bool reducedMotion;
 
+  /// Teinte du skin choisi (null = bombe classique).
+  final ColorFilter? tint;
+
   @override
   State<BombStage> createState() => _BombStageState();
 }
 
 class _BombStageState extends State<BombStage> {
-  late final BombGame _game = BombGame(placement: widget.placement, initialState: widget.state, confetti: widget.confetti);
+  late final BombGame _game = BombGame(placement: widget.placement, initialState: widget.state, confetti: widget.confetti, tint: widget.tint);
 
   @override
   void didUpdateWidget(covariant BombStage old) {

@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
           Positioned(
             left: 0, right: 0, top: y(354),
             child: Text("Le jeu qui met\nl'ambiance !",
-                textAlign: TextAlign.center, style: BoomText.ui800(12.6 * k, height: 1.08)),
+                textAlign: TextAlign.center, style: BoomText.ui800(11.6 * k, height: 1.08)),
           ),
           // bouton Jouer
           Positioned(
@@ -77,7 +77,7 @@ class HomeScreen extends StatelessWidget {
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 PlayBadge(size: x(27)),
                 SizedBox(width: x(20)),
-                Text('Jouer', style: BoomText.ui800(22 * k)),
+                Text('Jouer', style: BoomText.ui800(18.5 * k)),
                 SizedBox(width: x(30)),
               ]),
             ),
@@ -126,7 +126,7 @@ class _HomeMenu extends StatelessWidget {
                     SizedBox(width: 15 * k),
                     SizedBox(width: 22 * k, height: 18 * k, child: CustomPaint(painter: MenuIconPainter(icons[i]))),
                     SizedBox(width: 15 * k),
-                    Text(labels[i], style: BoomText.ui700(10.8 * k, color: const Color(0xFF1E1838))),
+                    Text(labels[i], style: BoomText.ui700(9.4 * k, color: const Color(0xFF1E1838))),
                   ]),
                 ),
               ),

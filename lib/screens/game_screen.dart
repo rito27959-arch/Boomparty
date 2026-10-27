@@ -14,6 +14,8 @@ import '../engine/game_engine.dart';
 import '../game/game_controller.dart';
 import '../services/answer_input.dart';
 import '../services/settings_store.dart';
+import '../services/wallet.dart';
+import '../character/skins.dart';
 import '../state/app_state.dart';
 
 /// Écrans 5 à 10 : une seule route de jeu dont l'affichage suit la phase
@@ -73,6 +75,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     if (ctl.phase == Phase.exploding) _explodeToken++;
     if (ctl.phase == Phase.finished) {
       AppState.instance.lastResult = ctl.result;
+      Wallet.instance.reward(winnerOnDevice: true);
       Navigator.pushReplacementNamed(context, AppRoutes.leaderboard);
     }
     setState(() => _seenPhase = ctl.phase);
@@ -108,7 +111,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           Positioned.fill(
             child: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
-              child: KeyedSubtree(key: ValueKey(_bgKey(p)), child: _background(p)),
+              child: KeyedSubtree(key: ValueKey(_bgKey(p)), child: SizedBox.expand(child: _background(p))),
             ),
           ),
           Positioned.fill(
@@ -117,6 +120,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               state: ctl.bombState,
               explodeToken: _explodeToken,
               reducedMotion: ctl.reducedMotion,
+              tint: skinById(SettingsStore.instance.skin).filter,
             ),
           ),
           ..._foreground(context, p, size),

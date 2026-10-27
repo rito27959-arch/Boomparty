@@ -46,10 +46,14 @@ class BoomText {
   static const display = 'Lilita';
   static const ui = 'Baloo';
 
+  /// Baloo 2 a un œil plus petit que la police de la maquette : mesuré sur
+  /// les 9 premières captures, les textes étaient ~20 % trop petits.
+  static const uiScale = 1.2;
+
   static TextStyle ui700(double size, {Color color = BoomColors.ink, double height = 1.1}) =>
-      TextStyle(fontFamily: ui, fontWeight: FontWeight.w700, fontSize: size, color: color, height: height);
+      TextStyle(fontFamily: ui, fontWeight: FontWeight.w700, fontSize: size * uiScale, color: color, height: height);
   static TextStyle ui800(double size, {Color color = BoomColors.ink, double height = 1.1}) =>
-      TextStyle(fontFamily: ui, fontWeight: FontWeight.w800, fontSize: size, color: color, height: height);
+      TextStyle(fontFamily: ui, fontWeight: FontWeight.w800, fontSize: size * uiScale, color: color, height: height);
   static TextStyle ui600(double size, {Color color = BoomColors.ink, double height = 1.1}) =>
-      TextStyle(fontFamily: ui, fontWeight: FontWeight.w600, fontSize: size, color: color, height: height);
+      TextStyle(fontFamily: ui, fontWeight: FontWeight.w600, fontSize: size * uiScale, color: color, height: height);
 }

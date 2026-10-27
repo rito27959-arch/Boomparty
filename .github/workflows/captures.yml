@@ -46,7 +46,7 @@ jobs:
         run: |
           pip install --quiet scikit-image pillow scipy
           mkdir -p ci_out/captures ci_out/compare
-          cp build/captures/*.png ci_out/captures/ || true
+          cp build/captures/*.png build/captures/*.log ci_out/captures/ || true
           python3 tools/compare.py reference build/captures ci_out/compare 2>&1 | tee ci_out/logs/compare.txt
       - name: APK de test
         if: contains(github.event.head_commit.message, '[apk]') || github.event_name == 'workflow_dispatch'

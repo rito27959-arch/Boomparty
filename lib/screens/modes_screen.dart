@@ -103,12 +103,12 @@ class _ModeCardContent extends StatelessWidget {
         child: _Mascot(spec: spec),
       ),
       Positioned(
-        left: spec.textLeft * k, right: 50 * k, top: 0, bottom: 0,
+        left: spec.textLeft * k, right: 38 * k, top: 0, bottom: 0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(spec.title, style: BoomText.ui800(12.6 * k, color: spec.titleColor, height: 1.05).copyWith(shadows: shadow)),
+            FittedBox(fit: BoxFit.scaleDown, alignment: Alignment.centerLeft, child: Text(spec.title, maxLines: 1, style: BoomText.ui800(12.6 * k, color: spec.titleColor, height: 1.05).copyWith(shadows: shadow))),
             SizedBox(height: 1.5 * k),
             Text(spec.subtitle, style: BoomText.ui600(7.6 * k, color: spec.subColor, height: 1.2).copyWith(shadows: shadow)),
           ],

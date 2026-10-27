@@ -9,7 +9,12 @@ import 'package:boom_party/character/bomb_game.dart';
 import 'package:boom_party/engine/game_engine.dart';
 import 'package:boom_party/engine/word_bank.dart';
 import 'package:boom_party/game/game_controller.dart';
+import 'package:boom_party/screens/celebration_screen.dart';
+import 'package:boom_party/screens/customize_screen.dart';
 import 'package:boom_party/screens/game_screen.dart';
+import 'package:boom_party/screens/leaderboard_screen.dart';
+import 'package:boom_party/screens/settings_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:boom_party/services/answer_input.dart';
 import 'package:boom_party/screens/home_screen.dart';
 import 'package:boom_party/screens/categories_screen.dart';
@@ -30,6 +35,12 @@ class Shot {
   final WidgetBuilder build;
   final int settleMs;
 }
+
+/// Classement de démonstration identique à la maquette.
+List<Player> demoRanking() => [
+      for (final (n, a, sc) in [('Emma', 0, 12), ('Léo', 1, 10), ('Sarah', 2, 8), ('Inès', 4, 6), ('Max', 3, 4)])
+        Player(id: n, name: n, avatar: a, score: sc),
+    ];
 
 /// Partie réelle pilotée par le moteur, mise dans l'état voulu.
 GameController scenario(void Function(GameController c) drive, {int first = 0}) {
@@ -70,6 +81,10 @@ final shots = <Shot>[
         c.tick(c.engine.fuseTotal + 0.1);
         c.tick(GameController.explosionDuration + 0.1);
       }, first: 3)), settleMs: 1800),
+  Shot('11_classement', 222, 450, Color(0xFF14123A), (_) => LeaderboardScreen(ranking: demoRanking())),
+  Shot('12_personnalisation', 294, 450, Color(0xFF14123A), (_) => const CustomizeScreen()),
+  Shot('13_parametres', 248, 450, Color(0xFF14123A), (_) => const SettingsScreen()),
+  Shot('14_celebration', 238, 450, Colors.white, (_) => CelebrationScreen(result: GameFinished(demoRanking(), 12, 8))),
 ];
 
 const logicalWidth = 390.0;
@@ -99,6 +114,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
     await _loadFonts();
   });
 
@@ -110,6 +126,18 @@ void main() {
       tester.view.devicePixelRatio = dpr;
       addTearDown(tester.view.reset);
 
+      final errors = <String>[];
+      final prevOnError = FlutterError.onError;
+      FlutterError.onError = (d) => errors.add(d.toString());
+      final prevErrorWidget = ErrorWidget.builder;
+      ErrorWidget.builder = (d) {
+        errors.add(d.toString());
+        return Container(color: const Color(0xFFFF00FF), child: Text(d.exceptionAsString(), style: const TextStyle(fontSize: 10)));
+      };
+      addTearDown(() {
+        FlutterError.onError = prevOnError;
+        ErrorWidget.builder = prevErrorWidget;
+      });
       final key = GlobalKey();
       await tester.pumpWidget(RepaintBoundary(
         key: key,
@@ -136,6 +164,9 @@ void main() {
       final out = File('build/captures/${s.name}.png');
       out.parent.createSync(recursive: true);
       out.writeAsBytesSync(bytes!);
+      final ex = tester.takeException();
+      if (ex != null) errors.add(ex.toString());
+      File('build/captures/${s.name}.log').writeAsStringSync(errors.isEmpty ? 'OK' : errors.join('\n\n'));
     });
   }
 }
