@@ -55,8 +55,20 @@ jobs:
         continue-on-error: true
         run: |
           set -o pipefail
-          flutter build apk --release --split-per-abi --target-platform android-arm64 2>&1 | tail -30 | tee ci_out/logs/build_apk.txt
+          flutter build apk --release --split-per-abi --target-platform android-arm,android-arm64 2>&1 | tail -30 | tee ci_out/logs/build_apk.txt
           cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ci_out/boom_party-arm64.apk || true
+      - name: Publier l'APK (lien de téléchargement direct)
+        if: contains(github.event.head_commit.message, '[apk]') || github.event_name == 'workflow_dispatch'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p apk_out
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk apk_out/BoomParty.apk
+          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk apk_out/BoomParty-ancien-telephone.apk
+          gh release view apk >/dev/null 2>&1 || gh release create apk --title "BOOM PARTY — APK à installer" \
+            --notes "BoomParty.apk : la plupart des téléphones. BoomParty-ancien-telephone.apk : téléphones 32 bits. Autoriser l'installation d'applications inconnues."
+          gh release upload apk apk_out/*.apk --clobber
       - name: Publier les résultats sur la branche ci-results
         if: always()
         env:
