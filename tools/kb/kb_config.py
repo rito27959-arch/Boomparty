@@ -32,7 +32,7 @@ CLASSES = {
     'Q11344': 'chemical element',
     'Q40050': 'drink',
     'Q746549': 'dish',
-    'Q39546': 'tool',
+    'Q39546': 'physical tool',
     'Q506': 'flower',
 }
 

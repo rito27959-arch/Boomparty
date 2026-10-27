@@ -9,7 +9,7 @@ LIGATURES = {'œ': 'oe', 'æ': 'ae', 'ß': 'ss', 'Œ': 'oe', 'Æ': 'ae'}
 LEADING = ['de la ', "de l'", 'les ', 'le ', 'la ', "l'", 'un ', 'une ', 'des ', 'du ', "d'", 'de ',
            'mon ', 'ma ', 'mes ', 'ton ', 'ta ', 'tes ', 'son ', 'sa ', 'ses ', 'ce ', 'cet ', 'cette ', 'ces ']
 FILLERS = ['euh', 'heu', 'hum', 'ben', 'bah', 'alors', 'bon', 'ok', 'okay', 'donc', 'voila',
-           'c est', 'je dis', 'je pense', 'je crois', 'moi je dis', 'mmh', 'hein']
+           "c' est", "c' etait", 'je dis', 'je pense', 'je crois', 'moi je dis', 'mmh', 'hein']
 
 
 def fold(text: str) -> str:
