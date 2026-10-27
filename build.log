@@ -1,0 +1,52 @@
+classes Wikidata vérifiées
+animaux: 285 entités Wikidata
+animaux_ferme: 0 entités Wikidata
+pays: 194 entités Wikidata
+capitales: 202 entités Wikidata
+objets_maison: 218 entités Wikidata
+objets_cuisine: 0 entités Wikidata
+fruits: 0 entités Wikidata
+legumes: 31 entités Wikidata
+plats: 205 entités Wikidata
+boissons: 0 entités Wikidata
+metiers: 283 entités Wikidata
+sports: 216 entités Wikidata
+vehicules: 194 entités Wikidata
+instruments: 196 entités Wikidata
+vetements: 271 entités Wikidata
+couleurs: 0 entités Wikidata
+corps: 0 entités Wikidata
+genres_films: 32 entités Wikidata
+genres_musique: 58 entités Wikidata
+villes_france: 203 entités Wikidata
+elements: 118 entités Wikidata
+# Rapport de la base de connaissances
+
+Concepts : 3027 — alias : 13558
+Quasi-doublons fusionnés : 19 — alias ambigus : 111
+
+| catégorie | concepts | Wikidata | listes seules | alias |
+|---|---|---|---|---|
+| animaux | 315 | 200 | 115 | 1425 |
+| animaux_ferme | 39 | 3 | 36 | 97 |
+| pays | 194 | 194 | 0 | 1230 |
+| capitales | 202 | 201 | 1 | 774 |
+| objets_maison | 261 | 210 | 51 | 981 |
+| objets_cuisine | 68 | 15 | 53 | 204 |
+| fruits | 48 | 1 | 47 | 111 |
+| legumes | 50 | 28 | 22 | 211 |
+| plats | 230 | 204 | 26 | 944 |
+| boissons | 25 | 1 | 24 | 58 |
+| metiers | 290 | 278 | 12 | 1958 |
+| sports | 220 | 214 | 6 | 964 |
+| vehicules | 180 | 170 | 10 | 738 |
+| instruments | 197 | 194 | 3 | 922 |
+| vetements | 266 | 262 | 4 | 1026 |
+| couleurs | 34 | 0 | 34 | 75 |
+| corps | 49 | 0 | 49 | 95 |
+| genres_films | 40 | 31 | 9 | 201 |
+| genres_musique | 73 | 56 | 17 | 296 |
+| villes_france | 200 | 200 | 0 | 1038 |
+| elements | 118 | 118 | 0 | 481 |
+
+## Avertissements
