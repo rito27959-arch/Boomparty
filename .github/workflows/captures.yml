@@ -1,0 +1,66 @@
+name: build-captures
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: captures
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Plateforme Android (générée si absente)
+        run: |
+          mkdir -p ci_out/logs
+          [ -d android ] || flutter create --platforms=android --project-name boom_party --org com.boomparty . 2>&1 | tail -5
+          flutter --version > ci_out/logs/flutter_version.txt
+      - name: Dépendances
+        run: flutter pub get 2>&1 | tee ci_out/logs/pub_get.txt
+      - name: Analyse statique
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter analyze --no-fatal-infos 2>&1 | tee ci_out/logs/analyze.txt
+      - name: Tests unitaires
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          if [ -d test/unit ]; then flutter test test/unit 2>&1 | tee ci_out/logs/unit_tests.txt; fi
+      - name: Captures des écrans
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter test test/capture 2>&1 | tee ci_out/logs/capture_tests.txt
+      - name: Comparaison avec la maquette
+        continue-on-error: true
+        run: |
+          pip install --quiet scikit-image pillow scipy
+          mkdir -p ci_out/captures ci_out/compare
+          cp build/captures/*.png ci_out/captures/ || true
+          python3 tools/compare.py reference build/captures ci_out/compare 2>&1 | tee ci_out/logs/compare.txt
+      - name: APK de test
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flutter build apk --release --split-per-abi --target-platform android-arm64 2>&1 | tail -30 | tee ci_out/logs/build_apk.txt
+          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk ci_out/boom_party-arm64.apk || true
+      - name: Publier les résultats sur la branche ci-results
+        if: always()
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd ci_out
+          echo "${GITHUB_SHA}" > SOURCE_COMMIT.txt
+          git init -q && git checkout -q -b ci-results
+          git config user.name "boom-ci" && git config user.email "ci@boomparty.local"
+          git add -A && git commit -qm "Résultats CI pour ${GITHUB_SHA}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}" ci-results
