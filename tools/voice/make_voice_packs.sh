@@ -4,9 +4,10 @@
 #   boom_asr_fr_v1.zip : reconnaissance vocale streaming (zipformer FR, int8, Apache-2.0)
 #   boom_tts_fr_v1.zip : synthèse vocale Piper fr_FR siwis medium (corpus CC BY 4.0)
 set -euo pipefail
-OUT=${1:-voice_packs}
+OUT=$(realpath -m "${1:-voice_packs}")
 REL=https://github.com/k2-fsa/sherpa-onnx/releases/download
-mkdir -p "$OUT" work && cd work
+WORK=$(mktemp -d)
+mkdir -p "$OUT" && cd "$WORK"
 curl -fsSL "$REL/asr-models/sherpa-onnx-streaming-zipformer-fr-2023-04-14.tar.bz2" | tar xj
 curl -fsSL "$REL/tts-models/vits-piper-fr_FR-siwis-medium.tar.bz2" | tar xj
 
@@ -24,9 +25,9 @@ cat > tts/LICENSE.txt <<'TXT'
 Voix : Piper fr_FR siwis (medium). Corpus SIWIS, licence CC BY 4.0 (https://datashare.is.ed.ac.uk/handle/10283/2353).
 espeak-ng-data : GPL-3.0 (données de phonétisation, fichiers non modifiés, https://github.com/espeak-ng/espeak-ng).
 TXT
-(cd asr && zip -q -0 -r "../../$OUT/boom_asr_fr_v1.zip" .)
-(cd tts && zip -q -0 -r "../../$OUT/boom_tts_fr_v1.zip" .)
-cd "../$OUT"
+(cd asr && zip -q -0 -r "$OUT/boom_asr_fr_v1.zip" .)
+(cd tts && zip -q -0 -r "$OUT/boom_tts_fr_v1.zip" .)
+cd "$OUT"
 python3 - <<'PY'
 import hashlib, json, os
 packs = {}
