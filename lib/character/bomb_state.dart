@@ -5,6 +5,7 @@
 enum BombState {
   idle,
   listening,
+  thinking,
   talking,
   happy,
   laughing,

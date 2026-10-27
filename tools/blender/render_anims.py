@@ -203,7 +203,25 @@ def anim_celebration(n=12):
     return out
 
 
+def anim_thinking(n=16):
+    base = POSES['thinking']
+    out = []
+    for f in range(n):
+        t = f / n
+        out.append(replace(base, look=(0.35 + 0.1 * math.sin(2 * math.pi * t), 0.45), tilt=-0.08 + 0.03 * math.sin(2 * math.pi * t),
+                           brow_h=(0.12 + 0.03 * ping(t), 0.0), lid=0.85 if f == 10 else 0.0, spark_phase=t * 2,
+                           m_dx=0.1 + 0.04 * math.sin(4 * math.pi * t)))
+    return out
+
+
+def anim_visemes(n=5):
+    """5 formes de bouche fixes, sélectionnées en temps réel par la synchro labiale."""
+    return [POSES[k] for k in ('vis_rest', 'vis_e', 'vis_a', 'vis_o', 'vis_m')]
+
+
 ANIMS = {
+    'thinking': (anim_thinking, True),
+    'visemes': (anim_visemes, False),
     'idle': (anim_idle, True),
     'listening': (anim_listening, True),
     'talking': (anim_talking, True),

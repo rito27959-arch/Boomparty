@@ -5,6 +5,7 @@ import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../services/audio_director.dart';
 import '../services/settings_store.dart';
+import 'voice_settings_sheet.dart';
 
 /// Écran 13 — Paramètres. Référence : reference/13_parametres.png (248 × 450).
 /// Chaque réglage est persisté (SharedPreferences) via [SettingsStore].
@@ -43,6 +44,21 @@ class SettingsScreen extends StatelessWidget {
                 ),
                 child: Stack(children: [
                   Positioned(left: 13 * k, top: r.y(84 - 64) - 7 * k, child: Text('Voix de la bombe', style: BoomText.ui700(10.5 * k))),
+                  // personnalité + packs voix hors ligne
+                  Positioned(
+                    right: 10 * k, top: r.y(84 - 64) - 8 * k,
+                    child: GestureDetector(
+                      onTap: () => showVoiceSettings(context),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(horizontal: 7 * k, vertical: 2.5 * k),
+                        decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.8), borderRadius: BorderRadius.circular(10 * k)),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          Text('Personnalité & hors ligne', style: BoomText.ui600(7.6 * k, color: const Color(0xFF6B5E8A))),
+                          Icon(Icons.chevron_right_rounded, size: 10 * k, color: const Color(0xFF6B5E8A)),
+                        ]),
+                      ),
+                    ),
+                  ),
                   Positioned(
                     left: 12 * k, right: 11 * k, top: r.y(101 - 64), height: r.y(72),
                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

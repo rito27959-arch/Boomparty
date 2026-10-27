@@ -4,10 +4,29 @@ import 'package:flutter/foundation.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
+/// Réponse entendue : texte + confiance de la reconnaissance (null = saisie
+/// au clavier, donc certaine).
+class HeardAnswer {
+  const HeardAnswer(this.text, {this.confidence, this.alternatives = const []});
+  final String text;
+  final double? confidence;
+
+  /// Autres hypothèses de la reconnaissance (essayées si la première échoue).
+  final List<String> alternatives;
+}
+
 /// Source des réponses des joueurs (voix ou clavier). Séparée du moteur
 /// de règles : elle ne fait que produire des mots.
 abstract class AnswerInput {
-  Stream<String> get answers;
+  Stream<HeardAnswer> get answers;
+
+  /// Quand vrai, ce qui est entendu est ignoré (la bombe parle : on ne
+  /// transcrit jamais sa propre voix).
+  bool muted = false;
+
+  /// Vocabulaire attendu pour la manche (favorisé par la reconnaissance
+  /// hors ligne ; ignoré par les autres sources).
+  Future<void> setVocabulary(Iterable<String> words) async {}
 
   /// Niveau sonore normalisé 0..1, pour l'onde du micro.
   ValueListenable<double> get level;
@@ -21,19 +40,20 @@ abstract class AnswerInput {
 }
 
 /// Saisie manuelle (clavier de secours, tests).
-class ManualAnswerInput implements AnswerInput {
-  final _ctl = StreamController<String>.broadcast();
+class ManualAnswerInput extends AnswerInput {
+  final _ctl = StreamController<HeardAnswer>.broadcast();
   final _level = ValueNotifier<double>(0);
   final _partial = ValueNotifier<String>('');
 
   @override
-  Stream<String> get answers => _ctl.stream;
+  Stream<HeardAnswer> get answers => _ctl.stream;
   @override
   ValueListenable<double> get level => _level;
   @override
   ValueListenable<String> get partial => _partial;
 
-  void submit(String word) => _ctl.add(word);
+  /// Saisie clavier (toujours acceptée, même quand la bombe parle).
+  void submit(String word, {double? confidence}) => _ctl.add(HeardAnswer(word, confidence: confidence));
   set debugLevel(double v) => _level.value = v;
 
   @override
@@ -48,11 +68,12 @@ class ManualAnswerInput implements AnswerInput {
   }
 }
 
-/// Reconnaissance vocale continue en français via speech_to_text.
+/// Reconnaissance vocale du système (speech_to_text), utilisée en secours si
+/// le pack voix hors ligne n'est pas installé.
 /// Android coupe l'écoute après un silence : on relance tant que la partie écoute.
-class SpeechAnswerInput implements AnswerInput {
+class SpeechAnswerInput extends AnswerInput {
   final _stt = SpeechToText();
-  final _ctl = StreamController<String>.broadcast();
+  final _ctl = StreamController<HeardAnswer>.broadcast();
   final _level = ValueNotifier<double>(0);
   final _partial = ValueNotifier<String>('');
   bool _wanted = false;
@@ -60,7 +81,7 @@ class SpeechAnswerInput implements AnswerInput {
   String? _locale;
 
   @override
-  Stream<String> get answers => _ctl.stream;
+  Stream<HeardAnswer> get answers => _ctl.stream;
   @override
   ValueListenable<double> get level => _level;
   @override
@@ -92,9 +113,14 @@ class SpeechAnswerInput implements AnswerInput {
   }
 
   void _onResult(SpeechRecognitionResult r) {
+    if (muted) {
+      _partial.value = '';
+      return;
+    }
     _partial.value = r.recognizedWords;
     if (r.finalResult && r.recognizedWords.trim().isNotEmpty) {
-      _ctl.add(r.recognizedWords.trim());
+      final alts = [for (final a in r.alternates.skip(1)) a.recognizedWords.trim()];
+      _ctl.add(HeardAnswer(r.recognizedWords.trim(), confidence: r.hasConfidenceRating ? r.confidence : null, alternatives: alts));
       _partial.value = '';
     }
   }

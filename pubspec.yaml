@@ -13,6 +13,14 @@ dependencies:
   shared_preferences: ^2.2.0
   speech_to_text: ^7.0.0
   share_plus: ^10.1.4
+  sqlite3: ^2.4.6
+  sqlite3_flutter_libs: ^0.5.24
+  path_provider: ^2.1.4
+  audioplayers: ^6.1.0
+  record: ^5.1.2
+  sherpa_onnx: ^1.12.40
+  archive: ^3.6.1
+  crypto: ^3.0.3
 
 dev_dependencies:
   flutter_test:
@@ -24,6 +32,20 @@ flutter:
   assets:
     - assets/sprites/
     - assets/illustrations/
+    - assets/knowledge/
+    - assets/voice/
+    - assets/voice/classique/classic/
+    - assets/voice/classique/crazy/
+    - assets/voice/classique/drama/
+    - assets/voice/drole/classic/
+    - assets/voice/drole/crazy/
+    - assets/voice/drole/drama/
+    - assets/voice/serieuse/classic/
+    - assets/voice/serieuse/crazy/
+    - assets/voice/serieuse/drama/
+    - assets/voice/robot/classic/
+    - assets/voice/robot/crazy/
+    - assets/voice/robot/drama/
   fonts:
     - family: Lilita
       fonts:

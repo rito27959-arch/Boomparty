@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../engine/game_engine.dart';
-import '../engine/word_bank.dart';
+import '../knowledge/knowledge_repository.dart';
 
 /// État de préparation de la partie, partagé entre les écrans de menu.
 class AppState extends ChangeNotifier {
@@ -17,6 +17,9 @@ class AppState extends ChangeNotifier {
     Player(id: 'p5', name: 'Inès', avatar: 4),
   ];
   final Set<String> selectedCategories = {};
+
+  /// Base de connaissances (chargée au démarrage, voir KnowledgeService).
+  KnowledgeRepository? kb;
 
   /// Résultat de la dernière partie (pour classement et célébration).
   GameFinished? lastResult;
@@ -57,5 +60,6 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<WordCategory> get categoriesForGame => [for (final c in categories) if (selectedCategories.contains(c.id)) c];
+  /// Tuiles choisies, dans l'ordre d'affichage.
+  List<String> get gameCategories => selectedCategories.toList();
 }

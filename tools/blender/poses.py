@@ -78,6 +78,18 @@ POSES = {
     'defeated': replace(BASE, x_eyes=True, m_open=0.25, m_width=0.24, m_smile=-0.06, m_tongue=0.8,
                         m_tongue_out=0.5, m_teeth=0.0, soot=0.55, spark=0.0, fuse_len=0.45, tilt=0.18, squash=0.12,
                         brow_h=(-0.02, 0.04), cheek=0.0),
+    # réflexion : regard en l'air, sourcil levé, main au menton
+    'thinking': replace(BASE, look=(0.35, 0.45), brow_h=(0.12, 0.0), brow_a=(-0.2, 0.2), m_open=0.05, m_width=0.18,
+                        m_dx=0.1, m_smile=-0.02, m_arch=0.02, m_teeth=0.0, m_tongue=0.0, tilt=-0.08,
+                        # main sous le menton (pose « je réfléchis »)
+                        right=Hand(pos=(0.3, -1.0, -0.8), rot=CHEEK, curl=(0.9, 1.3, 1.4, 1.5), thumb=0.4),
+                        left=H_REST),
+    # visèmes (synchronisation labiale) : même pose, seule la bouche change
+    'vis_rest': replace(BASE, m_open=0.04, m_width=0.3, m_smile=0.08, m_teeth=0.0, m_tongue=0.0, m_arch=0.0, right=H_OPEN),
+    'vis_e': replace(BASE, m_open=0.2, m_width=0.38, m_smile=0.1, m_teeth=0.08, m_tongue=0.25, right=H_OPEN),
+    'vis_a': replace(BASE, m_open=0.5, m_width=0.42, m_smile=0.06, m_teeth=0.08, m_tongue=0.5, right=H_OPEN),
+    'vis_o': replace(BASE, m_open=0.36, m_width=0.2, m_smile=-0.02, m_arch=0.12, m_teeth=0.03, m_tongue=0.4, right=H_OPEN),
+    'vis_m': replace(BASE, m_open=0.025, m_width=0.24, m_smile=0.02, m_teeth=0.0, m_tongue=0.0, m_arch=0.0, right=H_OPEN),
     'celebrate': replace(BASE, m_width=0.48, m_open=0.6, m_smile=0.15, m_teeth=0.09, m_tongue=0.6,
                          left=replace(H_THUMB, pos=(1.1, -0.4, 0.3)), right=replace(H_THUMB, pos=(1.1, -0.4, 0.3)),
                          brow_h=(0.06, 0.06)),

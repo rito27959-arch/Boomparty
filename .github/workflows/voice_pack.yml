@@ -1,0 +1,25 @@
+name: voice-packs
+on:
+  push:
+    branches: [main]
+    paths: ['tools/voice/make_voice_packs.sh', '.github/workflows/voice_pack.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire les packs
+        run: bash tools/voice/make_voice_packs.sh "$PWD/voice_packs"
+      - name: Publier la release voice-pack-v1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view voice-pack-v1 >/dev/null 2>&1 || \
+            gh release create voice-pack-v1 --title "Packs voix hors ligne v1" \
+              --notes "Modèles téléchargés par l'application au premier lancement (reconnaissance et synthèse vocale françaises hors ligne). Licences dans chaque archive."
+          gh release upload voice-pack-v1 voice_packs/*.zip voice_packs/voice_packs.json --clobber
+          ls -la voice_packs

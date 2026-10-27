@@ -8,7 +8,7 @@ import 'dart:math';
 import 'package:boom_party/character/bomb_game.dart';
 import 'package:boom_party/character/bomb_state.dart';
 import 'package:boom_party/engine/game_engine.dart';
-import 'package:boom_party/engine/word_bank.dart';
+import 'package:boom_party/knowledge/knowledge_repository.dart';
 import 'package:boom_party/game/game_controller.dart';
 import 'package:boom_party/screens/celebration_screen.dart';
 import 'package:boom_party/screens/customize_screen.dart';
@@ -44,6 +44,9 @@ List<Player> demoRanking() => [
         Player(id: n, name: n, avatar: a, score: sc),
     ];
 
+/// Base de connaissances embarquée (la même que dans l'application).
+final kb = KnowledgeRepository.open('assets/knowledge/boom_kb.db');
+
 /// Partie réelle pilotée par le moteur, mise dans l'état voulu.
 GameController scenario(void Function(GameController c) drive, {int first = 0}) {
   final players = [
@@ -51,9 +54,11 @@ GameController scenario(void Function(GameController c) drive, {int first = 0}) 
   ];
   final input = ManualAnswerInput()..debugLevel = 0.85;
   final c = GameController(
-    engine: GameEngine(players: players, selected: [categories.firstWhere((x) => x.id == 'objets')], random: Random(3)),
+    engine: GameEngine(players: players, kb: kb, gameCategories: const ['objets'], onlyKbCategories: const ['objets_maison'],
+        challengeEvery: 0, random: Random(3)),
     input: input,
     vibrations: false,
+    expressive: false, // états de la maquette, indépendants du tirage des répliques
   )..start(firstPlayer: first);
   drive(c);
   return c;
@@ -67,14 +72,23 @@ final shots = <Shot>[
   Shot('05_jeu_ecoute', 230, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {}))),
   Shot('06_bonne_reponse', 196, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {
         for (final w in ['Table', 'Chaise', 'Réfrigérateur']) {
-          c.answer(w);
+          c.answer(HeardAnswer(w));
         }
       }))),
   Shot('07_deja_dit', 194, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {
         for (final w in ['Table', 'Chaise', 'Réfrigérateur', 'Télévision', 'chaise']) {
-          c.answer(w);
+          c.answer(HeardAnswer(w));
           c.tick(GameController.correctPause + 0.01);
         }
+      }))),
+  Shot('08_hors_categorie', 194, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {
+        c.answer(const HeardAnswer('Table'));
+        c.tick(GameController.correctPause + 0.01);
+        c.answer(const HeardAnswer('éléphant'));
+      }))),
+  Shot('15_repete', 194, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {
+        c.answer(const HeardAnswer('table', confidence: 0.1));
+        c.tick(0.6);
       }))),
   Shot('09_trop_lent', 216, 440, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {
         c.tick(c.engine.fuseTotal * 0.72);

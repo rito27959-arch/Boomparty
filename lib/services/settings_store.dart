@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'audio_director.dart';
 
 /// Paramètres persistés (écran 13).
 class SettingsStore extends ChangeNotifier {
@@ -11,6 +10,7 @@ class SettingsStore extends ChangeNotifier {
   SharedPreferences? _prefs;
 
   String voice = 'classique';
+  String personality = 'classic'; // PersonalityId.name
   double voiceVolume = 0.8;
   double fxVolume = 0.7;
   bool vibrations = true;
@@ -24,6 +24,7 @@ class SettingsStore extends ChangeNotifier {
   Future<void> load() async {
     final p = _prefs = await SharedPreferences.getInstance();
     voice = p.getString('voice') ?? voice;
+    personality = p.getString('personality') ?? personality;
     voiceVolume = p.getDouble('voiceVolume') ?? voiceVolume;
     fxVolume = p.getDouble('fxVolume') ?? fxVolume;
     vibrations = p.getBool('vibrations') ?? vibrations;
@@ -42,6 +43,7 @@ class SettingsStore extends ChangeNotifier {
     final p = _prefs ??= await SharedPreferences.getInstance();
     await Future.wait([
       p.setString('voice', voice),
+      p.setString('personality', personality),
       p.setDouble('voiceVolume', voiceVolume),
       p.setDouble('fxVolume', fxVolume),
       p.setBool('vibrations', vibrations),
@@ -53,10 +55,4 @@ class SettingsStore extends ChangeNotifier {
       p.setString('skin', skin),
     ]);
   }
-
-  AudioDirector buildAudio() => AudioDirector(
-        pack: voicePacks.firstWhere((v) => v.id == voice, orElse: () => voicePacks.first),
-        voiceVolume: voiceVolume,
-        fxVolume: fxVolume,
-      );
 }

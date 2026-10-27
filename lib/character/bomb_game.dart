@@ -5,9 +5,11 @@ import 'dart:ui' as ui;
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
+import '../speech/lip_sync.dart';
 import 'bomb_state.dart';
 
 /// Spritesheets de la bombe (rendues dans Blender, voir tools/blender/).
@@ -36,6 +38,24 @@ class BombAssets {
   static Future<void> ensureStates(Iterable<BombState> states) async {
     await ensureMeta();
     await Future.wait([for (final s in states) _loadSheet(s.sheet)]);
+  }
+
+  /// Planche des 5 formes de bouche (synchro labiale) ; absente des anciens packs.
+  static bool get hasVisemes => (meta['states'] as Map<String, dynamic>).containsKey('visemes');
+
+  static Future<List<Sprite>?> visemeSprites() async {
+    await ensureMeta();
+    if (!hasVisemes) return null;
+    await _loadSheet('visemes');
+    final m = (meta['states'] as Map<String, dynamic>)['visemes'] as Map<String, dynamic>;
+    final img = images.fromCache(m['image'] as String);
+    final fw = (meta['frameWidth'] as num).toDouble() * quality;
+    final fh = (meta['frameHeight'] as num).toDouble() * quality;
+    final cols = (m['columns'] as int?) ?? (m['frames'] as int);
+    return [
+      for (var i = 0; i < (m['frames'] as int); i++)
+        Sprite(img, srcPosition: Vector2((i % cols) * fw, (i ~/ cols) * fh), srcSize: Vector2(fw, fh)),
+    ];
   }
 
   static bool isReady(BombState s) => images.containsKey(sheetOf(s)['image'] as String);
@@ -165,6 +185,9 @@ class BombGame extends FlameGame {
   }
 
   void setState(BombState s) => bomb.react(s);
+
+  /// Forme de bouche imposée par la synchro labiale (null = animation normale).
+  set viseme(int? v) => bomb.viseme = v;
 }
 
 class BombCharacter extends SpriteAnimationGroupComponent<BombState> {
@@ -176,10 +199,28 @@ class BombCharacter extends SpriteAnimationGroupComponent<BombState> {
   double _t = 0;
   double _stateT = 0;
 
+  List<Sprite>? _visemes;
+
+  /// Indice de la forme de bouche (0 repos, 1 é, 2 a, 3 o, 4 m) pendant que
+  /// la bombe parle ; null = animation « talking » rendue dans Blender.
+  int? viseme;
+
   @override
   Future<void> onLoad() async {
     animations = {_initial: _build(_initial)};
     current = _initial;
+    BombAssets.visemeSprites().then((v) => _visemes = v);
+  }
+
+  bool get _lipSyncing => viseme != null && _visemes != null && current == BombState.talking;
+
+  @override
+  void render(Canvas canvas) {
+    if (_lipSyncing) {
+      _visemes![viseme!.clamp(0, _visemes!.length - 1)].render(canvas, size: size, overridePaint: paint);
+      return;
+    }
+    super.render(canvas);
   }
 
   SpriteAnimation _build(BombState st) {
@@ -231,7 +272,9 @@ class BombCharacter extends SpriteAnimationGroupComponent<BombState> {
     _t += dt;
     _stateT += dt;
     final pop = math.max(0.0, 1 - _stateT / 0.18);
-    final k = math.sin(pop * math.pi) * 0.06;
+    var k = math.sin(pop * math.pi) * 0.06;
+    // les formes de bouche sont des poses fixes : léger rebond pour garder la vie
+    if (_lipSyncing) k += 0.018 * math.sin(_t * 2 * math.pi * 2.6);
     scale = Vector2((1 + k) * (isFlippedHorizontally ? -1 : 1), 1 - k);
     angle = 0;
   }
@@ -351,7 +394,11 @@ class BombStage extends StatefulWidget {
     this.reducedMotion = false,
     this.tint,
     this.preload = const {},
+    this.viseme,
   });
+
+  /// Forme de bouche courante (synchro labiale de la voix de la bombe).
+  final ValueListenable<Viseme?>? viseme;
 
   /// États chargés dès l'ouverture (évite un temps de chargement au changement d'état).
   final Set<BombState> preload;
@@ -376,8 +423,28 @@ class _BombStageState extends State<BombStage> {
       placement: widget.placement, initialState: widget.state, confetti: widget.confetti, tint: widget.tint, preload: widget.preload);
 
   @override
+  void initState() {
+    super.initState();
+    widget.viseme?.addListener(_onViseme);
+  }
+
+  void _onViseme() {
+    if (_game.isLoaded) _game.viseme = widget.viseme!.value?.index;
+  }
+
+  @override
+  void dispose() {
+    widget.viseme?.removeListener(_onViseme);
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant BombStage old) {
     super.didUpdateWidget(old);
+    if (old.viseme != widget.viseme) {
+      old.viseme?.removeListener(_onViseme);
+      widget.viseme?.addListener(_onViseme);
+    }
     if (old.state != widget.state && _game.isLoaded) _game.setState(widget.state);
     _game.moveTo(widget.placement, animate: widget.animatePlacement);
     if (widget.explodeToken != old.explodeToken && widget.explodeToken > 0 && _game.isLoaded) {

@@ -5,7 +5,7 @@ import '../design/candy_button.dart';
 import '../design/illustration.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
-import '../engine/word_bank.dart';
+import '../engine/game_tiles.dart';
 import '../state/app_state.dart';
 
 /// Écran 4 — Choix de catégorie. Référence : reference/04_categories.png (204 × 536).
@@ -51,7 +51,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       decor: PastelDecor.pinkCloudRight,
       builder: (context, r) {
         final k = r.k;
-        final list = categories
+        final list = gameTiles
             .where((c) => _query.isEmpty || c.label.toLowerCase().contains(_query.toLowerCase()))
             .toList();
         return [

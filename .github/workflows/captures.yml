@@ -24,6 +24,8 @@ jobs:
           [ -d android ] || flutter create --platforms=android --project-name boom_party --org com.boomparty . 2>&1 | tail -5
           python3 tools/patch_android.py .
           flutter --version > ci_out/logs/flutter_version.txt
+      - name: SQLite natif (tests de la base de connaissances)
+        run: sudo apt-get install -y libsqlite3-dev >/dev/null
       - name: Dépendances
         run: flutter pub get 2>&1 | tee ci_out/logs/pub_get.txt
       - name: Analyse statique

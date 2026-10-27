@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'app.dart';
 import 'character/bomb_game.dart';
+import 'services/app_services.dart';
 import 'services/settings_store.dart';
 import 'services/wallet.dart';
 
@@ -14,5 +15,7 @@ Future<void> main() async {
   // qualité graphique adaptative : planches décodées à 50 % si « graphismes allégés »
   BombAssets.quality = SettingsStore.instance.lowGraphics ? 0.5 : 1.0;
   await BombAssets.ensureLoaded();
+  await AppServices.init();
+  SettingsStore.instance.addListener(AppServices.applySettings);
   runApp(const BoomPartyApp());
 }

@@ -20,3 +20,13 @@ if 'android:screenOrientation' not in s:
     s = s.replace('android:name=".MainActivity"', 'android:name=".MainActivity"\n            android:screenOrientation="portrait"', 1)
 man.write_text(s)
 print('AndroidManifest patché')
+
+# minSdk 24 : exigé par la reconnaissance vocale hors ligne (sherpa-onnx, record)
+for g in (root / 'android/app/build.gradle.kts', root / 'android/app/build.gradle'):
+    if g.exists():
+        t = g.read_text()
+        t2 = re.sub(r'minSdk\s*=\s*flutter\.minSdkVersion', 'minSdk = 24', t)
+        t2 = re.sub(r'minSdkVersion\s+flutter\.minSdkVersion', 'minSdkVersion 24', t2)
+        if t2 != t:
+            g.write_text(t2)
+            print('minSdk = 24 :', g.name)

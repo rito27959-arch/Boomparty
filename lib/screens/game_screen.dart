@@ -13,7 +13,8 @@ import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
 import '../engine/game_engine.dart';
 import '../game/game_controller.dart';
-import '../services/answer_input.dart';
+import '../personality/personality_engine.dart';
+import '../services/app_services.dart';
 import '../services/settings_store.dart';
 import '../services/wallet.dart';
 import '../character/skins.dart';
@@ -25,6 +26,7 @@ import '../state/app_state.dart';
 /// États de la bombe utilisés pendant une partie (préchargés à l'ouverture).
 const gameStates = {
   BombState.talking, BombState.listening, BombState.happy, BombState.angry, BombState.confused,
+  BombState.thinking, BombState.laughing,
   BombState.panic, BombState.countdown, BombState.explosion, BombState.defeated,
 };
 
@@ -57,9 +59,10 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
       final st = AppState.instance;
       final settings = SettingsStore.instance;
       ctl = GameController(
-        engine: GameEngine(players: st.players, selected: st.categoriesForGame, mode: st.mode),
-        input: SpeechAnswerInput(),
-        audio: settings.buildAudio(),
+        engine: GameEngine(players: st.players, kb: st.kb!, gameCategories: st.gameCategories, mode: st.mode),
+        input: AppServices.createInput(),
+        personality: PersonalityEngine(profile: AppServices.personality),
+        speaker: AppServices.speech,
         reducedMotion: settings.reducedMotion,
         vibrations: settings.vibrations,
       )..start();
@@ -94,6 +97,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     _ticker.dispose();
     ctl.removeListener(_onPhase);
     if (widget.controller == null) {
+      ctl.speaker.stop();
       ctl.input.dispose();
       ctl.engine.dispose();
       ctl.dispose();
@@ -106,7 +110,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   BombPlacement get _placement => switch (ctl.phase) {
         Phase.listening => const BombPlacement(feet: Offset(0.48, 0.78), bodyWidth: 0.66),
         Phase.correct => const BombPlacement(feet: Offset(0.55, 0.64), bodyWidth: 0.64),
-        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.5, 0.64), bodyWidth: 0.7),
+        Phase.repeated || Phase.invalid || Phase.unclear => const BombPlacement(feet: Offset(0.5, 0.64), bodyWidth: 0.7),
         Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.48, 0.66), bodyWidth: 0.5),
         Phase.exploded || Phase.finished => const BombPlacement(feet: Offset(0.5, 0.66), bodyWidth: 0.46),
       };
@@ -132,6 +136,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               reducedMotion: ctl.reducedMotion,
               tint: skinById(SettingsStore.instance.skin).filter,
               preload: gameStates,
+              viseme: ctl.speaker.lipSync.current,
             ),
           ),
           ..._foreground(context, p, size),
@@ -144,6 +149,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
         Phase.listening => 'room',
         Phase.correct => 'green',
         Phase.repeated || Phase.invalid => 'red',
+        Phase.unclear => 'blue',
         _ => 'orange',
       };
 
@@ -161,6 +167,12 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               center: Color(0xFFFF8A6A), inner: Color(0xFFF6384F), outer: Color(0xFF9A1424),
               ray: Color(0x22FFFFFF), focus: Alignment(0, -0.15),
               sparkles: [Color(0xFFFFD42A), Color(0xFFFF9A3A)], seed: 4,
+            )),
+        Phase.unclear => const CustomPaint(
+            painter: BurstScenePainter(
+              center: Color(0xFF9FE8FF), inner: Color(0xFF5A8CF5), outer: Color(0xFF3B2A9A),
+              ray: Color(0x22FFFFFF), focus: Alignment(0, -0.15),
+              sparkles: [Color(0xFFFFD42A), Color(0xFF9FE8FF)], seed: 5,
             )),
         Phase.exploded || Phase.finished => const CustomPaint(
             painter: BurstScenePainter(
@@ -181,7 +193,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   List<Widget> _foreground(BuildContext context, Phase p, Size size) => switch (p) {
         Phase.listening => _listening(context, RefScale(size, 230, 536)),
         Phase.correct => _correct(RefScale(size, 196, 536)),
-        Phase.repeated || Phase.invalid => _repeated(RefScale(size, 194, 536), invalid: p == Phase.invalid),
+        Phase.repeated || Phase.invalid || Phase.unclear => _repeated(RefScale(size, 194, 536), phase: p),
         Phase.tooSlow || Phase.exploding => _tooSlow(RefScale(size, 216, 440)),
         Phase.exploded || Phase.finished => _exploded(RefScale(size, 248, 452)),
       };
@@ -218,13 +230,24 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
             tailX: 0.78, radius: 26 * k,
             padding: EdgeInsets.zero,
             child: Center(
-              child: ValueListenableBuilder<String>(
-                valueListenable: ctl.input.partial,
-                builder: (_, partial, __) => Text(
-                  partial.isEmpty ? "Je t'écoute !" : partial,
-                  overflow: TextOverflow.ellipsis,
-                  style: BoomText.ui800(18.5 * k, color: const Color(0xFF1A1440)),
-                ),
+              child: ListenableBuilder(
+                listenable: Listenable.merge([ctl.input.partial, ctl.speaker.speaking, ctl.speaker.subtitle]),
+                builder: (_, __) {
+                  final partial = ctl.input.partial.value;
+                  if (ctl.speaker.speaking.value && SettingsStore.instance.subtitles && ctl.speaker.subtitle.value.isNotEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10 * k),
+                      child: Text(ctl.speaker.subtitle.value,
+                          textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis,
+                          style: BoomText.ui700(10.5 * k, color: const Color(0xFF1A1440))),
+                    );
+                  }
+                  return Text(
+                    partial.isEmpty ? "Je t'écoute !" : partial,
+                    overflow: TextOverflow.ellipsis,
+                    style: BoomText.ui800(18.5 * k, color: const Color(0xFF1A1440)),
+                  );
+                },
               ),
             ),
           ),
@@ -243,7 +266,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
         actions: [TextButton(onPressed: () => Navigator.pop(ctx, t.text), child: Text('Valider', style: BoomText.ui800(16)))],
       ),
     );
-    if (word != null) ctl.answer(word);
+    if (word != null && word.trim().isNotEmpty) ctl.typed(word);
   }
 
   // ---------- 06 : bonne réponse ----------
@@ -277,9 +300,12 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   }
 
   // ---------- 07 : déjà dit (et 08 : hors catégorie) ----------
-  List<Widget> _repeated(RefScale r, {required bool invalid}) {
+  List<Widget> _repeated(RefScale r, {required Phase phase}) {
     final k = r.k;
     final words = ctl.engine.usedWords;
+    final unclear = phase == Phase.unclear;
+    final (title, text) = ctl.feedback;
+    final accent = unclear ? const Color(0xFF4A4FD8) : const Color(0xFFE21A44);
     return [
       Positioned(left: r.x(10), top: r.y(40), child: _WhiteChevron(size: 20 * k)),
       Positioned(
@@ -288,15 +314,19 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           angle: -0.04, tailX: 0.3, radius: 22 * k,
           padding: EdgeInsets.fromLTRB(10 * k, 12 * k, 10 * k, 14 * k),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            CartoonTitle(invalid ? 'Hmm…' : 'Oups !',
-                fontSize: 29 * k, fill: const [Color(0xFFFF4F6E), Color(0xFFE21A44)], outline: Colors.white, strokeWidth: 2 * k, depth: 0.1),
+            CartoonTitle(title,
+                fontSize: 29 * k,
+                fill: unclear ? const [Color(0xFF7A8CFF), Color(0xFF4A4FD8)] : const [Color(0xFFFF4F6E), Color(0xFFE21A44)],
+                outline: Colors.white, strokeWidth: 2 * k, depth: 0.1),
             SizedBox(height: 3 * k),
-            Text(invalid ? '« ${ctl.lastWord} » ne rentre pas\ndans la catégorie !' : 'Ce mot a déjà été dit !',
-                textAlign: TextAlign.center, style: BoomText.ui800(11.4 * k, color: const Color(0xFFE21A44))),
+            Text(text, textAlign: TextAlign.center, maxLines: 3, style: BoomText.ui800(11.4 * k, color: accent)),
           ]),
         ),
       ),
-      Positioned(left: r.x(138), top: r.y(162), child: _Badge(size: 46 * k, color: const Color(0xFFE8263F), icon: Icons.close_rounded)),
+      Positioned(
+          left: r.x(138), top: r.y(162),
+          child: _Badge(size: 46 * k, color: unclear ? const Color(0xFF5A5FE8) : const Color(0xFFE8263F),
+              icon: unclear ? Icons.question_mark_rounded : Icons.close_rounded)),
       Positioned(
         left: 0, right: 0, top: r.y(350), bottom: 0,
         child: Container(
@@ -327,9 +357,11 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
         left: r.x(15), right: r.x(15), top: r.y(460),
         child: CandyButton(
           height: r.y(42), depth: r.y(4),
-          top: const Color(0xFFFF6A72), bottom: const Color(0xFFF0323F), edge: const Color(0xFFB81E2E),
+          top: unclear ? const Color(0xFF8A90FF) : const Color(0xFFFF6A72),
+          bottom: unclear ? const Color(0xFF5A5FE8) : const Color(0xFFF0323F),
+          edge: unclear ? const Color(0xFF3A3AB0) : const Color(0xFFB81E2E),
           onPressed: ctl.retry,
-          child: Text('Réessaie !', style: BoomText.ui800(16 * k, color: Colors.white)),
+          child: Text(unclear ? 'Répète !' : 'Réessaie !', style: BoomText.ui800(16 * k, color: Colors.white)),
         ),
       ),
     ];

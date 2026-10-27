@@ -1,0 +1,182 @@
+[
+ {
+  "input": "Le Réfrigérateur",
+  "fold": "le refrigerateur",
+  "normalize": "refrigerateur",
+  "singular": "refrigerateur"
+ },
+ {
+  "input": "un frigo",
+  "fold": "un frigo",
+  "normalize": "frigo",
+  "singular": "frigo"
+ },
+ {
+  "input": "Une télé !",
+  "fold": "une tele",
+  "normalize": "tele",
+  "singular": "tele"
+ },
+ {
+  "input": "Des casseroles",
+  "fold": "des casseroles",
+  "normalize": "casseroles",
+  "singular": "casserole"
+ },
+ {
+  "input": "le Cameroun",
+  "fold": "le cameroun",
+  "normalize": "cameroun",
+  "singular": "cameroun"
+ },
+ {
+  "input": "Une voiture.",
+  "fold": "une voiture",
+  "normalize": "voiture",
+  "singular": "voiture"
+ },
+ {
+  "input": "Un ordinateur portable",
+  "fold": "un ordinateur portable",
+  "normalize": "ordinateur portable",
+  "singular": "ordinateur portable"
+ },
+ {
+  "input": "une table à manger",
+  "fold": "une table a manger",
+  "normalize": "table a manger",
+  "singular": "table a manger"
+ },
+ {
+  "input": "L'Éléphant",
+  "fold": "l' elephant",
+  "normalize": "elephant",
+  "singular": "elephant"
+ },
+ {
+  "input": "l’eau",
+  "fold": "l' eau",
+  "normalize": "eau",
+  "singular": "eau"
+ },
+ {
+  "input": "Euh… le frigo",
+  "fold": "euh le frigo",
+  "normalize": "frigo",
+  "singular": "frigo"
+ },
+ {
+  "input": "ben des œufs",
+  "fold": "ben des oeufs",
+  "normalize": "oeufs",
+  "singular": "oeuf"
+ },
+ {
+  "input": "La Paz",
+  "fold": "la paz",
+  "normalize": "paz",
+  "singular": "paz"
+ },
+ {
+  "input": "Le Caire",
+  "fold": "le caire",
+  "normalize": "caire",
+  "singular": "caire"
+ },
+ {
+  "input": "Côte d'Ivoire",
+  "fold": "cote d' ivoire",
+  "normalize": "cote d' ivoire",
+  "singular": "cote d' ivoire"
+ },
+ {
+  "input": "c'est un chien",
+  "fold": "c' est un chien",
+  "normalize": "chien",
+  "singular": "chien"
+ },
+ {
+  "input": "Pommes de terre",
+  "fold": "pommes de terre",
+  "normalize": "pommes de terre",
+  "singular": "pomme de terre"
+ },
+ {
+  "input": "CHEVAUX",
+  "fold": "chevaux",
+  "normalize": "chevaux",
+  "singular": "cheval"
+ },
+ {
+  "input": "gâteaux",
+  "fold": "gateaux",
+  "normalize": "gateaux",
+  "singular": "gateau"
+ },
+ {
+  "input": "Ça va",
+  "fold": "ca va",
+  "normalize": "ca va",
+  "singular": "ca va"
+ },
+ {
+  "input": "Ndolé",
+  "fold": "ndole",
+  "normalize": "ndole",
+  "singular": "ndole"
+ },
+ {
+  "input": "États-Unis",
+  "fold": "etats unis",
+  "normalize": "etats unis",
+  "singular": "etat uni"
+ },
+ {
+  "input": "tee-shirt",
+  "fold": "tee shirt",
+  "normalize": "tee shirt",
+  "singular": "tee shirt"
+ },
+ {
+  "input": "  hum   la   télévision  ",
+  "fold": "hum la television",
+  "normalize": "television",
+  "singular": "television"
+ },
+ {
+  "input": "de la soupe",
+  "fold": "de la soupe",
+  "normalize": "soupe",
+  "singular": "soupe"
+ },
+ {
+  "input": "du café",
+  "fold": "du cafe",
+  "normalize": "cafe",
+  "singular": "cafe"
+ },
+ {
+  "input": "mon chat",
+  "fold": "mon chat",
+  "normalize": "chat",
+  "singular": "chat"
+ },
+ {
+  "input": "je dis la guitare",
+  "fold": "je dis la guitare",
+  "normalize": "guitare",
+  "singular": "guitare"
+ },
+ {
+  "input": "4x4",
+  "fold": "4x4",
+  "normalize": "4x4",
+  "singular": "4x4"
+ },
+ {
+  "input": "Saint-Étienne",
+  "fold": "saint etienne",
+  "normalize": "saint etienne",
+  "singular": "saint etienne"
+ }
+]

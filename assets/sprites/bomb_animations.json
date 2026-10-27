@@ -84,6 +84,20 @@
    "columns": 8,
    "stepTime": 0.0833,
    "loop": true
+  },
+  "thinking": {
+   "image": "bomb_thinking.png",
+   "frames": 16,
+   "columns": 8,
+   "stepTime": 0.0833,
+   "loop": true
+  },
+  "visemes": {
+   "image": "bomb_visemes.png",
+   "frames": 5,
+   "columns": 5,
+   "stepTime": 0.0833,
+   "loop": false
   }
  },
  "frameWidth": 420,
