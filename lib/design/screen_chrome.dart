@@ -42,7 +42,9 @@ class PastelScreen extends StatelessWidget {
     return Scaffold(
       body: LayoutBuilder(builder: (context, c) {
         final r = RefScale(c.biggest, refW, refH);
-        return Stack(children: [
+        // expand : l'écran occupe toujours toute la surface, même si un
+        // enfant conditionnel non positionné est vide (bug Catégories).
+        return Stack(fit: StackFit.expand, children: [
           Positioned.fill(child: CustomPaint(painter: PastelBackgroundPainter(decor))),
           Positioned(
             left: r.x(8), top: r.y(headerY) - r.x(11.5),

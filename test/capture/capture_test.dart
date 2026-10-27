@@ -63,7 +63,6 @@ final shots = <Shot>[
   Shot('02_modes_de_jeu', 214, 536, Color(0xFF14123A), (_) => const ModesScreen()),
   Shot('03_joueurs', 196, 536, Color(0xFF14123A), (_) => const PlayersScreen()),
   Shot('04_categories', 204, 536, Color(0xFF14123A), (_) => const CategoriesScreen()),
-  Shot('04b_diag_sans_recherche', 204, 536, Color(0xFF14123A), (_) => const CategoriesScreen(showSearch: false)),
   Shot('05_jeu_ecoute', 230, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {}))),
   Shot('06_bonne_reponse', 196, 536, Colors.white, (_) => GameScreen(frozen: true, controller: scenario((c) {
         for (final w in ['Table', 'Chaise', 'Réfrigérateur']) {
@@ -170,7 +169,6 @@ void main() {
       // en debug, et peinture interrompue dans les captures).
       final tree = key.currentContext!.findRenderObject()!.toStringDeep(minLevel: DiagnosticLevel.info);
       final overflow = RegExp(r'^.*OVERFLOWING.*\$', multiLine: true).allMatches(tree).map((m) => m.group(0)!.trim()).toList();
-      if (s.name.startsWith('04')) log += '\n\n--- arbre ---\n$tree';
       if (overflow.isNotEmpty) log += '\n\nDÉBORDEMENTS :\n${overflow.join('\n')}';
       File('build/captures/${s.name}.log').writeAsStringSync(log);
     });

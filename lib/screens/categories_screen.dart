@@ -10,10 +10,7 @@ import '../state/app_state.dart';
 
 /// Écran 4 — Choix de catégorie. Référence : reference/04_categories.png (204 × 536).
 class CategoriesScreen extends StatefulWidget {
-  const CategoriesScreen({super.key, this.showSearch = true});
-
-  /// Diagnostic des captures uniquement.
-  final bool showSearch;
+  const CategoriesScreen({super.key});
 
   @override
   State<CategoriesScreen> createState() => _CategoriesScreenState();
@@ -59,7 +56,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             .toList();
         return [
           // recherche
-          if (widget.showSearch) Positioned(
+          Positioned(
             left: r.x(7), right: r.x(7), top: r.y(82), height: r.y(31),
             child: Container(
               decoration: BoxDecoration(
@@ -137,7 +134,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           ListenableBuilder(
             listenable: st,
             builder: (context, _) => st.selectedCategories.isEmpty
-                ? const SizedBox.shrink()
+                ? const Positioned(left: 0, top: 0, child: SizedBox.shrink())
                 : Positioned(
                     left: r.x(14), right: r.x(14), bottom: r.y(16),
                     child: CandyButton(
