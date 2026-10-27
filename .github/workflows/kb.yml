@@ -1,0 +1,34 @@
+name: build-knowledge-base
+on:
+  push:
+    branches: [main]
+    paths: ['tools/kb/**', '.github/workflows/kb.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  kb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install requests
+      - name: Construction depuis Wikidata
+        run: |
+          mkdir -p kb_out
+          set -o pipefail
+          python tools/kb/build_kb.py kb_out/boom_kb.db kb_out 2>&1 | tee kb_out/build.log
+      - name: Publier sur la branche kb-results
+        if: always()
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd kb_out
+          echo "${GITHUB_SHA}" > SOURCE_COMMIT.txt
+          git init -q && git checkout -q -b kb-results
+          git config user.name "boom-ci" && git config user.email "ci@boomparty.local"
+          git add -A && git commit -qm "Base de connaissances pour ${GITHUB_SHA}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}" kb-results
