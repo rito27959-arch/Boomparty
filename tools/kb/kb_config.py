@@ -34,25 +34,35 @@ CLASSES = {
     'Q746549': 'dish',
     'Q39546': 'physical tool',
     'Q506': 'flower',
+    'Q7377': 'mammal',
+    'Q5113': 'bird',
+    'Q10811': 'reptile',
+    'Q10908': 'amphibian',
 }
+
+# Exclut les choses individuelles : modèles de produits (fabricant, marque,
+# développeur), compétitions et organisations (pays, siège, date), êtres
+# vivants nommés (sexe, naissance). On ne garde que des notions génériques.
+NOT_INDIVIDUAL = """
+  FILTER NOT EXISTS {{ ?item wdt:P176|wdt:P1716|wdt:P178|wdt:P17|wdt:P159|wdt:P569|wdt:P21|wdt:P585|wdt:P580 [] }}"""
 
 # Gabarits SPARQL. {cls} = QID de la classe, {min} = sitelinks minimum.
 SUBCLASS = """
 SELECT DISTINCT ?item ?sl WHERE {{
   ?item wdt:P279* wd:{cls} .
-  ?item wikibase:sitelinks ?sl . FILTER(?sl >= {min})
+  ?item wikibase:sitelinks ?sl . FILTER(?sl >= {min})""" + NOT_INDIVIDUAL + """
 }}"""
 
 INSTANCE = """
 SELECT DISTINCT ?item ?sl WHERE {{
   ?item wdt:P31/wdt:P279* wd:{cls} .
-  ?item wikibase:sitelinks ?sl . FILTER(?sl >= {min})
+  ?item wikibase:sitelinks ?sl . FILTER(?sl >= {min})""" + NOT_INDIVIDUAL + """
 }}"""
 
 INSTANCE_OR_SUBCLASS = """
 SELECT DISTINCT ?item ?sl WHERE {{
   {{ ?item wdt:P279* wd:{cls} . }} UNION {{ ?item wdt:P31/wdt:P279* wd:{cls} . }}
-  ?item wikibase:sitelinks ?sl . FILTER(?sl >= {min})
+  ?item wikibase:sitelinks ?sl . FILTER(?sl >= {min})""" + NOT_INDIVIDUAL + """
 }}"""
 
 UN_MEMBERS = """
@@ -61,17 +71,23 @@ SELECT DISTINCT ?item ?sl WHERE {
   ?item wikibase:sitelinks ?sl .
 }"""
 
+# Capitales actuelles seulement (déclaration P36 sans date de fin, rang non déprécié).
 CAPITALS = """
 SELECT DISTINCT ?item ?sl WHERE {
-  ?country wdt:P463 wd:Q1065 ; wdt:P36 ?item .
+  ?country wdt:P463 wd:Q1065 ; wdt:P31 wd:Q3624078 ; p:P36 ?st .
+  ?st ps:P36 ?item . FILTER NOT EXISTS { ?st pq:P582 [] }
+  FILTER NOT EXISTS { ?st wikibase:rank wikibase:DeprecatedRank }
   ?item wikibase:sitelinks ?sl .
 }"""
 
-ANIMALS = """
-SELECT DISTINCT ?item ?sl WHERE {
-  ?item wdt:P31 wd:Q16521 ; wikibase:sitelinks ?sl . FILTER(?sl >= 90)
-  ?item wdt:P171+ wd:Q729 .
-}"""
+# Espèces populaires d'un groupe (parcours P171+ depuis la racine du groupe :
+# beaucoup moins coûteux que de filtrer tous les taxons de Wikidata).
+ANIMAL_GROUP = """
+SELECT DISTINCT ?item ?sl WHERE {{
+  ?item wdt:P171+ wd:{grp} ; wdt:P105 wd:Q7432 ; wikibase:sitelinks ?sl . FILTER(?sl >= {min})
+}}"""
+ANIMALS = [ANIMAL_GROUP.format(grp=g, min=m) for g, m in
+           (('Q7377', 70), ('Q5113', 80), ('Q10811', 80), ('Q10908', 80))]
 
 FRENCH_CITIES = """
 SELECT DISTINCT ?item ?sl WHERE {
@@ -85,7 +101,7 @@ CATEGORIES = [
     {
         'id': 'animaux', 'name': 'Animaux', 'game': 'animaux',
         'prompts': [('Cite des', 'ANIMAUX', 'que tu connais !')],
-        'queries': [ANIMALS],
+        'queries': ANIMALS,
         'seeds': [
             S('chien', 'toutou', 'clebs'), S('chat', 'minou', 'matou'), S('vache'), S('cochon', 'porc'), S('poule'),
             S('coq'), S('mouton'), S('chèvre', 'bique'), S('cheval', 'dada'), S('âne', 'baudet'), S('canard'),
@@ -144,7 +160,7 @@ CATEGORIES = [
     {
         'id': 'objets_maison', 'name': 'Objets de la maison', 'game': 'objets',
         'prompts': [('Cite des', 'OBJETS', "qu'on trouve dans une maison !")],
-        'queries': [SUBCLASS.format(cls='Q212920', min=12), SUBCLASS.format(cls='Q14745', min=12)],
+        'queries': [SUBCLASS.format(cls='Q212920', min=20), SUBCLASS.format(cls='Q14745', min=20)],
         'seeds': [
             S('table'), S('chaise'), S('réfrigérateur', 'frigo', 'frigidaire', 'réfrigérateur domestique'),
             S('télévision', 'téléviseur', 'télé', 'TV'), S('canapé', 'sofa', 'divan'), S('lit'), S('lampe'),

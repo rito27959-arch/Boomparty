@@ -7,3 +7,4 @@ build/
 *.iml
 ci_out/
 build_blender/
+__pycache__/
