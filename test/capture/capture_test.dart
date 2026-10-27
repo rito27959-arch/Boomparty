@@ -101,9 +101,6 @@ Future<void> _loadFonts() async {
   }
 
   await family('Lilita', ['assets/fonts/LilitaOne_400Regular.ttf']);
-  await family('Baloo', [
-    for (final w in ['500Medium', '600SemiBold', '700Bold', '800ExtraBold']) 'assets/fonts/Baloo2_$w.ttf',
-  ]);
   final root = Platform.environment['FLUTTER_ROOT'];
   if (root != null) {
     final icons = File('$root/bin/cache/artifacts/material_fonts/MaterialIcons-Regular.otf');

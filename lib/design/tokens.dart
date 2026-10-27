@@ -43,17 +43,22 @@ class BoomColors {
 
 class BoomText {
   BoomText._();
+  /// Typographie unique du jeu : Lilita One (titres ET textes d'interface).
   static const display = 'Lilita';
-  static const ui = 'Baloo';
+  static const ui = 'Lilita';
 
-  /// Baloo 2 a un œil plus petit que la police de la maquette : mesuré sur
-  /// les 9 premières captures, les textes étaient ~20 % trop petits.
+  /// Facteur calibré sur les captures : la maquette a des textes ~20 % plus
+  /// grands que les tailles relevées. Lilita One : capitales +9 % de haut,
+  /// largeur -5 % par rapport à Baloo 2 (mesuré) → même facteur conservé.
   static const uiScale = 1.2;
 
-  static TextStyle ui700(double size, {Color color = BoomColors.ink, double height = 1.1}) =>
-      TextStyle(fontFamily: ui, fontWeight: FontWeight.w700, fontSize: size * uiScale, color: color, height: height);
-  static TextStyle ui800(double size, {Color color = BoomColors.ink, double height = 1.1}) =>
-      TextStyle(fontFamily: ui, fontWeight: FontWeight.w800, fontSize: size * uiScale, color: color, height: height);
-  static TextStyle ui600(double size, {Color color = BoomColors.ink, double height = 1.1}) =>
-      TextStyle(fontFamily: ui, fontWeight: FontWeight.w600, fontSize: size * uiScale, color: color, height: height);
+  // Lilita One n'existe qu'en une seule graisse : on force normal pour éviter
+  // le faux gras synthétisé par le moteur de rendu. Les noms ui600/700/800
+  // sont conservés pour marquer la hiérarchie (taille), pas la graisse.
+  static TextStyle _lilita(double size, Color color, double height) =>
+      TextStyle(fontFamily: ui, fontWeight: FontWeight.w400, fontSize: size * uiScale, color: color, height: height);
+
+  static TextStyle ui700(double size, {Color color = BoomColors.ink, double height = 1.1}) => _lilita(size, color, height);
+  static TextStyle ui800(double size, {Color color = BoomColors.ink, double height = 1.1}) => _lilita(size, color, height);
+  static TextStyle ui600(double size, {Color color = BoomColors.ink, double height = 1.1}) => _lilita(size, color, height);
 }

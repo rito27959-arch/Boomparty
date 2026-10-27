@@ -31,7 +31,7 @@ sur la branche **`ci-results`** :
 | `lib/services/settings_store.dart` | Paramètres persistés. |
 | `lib/services/wallet.dart` | Monétisation : gemmes gagnées en jeu, skins débloqués. |
 | `lib/character/` | Bombe Flame : spritesheets par état, mouvement secondaire procédural, explosion (flash, onde de choc, débris, fumée), skins par teinte. |
-| `lib/design/` | Design system : couleurs relevées sur la maquette, boutons « bonbon » en relief, titres cartoon, décors et icônes vectoriels. |
+| `lib/design/` | Design system : typographie unique Lilita One, couleurs relevées sur la maquette, boutons « bonbon » en relief, titres cartoon, décors et icônes vectoriels. |
 | `lib/screens/` | Les 14 écrans. |
 | `reference/` | Écrans extraits de la maquette, source de vérité des comparaisons. |
 | `tools/` | Découpe/nettoyage des planches, spritesheets, comparaison visuelle, patch Android. |
