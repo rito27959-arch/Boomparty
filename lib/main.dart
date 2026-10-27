@@ -3,11 +3,15 @@ import 'package:flutter/services.dart';
 
 import 'app.dart';
 import 'character/bomb_game.dart';
+import 'services/settings_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-  await BombAssets.ensureLoaded(); // spritesheets chargées une seule fois au démarrage
+  await Future.wait([
+    BombAssets.ensureLoaded(), // spritesheets chargées une seule fois au démarrage
+    SettingsStore.instance.load(),
+  ]);
   runApp(const BoomPartyApp());
 }

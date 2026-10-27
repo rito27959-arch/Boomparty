@@ -22,6 +22,7 @@ jobs:
         run: |
           mkdir -p ci_out/logs
           [ -d android ] || flutter create --platforms=android --project-name boom_party --org com.boomparty . 2>&1 | tail -5
+          python3 tools/patch_android.py .
           flutter --version > ci_out/logs/flutter_version.txt
       - name: Dépendances
         run: flutter pub get 2>&1 | tee ci_out/logs/pub_get.txt
@@ -48,6 +49,7 @@ jobs:
           cp build/captures/*.png ci_out/captures/ || true
           python3 tools/compare.py reference build/captures ci_out/compare 2>&1 | tee ci_out/logs/compare.txt
       - name: APK de test
+        if: contains(github.event.head_commit.message, '[apk]') || github.event_name == 'workflow_dispatch'
         continue-on-error: true
         run: |
           set -o pipefail

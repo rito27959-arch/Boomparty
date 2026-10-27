@@ -4,6 +4,7 @@ import 'app_routes.dart';
 import 'design/tokens.dart';
 import 'screens/home_screen.dart';
 import 'screens/categories_screen.dart';
+import 'screens/game_screen.dart';
 import 'screens/modes_screen.dart';
 import 'screens/players_screen.dart';
 import 'screens/not_built_screen.dart';
@@ -17,6 +18,7 @@ class BoomPartyApp extends StatelessWidget {
     AppRoutes.modes: (_) => const ModesScreen(),
     AppRoutes.players: (_) => const PlayersScreen(),
     AppRoutes.categories: (_) => const CategoriesScreen(),
+    AppRoutes.game: (_) => const GameScreen(),
   };
 
   @override

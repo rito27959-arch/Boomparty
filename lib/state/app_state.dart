@@ -57,5 +57,5 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<Category> get categoriesForGame => [for (final c in categories) if (selectedCategories.contains(c.id)) c];
+  List<WordCategory> get categoriesForGame => [for (final c in categories) if (selectedCategories.contains(c.id)) c];
 }

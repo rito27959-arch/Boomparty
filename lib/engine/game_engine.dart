@@ -79,7 +79,7 @@ class GameFinished extends GameEvent {
 class GameEngine {
   GameEngine({
     required List<Player> players,
-    required List<Category> selected,
+    required List<WordCategory> selected,
     this.mode = GameMode.cultureGenerale,
     this.totalRounds = 12,
     this.slowAfter = 7,
@@ -116,14 +116,14 @@ class GameEngine {
   Player get current => players[_turn % players.length];
   double get fuseFraction => fuseTotal == 0 ? 0 : (fuseLeft / fuseTotal).clamp(0, 1);
 
-  void start() {
+  void start({int? firstPlayer}) {
     round = 0;
     explosions = 0;
     finished = false;
     for (final p in players) {
       p.score = 0;
     }
-    _turn = _rng.nextInt(players.length);
+    _turn = firstPlayer ?? _rng.nextInt(players.length);
     _nextRound();
   }
 
