@@ -291,7 +291,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
       Positioned(
         left: 0, right: 0, top: r.y(350), bottom: 0,
         child: Container(
-          padding: EdgeInsets.fromLTRB(14 * k, 16 * k, 14 * k, 0),
+          padding: EdgeInsets.fromLTRB(11 * k, 16 * k, 9 * k, 0),
           decoration: BoxDecoration(
             color: const Color(0xFFFEE0E5),
             borderRadius: BorderRadius.vertical(top: Radius.circular(18 * k)),
@@ -299,16 +299,16 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Mots déjà cités :', style: BoomText.ui800(9.8 * k, color: const Color(0xFF1E1838))),
             SizedBox(height: 8 * k),
-            Wrap(spacing: 4 * k, runSpacing: 6 * k, children: [
+            Wrap(spacing: 3.5 * k, runSpacing: 6 * k, children: [
               for (final w in words)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 6 * k, vertical: 4 * k),
+                  padding: EdgeInsets.symmetric(horizontal: 5 * k, vertical: 4 * k),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(12 * k),
                     boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 3, offset: Offset(0, 1))],
                   ),
-                  child: Text(w, style: BoomText.ui600(9.0 * k, color: const Color(0xFF1E1838))),
+                  child: Text(w, style: BoomText.ui600(8.3 * k, color: const Color(0xFF1E1838))),
                 ),
             ]),
           ]),
@@ -336,8 +336,11 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
         child: SpeechBubble(
           angle: -0.05, tailX: 0.4, radius: 20 * k,
           padding: EdgeInsets.fromLTRB(8 * k, 12 * k, 8 * k, 14 * k),
-          child: Text('Trop lent...\nÇA VA EXPLOSER !',
-              textAlign: TextAlign.center, style: BoomText.ui800(17 * k, color: const Color(0xFFE81E3A), height: 1.12)),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text('Trop lent...\nÇA VA EXPLOSER !',
+                maxLines: 2, textAlign: TextAlign.center, style: BoomText.ui800(16 * k, color: const Color(0xFFE81E3A), height: 1.12)),
+          ),
         ),
       ),
       Positioned(
