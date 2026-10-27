@@ -25,7 +25,7 @@ void paintCloud(Canvas c, Offset center, double w, Color top, Color bottom) {
 /// Étoile-étincelle à 8 branches avec halo.
 void paintSpark(Canvas c, Offset center, double r, {double rotation = 0}) {
   c.drawCircle(center, r * 1.3,
-      Paint()..shader = RadialGradient(colors: [const Color(0xCCFFF6A0), const Color(0x00FFC020)]).createShader(Rect.fromCircle(center: center, radius: r * 1.3)));
+      Paint()..shader = const RadialGradient(colors: [Color(0xCCFFF6A0), Color(0x00FFC020)]).createShader(Rect.fromCircle(center: center, radius: r * 1.3)));
   final path = Path();
   const n = 8;
   for (var i = 0; i < n * 2; i++) {
@@ -55,14 +55,14 @@ class HomeBackgroundPainter extends CustomPainter {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            BoomColors.skyTop, Color(0xFF55CCFD), BoomColors.skyMid, Color(0xFFF9D9EE),
-            Color(0xFFFEE3A6), Color(0xFFFEDD8E), Color(0xFFFEEBC4), BoomColors.cream,
+            BoomColors.skyTop, Color(0xFF55CCFD), BoomColors.skyMid, Color(0xFFFAD3EE),
+            Color(0xFFFDE6A0), Color(0xFFFEE07A), Color(0xFFFEE9B0), BoomColors.cream,
           ],
-          stops: [0.0, 0.18, 0.30, 0.42, 0.56, 0.68, 0.78, 0.84],
+          stops: [0.0, 0.14, 0.24, 0.36, 0.5, 0.64, 0.76, 0.84],
         ).createShader(full),
     );
     // rayons de lumière rose derrière la bombe
-    final ray = Paint()..color = const Color(0x55FFC3E6);
+    final ray = Paint()..color = const Color(0x88FFC3E6);
     for (final x in [0.36, 0.46, 0.56]) {
       final path = Path()
         ..moveTo(w * x, h * 0.28)
@@ -75,7 +75,7 @@ class HomeBackgroundPainter extends CustomPainter {
     // halo du sol
     c.drawOval(
       Rect.fromCenter(center: Offset(w * 0.5, h * 0.62), width: w * 1.1, height: h * 0.16),
-      Paint()..shader = RadialGradient(colors: [const Color(0xFFFFF3A6), const Color(0x00FFE08A)])
+      Paint()..shader = const RadialGradient(colors: [Color(0xFFFFE97A), Color(0x00FFD86A)])
           .createShader(Rect.fromCenter(center: Offset(w * 0.5, h * 0.62), width: w * 1.1, height: h * 0.16)),
     );
     // nuages
@@ -85,8 +85,6 @@ class HomeBackgroundPainter extends CustomPainter {
     paintCloud(c, Offset(w * 0.96, h * 0.5), w * 0.4, const Color(0xFFE6B4F5), const Color(0xFFB57EE6));
     paintCloud(c, Offset(w * 0.04, h * 0.66), w * 0.36, Colors.white, const Color(0xFFFCE6D8));
     paintCloud(c, Offset(w * 0.98, h * 0.655), w * 0.4, Colors.white, const Color(0xFFFCE6D8));
-    // étincelle décorative à droite
-    paintSpark(c, Offset(w * 0.79, h * 0.345), w * 0.085, rotation: 0.3);
   }
 
   @override

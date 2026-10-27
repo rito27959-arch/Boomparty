@@ -5,6 +5,9 @@ import 'dart:ui' as ui;
 
 import 'package:boom_party/character/bomb_game.dart';
 import 'package:boom_party/screens/home_screen.dart';
+import 'package:boom_party/screens/categories_screen.dart';
+import 'package:boom_party/screens/modes_screen.dart';
+import 'package:boom_party/screens/players_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +24,10 @@ class Shot {
 }
 
 final shots = <Shot>[
-  Shot('01_accueil', 224, 544, Colors.white, (_) => const HomeScreen()),
+  Shot('01_accueil', 224, 544, Color(0xFF241F33), (_) => const HomeScreen()),
+  Shot('02_modes_de_jeu', 214, 536, Color(0xFF14123A), (_) => const ModesScreen()),
+  Shot('03_joueurs', 196, 536, Color(0xFF14123A), (_) => const PlayersScreen()),
+  Shot('04_categories', 204, 536, Color(0xFF14123A), (_) => const CategoriesScreen()),
 ];
 
 const logicalWidth = 390.0;

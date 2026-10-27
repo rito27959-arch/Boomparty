@@ -27,20 +27,20 @@ class HomeScreen extends StatelessWidget {
         return Stack(children: [
           const Positioned.fill(child: CustomPaint(painter: HomeBackgroundPainter())),
           // bombe décorative derrière le logo
-          Positioned(left: x(62), top: y(4), width: x(110), height: y(64), child: const CustomPaint(painter: LogoBombPainter())),
+          Positioned(left: x(60), top: y(23), width: x(110), height: y(64), child: const CustomPaint(painter: LogoBombPainter())),
           // héros animé (Flame) + confettis
           const Positioned.fill(
             child: BombStage(
-              placement: BombPlacement(feet: Offset(0.5, 0.665), bodyWidth: 148 / refW),
+              placement: BombPlacement(feet: Offset(0.475, 0.668), bodyWidth: 146 / refW),
               state: BombState.celebration,
-              confetti: 34,
+              confetti: 22,
             ),
           ),
           // logo BOOM / PARTY
           Positioned(
-            left: x(18), width: x(188), top: y(60), height: y(56),
+            left: x(14), width: x(196), top: y(58), height: y(60),
             child: Transform.rotate(
-              angle: -0.035,
+              angle: -0.07,
               child: FittedBox(
                 child: CartoonTitle('BOOM',
                     fontSize: 80, letterSpacing: 2,
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
           Positioned(
             left: 0, right: 0, top: y(354),
             child: Text("Le jeu qui met\nl'ambiance !",
-                textAlign: TextAlign.center, style: BoomText.ui700(12.0 * k, height: 1.08)),
+                textAlign: TextAlign.center, style: BoomText.ui800(12.6 * k, height: 1.08)),
           ),
           // bouton Jouer
           Positioned(
@@ -75,9 +75,9 @@ class HomeScreen extends StatelessWidget {
               top: BoomColors.yellowTop, bottom: BoomColors.yellowBottom, edge: BoomColors.yellowEdge,
               onPressed: () => Navigator.pushNamed(context, AppRoutes.modes),
               child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                PlayBadge(size: x(23)),
-                SizedBox(width: x(22)),
-                Text('Jouer', style: BoomText.ui800(18.5 * k)),
+                PlayBadge(size: x(27)),
+                SizedBox(width: x(20)),
+                Text('Jouer', style: BoomText.ui800(22 * k)),
                 SizedBox(width: x(30)),
               ]),
             ),
@@ -126,7 +126,7 @@ class _HomeMenu extends StatelessWidget {
                     SizedBox(width: 15 * k),
                     SizedBox(width: 22 * k, height: 18 * k, child: CustomPaint(painter: MenuIconPainter(icons[i]))),
                     SizedBox(width: 15 * k),
-                    Text(labels[i], style: BoomText.ui600(10.2 * k)),
+                    Text(labels[i], style: BoomText.ui700(10.8 * k, color: const Color(0xFF1E1838))),
                   ]),
                 ),
               ),

@@ -51,7 +51,7 @@ class MenuIconPainter extends CustomPainter {
     final rect = Offset.zero & s;
     final fill = Paint()
       ..shader = const LinearGradient(
-              begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF6A43B0), BoomColors.iconPurple])
+              begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFF4E3790), Color(0xFF2E2156)])
           .createShader(rect);
     final hole = Paint()..color = const Color(0xFFEDE4FA);
     switch (icon) {

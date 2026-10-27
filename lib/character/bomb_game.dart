@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:flame/cache.dart';
 import 'package:flame/components.dart';
@@ -191,8 +190,8 @@ class ConfettiField extends Component with HasGameReference<FlameGame> {
       return _Piece(
         x: r.nextDouble(),
         y: r.nextDouble() * 0.62,
-        w: 5 + r.nextDouble() * 7,
-        h: 3 + r.nextDouble() * 5,
+        w: 9 + r.nextDouble() * 10,
+        h: 6 + r.nextDouble() * 6,
         rot: r.nextDouble() * math.pi,
         spin: (r.nextDouble() - 0.5) * 2,
         vy: 0.004 + r.nextDouble() * 0.01,
