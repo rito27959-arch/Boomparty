@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
           // héros animé (Flame) + confettis
           const Positioned.fill(
             child: BombStage(
-              placement: BombPlacement(feet: Offset(0.475, 0.668), bodyWidth: 146 / refW),
+              placement: BombPlacement(feet: Offset(0.458, 0.633), bodyWidth: 146 / refW),
               state: BombState.celebration,
               confetti: 22,
             ),

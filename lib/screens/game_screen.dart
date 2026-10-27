@@ -93,12 +93,14 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     super.dispose();
   }
 
+  // Placements calés par superposition de la silhouette du sprite sur la
+  // maquette (tools/fit_bomb.py + tools/show_fit.py).
   BombPlacement get _placement => switch (ctl.phase) {
-        Phase.listening => const BombPlacement(feet: Offset(0.47, 0.89), bodyWidth: 0.72),
-        Phase.correct => const BombPlacement(feet: Offset(0.42, 0.665), bodyWidth: 0.62),
-        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.48, 0.71), bodyWidth: 0.76),
-        Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.45, 0.79), bodyWidth: 0.66),
-        Phase.exploded || Phase.finished => const BombPlacement(feet: Offset(0.5, 0.70), bodyWidth: 0.56),
+        Phase.listening => const BombPlacement(feet: Offset(0.45, 0.81), bodyWidth: 0.62),
+        Phase.correct => const BombPlacement(feet: Offset(0.51, 0.67), bodyWidth: 0.6),
+        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.47, 0.65), bodyWidth: 0.62),
+        Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.47, 0.74), bodyWidth: 0.56),
+        Phase.exploded || Phase.finished => const BombPlacement(feet: Offset(0.49, 0.66), bodyWidth: 0.46),
       };
 
   @override

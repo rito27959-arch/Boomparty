@@ -45,7 +45,7 @@ class CelebrationScreen extends StatelessWidget {
             ),
           const Positioned.fill(
             child: BombStage(
-              placement: BombPlacement(feet: Offset(0.53, 0.78), bodyWidth: 0.58),
+              placement: BombPlacement(feet: Offset(0.55, 0.60), bodyWidth: 0.45),
               state: BombState.celebration,
               confetti: 26,
             ),
