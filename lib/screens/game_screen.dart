@@ -189,9 +189,9 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             Text(pr.lead, style: BoomText.ui800(13 * k, color: const Color(0xFF1A1440))),
             CartoonTitle(pr.keyword,
-                fontSize: 27 * k, fill: const [Color(0xFFFF8A2A), Color(0xFFF2501E)], outline: Colors.white,
+                fontSize: 32 * k, fill: const [Color(0xFFFF8A2A), Color(0xFFF2501E)], outline: Colors.white,
                 strokeWidth: 2 * k, depth: 0.1, height: 1.05),
-            Text(pr.tail, textAlign: TextAlign.center, style: BoomText.ui700(10.5 * k, color: const Color(0xFF1A1440))),
+            FittedBox(fit: BoxFit.scaleDown, child: Text(pr.tail, maxLines: 1, style: BoomText.ui700(10.5 * k, color: const Color(0xFF1A1440)))),
           ]),
         ),
       ),
@@ -300,13 +300,13 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
             Wrap(spacing: 5 * k, runSpacing: 6 * k, children: [
               for (final w in words)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 9 * k, vertical: 4 * k),
+                  padding: EdgeInsets.symmetric(horizontal: 7 * k, vertical: 3 * k),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(12 * k),
                     boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 3, offset: Offset(0, 1))],
                   ),
-                  child: Text(w, style: BoomText.ui600(9.8 * k, color: const Color(0xFF1E1838))),
+                  child: Text(w, style: BoomText.ui600(8.4 * k, color: const Color(0xFF1E1838))),
                 ),
             ]),
           ]),
@@ -363,7 +363,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
         left: 0, right: 0, top: r.y(312),
         child: Text("C'est $name\nqui perd 1 point !",
             textAlign: TextAlign.center,
-            style: BoomText.ui800(13.5 * k, color: const Color(0xFF2A1A3A), height: 1.15).copyWith(shadows: [
+            style: BoomText.ui800(15 * k, color: const Color(0xFF2A1A3A), height: 1.15).copyWith(shadows: [
               for (final o in const [Offset(1, 1), Offset(-1, 1), Offset(1, -1), Offset(-1, -1)])
                 Shadow(color: Colors.white.withValues(alpha: 0.85), offset: o * k, blurRadius: 1.5 * k),
             ])),

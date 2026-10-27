@@ -20,6 +20,7 @@ import 'package:boom_party/screens/home_screen.dart';
 import 'package:boom_party/screens/categories_screen.dart';
 import 'package:boom_party/screens/modes_screen.dart';
 import 'package:boom_party/screens/players_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -145,7 +146,7 @@ void main() {
           debugShowCheckedModeBanner: false,
           home: Builder(builder: (ctx) => Stack(children: [
                 s.build(ctx),
-                Positioned(left: 0, right: 0, top: 0, child: StatusBarSim(color: s.statusColor)),
+                Positioned(left: 0, right: 0, top: 0, child: Material(type: MaterialType.transparency, child: StatusBarSim(color: s.statusColor))),
               ])),
         ),
       ));
@@ -166,7 +167,11 @@ void main() {
       out.writeAsBytesSync(bytes!);
       final ex = tester.takeException();
       if (ex != null) errors.add(ex.toString());
-      File('build/captures/${s.name}.log').writeAsStringSync(errors.isEmpty ? 'OK' : errors.join('\n\n'));
+      var log = errors.isEmpty ? 'OK' : errors.join('\n\n');
+      if (s.name == '04_categories') {
+        log += '\n\n--- render tree ---\n${key.currentContext!.findRenderObject()!.toStringDeep(minLevel: DiagnosticLevel.info)}';
+      }
+      File('build/captures/${s.name}.log').writeAsStringSync(log);
     });
   }
 }

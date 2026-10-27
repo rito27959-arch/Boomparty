@@ -9,11 +9,14 @@ import 'bomb_state.dart';
 /// (cohérence du personnage). Utilisée pour les vignettes : cartes de mode,
 /// skins, voix, etc.
 class BombFrame extends StatelessWidget {
-  const BombFrame({super.key, required this.state, this.frame = 0, this.tint, this.mirror = false});
+  const BombFrame({super.key, required this.state, this.frame = 0, this.tint, this.mirror = false, this.zoom = 1});
   final BombState state;
   final int frame;
   final ColorFilter? tint;
   final bool mirror;
+
+  /// Agrandit le personnage dans sa case (les frames ont une marge transparente).
+  final double zoom;
 
   /// Teinte « skin » : les zones sombres prennent la couleur, le blanc reste blanc.
   static ColorFilter skin(Color c, {double strength = 1}) {
@@ -39,6 +42,7 @@ class BombFrame extends StatelessWidget {
     );
     if (tint != null) w = ColorFiltered(colorFilter: tint!, child: w);
     if (mirror) w = Transform.flip(flipX: true, child: w);
+    if (zoom != 1) w = Transform.scale(scale: zoom, alignment: const Alignment(0, 0.55), child: w);
     return w;
   }
 }

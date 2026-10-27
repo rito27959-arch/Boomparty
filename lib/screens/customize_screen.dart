@@ -109,7 +109,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
               child: Stack(children: [
                 Positioned(
                   left: 6 * k, right: 6 * k, top: 2 * k, bottom: 22 * k,
-                  child: BombFrame(state: BombState.happy, frame: 0, tint: s.filter),
+                  child: BombFrame(state: BombState.happy, frame: 0, tint: s.filter, zoom: 1.35),
                 ),
                 Positioned(
                   left: 0, right: 0, bottom: 0, height: (equipped ? 30 : 24) * k,

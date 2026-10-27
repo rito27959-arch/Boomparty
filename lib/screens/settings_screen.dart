@@ -171,7 +171,7 @@ class _VoiceTile extends StatelessWidget {
             ),
             child: Padding(
               padding: EdgeInsets.only(top: 3 * k),
-              child: BombFrame(state: BombState.happy, frame: 1, tint: tint == null ? null : BombFrame.skin(tint)),
+              child: BombFrame(state: BombState.happy, frame: 1, tint: tint == null ? null : BombFrame.skin(tint), zoom: 1.3),
             ),
           ),
           SizedBox(height: 4 * k),
