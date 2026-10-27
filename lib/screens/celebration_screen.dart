@@ -36,7 +36,7 @@ class CelebrationScreen extends StatelessWidget {
         final r = RefScale(c.biggest, 238, 450);
         final k = r.k;
         // positions des joueurs autour de la bombe (gagnant en haut à gauche)
-        const spots = [(10.0, 100.0, 82.0), (150.0, 92.0, 82.0), (0.0, 178.0, 70.0), (176.0, 176.0, 64.0), (96.0, 226.0, 0.0)];
+        const spots = [(2.0, 88.0, 100.0), (138.0, 80.0, 100.0), (-8.0, 172.0, 88.0), (160.0, 168.0, 84.0), (96.0, 226.0, 0.0)];
         return Stack(children: [
           const Positioned.fill(child: CustomPaint(painter: _PartyBackgroundPainter())),
           for (var i = 0; i < ranking.length && i < 4; i++)

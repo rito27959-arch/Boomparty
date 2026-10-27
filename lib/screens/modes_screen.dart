@@ -102,7 +102,7 @@ class _ModeCardContent extends StatelessWidget {
         child: _Mascot(spec: spec),
       ),
       Positioned(
-        left: spec.textLeft * k, right: 38 * k, top: 0, bottom: 0,
+        left: spec.textLeft * k, right: 52 * k, top: 0, bottom: 0,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,7 +133,7 @@ class _Mascot extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, c) {
       final h = c.maxHeight;
-      return SizedBox(width: h * 0.95, child: Illustration(_art[spec.mode]!, scale: 1.15, alignment: Alignment.bottomCenter));
+      return SizedBox(width: h * 0.78, child: Illustration(_art[spec.mode]!, scale: 1.25, alignment: Alignment.bottomCenter));
     });
   }
 }

@@ -27,7 +27,7 @@ class LeaderboardScreen extends StatelessWidget {
         return Stack(children: [
           const Positioned.fill(child: CustomPaint(painter: PastelBackgroundPainter(PastelDecor.none))),
           Positioned(left: 0, right: 0, top: 0, height: r.y(98), child: const CustomPaint(painter: _SkyHeaderPainter())),
-          Positioned(left: r.x(31), top: r.y(30), width: r.x(42), height: r.y(52), child: const Illustration('trophy')),
+          Positioned(left: r.x(31), top: r.y(30), width: r.x(42), height: r.y(52), child: const Illustration('trophy', scale: 1.35)),
           Positioned(
             left: r.x(83), top: r.y(30),
             child: Text('Classement\nde la partie', style: BoomText.ui800(15.5 * k, color: const Color(0xFF1A1A4A), height: 1.02)),
@@ -95,7 +95,7 @@ class _Row extends StatelessWidget {
       ),
       child: Row(children: [
         SizedBox(width: 9 * k),
-        SizedBox(width: 26 * k, height: 26 * k, child: rank <= 3 ? Illustration('medal_$rank') : Center(child: Text('$rank', style: BoomText.ui800(12.5 * k)))),
+        SizedBox(width: 26 * k, height: 26 * k, child: rank <= 3 ? Illustration('medal_$rank', scale: 1.5) : Center(child: Text('$rank', style: BoomText.ui800(12.5 * k)))),
         SizedBox(width: 8 * k),
         PlayerAvatar(index: p.avatar, size: 30 * k),
         SizedBox(width: 9 * k),
