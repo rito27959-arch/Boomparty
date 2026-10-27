@@ -36,8 +36,8 @@ CLASSES = {
     'Q506': 'flower',
     'Q7377': 'mammal',
     'Q5113': 'bird',
-    'Q10811': 'reptile',
-    'Q10908': 'amphibian',
+    'Q10811': 'Reptilia',
+    'Q10908': 'Amphibia',
 }
 
 # Exclut les choses individuelles : modèles de produits (fabricant, marque,
