@@ -94,10 +94,10 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   }
 
   BombPlacement get _placement => switch (ctl.phase) {
-        Phase.listening => const BombPlacement(feet: Offset(0.51, 0.811), bodyWidth: 0.65),
-        Phase.correct => const BombPlacement(feet: Offset(0.46, 0.681), bodyWidth: 0.69),
-        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.49, 0.687), bodyWidth: 0.72),
-        Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.46, 0.716), bodyWidth: 0.6),
+        Phase.listening => const BombPlacement(feet: Offset(0.47, 0.89), bodyWidth: 0.72),
+        Phase.correct => const BombPlacement(feet: Offset(0.42, 0.665), bodyWidth: 0.62),
+        Phase.repeated || Phase.invalid => const BombPlacement(feet: Offset(0.48, 0.71), bodyWidth: 0.76),
+        Phase.tooSlow || Phase.exploding => const BombPlacement(feet: Offset(0.45, 0.79), bodyWidth: 0.66),
         Phase.exploded || Phase.finished => const BombPlacement(feet: Offset(0.5, 0.70), bodyWidth: 0.56),
       };
 
@@ -184,12 +184,12 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
       Positioned(
         left: r.x(16), right: r.x(18), top: r.y(94),
         child: SpeechBubble(
-          angle: -0.06, tailX: 0.36, radius: 20 * k,
+          angle: -0.09, tailX: 0.36, radius: 20 * k,
           padding: EdgeInsets.fromLTRB(12 * k, 10 * k, 12 * k, 12 * k),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            Text(pr.lead, style: BoomText.ui800(13 * k, color: const Color(0xFF1A1440))),
+            Text(pr.lead, style: BoomText.ui800(14 * k, color: const Color(0xFF1A1440))),
             CartoonTitle(pr.keyword,
-                fontSize: 32 * k, fill: const [Color(0xFFFF8A2A), Color(0xFFF2501E)], outline: Colors.white,
+                fontSize: 36 * k, fill: const [Color(0xFFFF8A2A), Color(0xFFF2501E)], outline: Colors.white,
                 strokeWidth: 2 * k, depth: 0.1, height: 1.05),
             FittedBox(fit: BoxFit.scaleDown, child: Text(pr.tail, maxLines: 1, style: BoomText.ui700(10.5 * k, color: const Color(0xFF1A1440)))),
           ]),
@@ -245,9 +245,9 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           angle: -0.05, tailX: 0.46, radius: 22 * k,
           padding: EdgeInsets.fromLTRB(10 * k, 12 * k, 10 * k, 16 * k),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
-            CartoonTitle('Super !', fontSize: 27 * k, fill: const [Color(0xFF2BC24A), Color(0xFF12902E)], outline: Colors.white, strokeWidth: 2 * k, depth: 0.1),
+            CartoonTitle('Super !', fontSize: 32 * k, fill: const [Color(0xFF2BC24A), Color(0xFF12902E)], outline: Colors.white, strokeWidth: 2 * k, depth: 0.1),
             SizedBox(height: 2 * k),
-            Text('${ctl.lastWord} !', textAlign: TextAlign.center, style: BoomText.ui800(12 * k, color: const Color(0xFF16502A))),
+            Text('${ctl.lastWord} !', textAlign: TextAlign.center, style: BoomText.ui800(13 * k, color: const Color(0xFF16502A))),
           ]),
         ),
       ),
@@ -278,10 +278,10 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           padding: EdgeInsets.fromLTRB(10 * k, 12 * k, 10 * k, 14 * k),
           child: Column(mainAxisSize: MainAxisSize.min, children: [
             CartoonTitle(invalid ? 'Hmm…' : 'Oups !',
-                fontSize: 25 * k, fill: const [Color(0xFFFF4F6E), Color(0xFFE21A44)], outline: Colors.white, strokeWidth: 2 * k, depth: 0.1),
+                fontSize: 29 * k, fill: const [Color(0xFFFF4F6E), Color(0xFFE21A44)], outline: Colors.white, strokeWidth: 2 * k, depth: 0.1),
             SizedBox(height: 3 * k),
             Text(invalid ? '« ${ctl.lastWord} » ne rentre pas\ndans la catégorie !' : 'Ce mot a déjà été dit !',
-                textAlign: TextAlign.center, style: BoomText.ui800(10.6 * k, color: const Color(0xFFE21A44))),
+                textAlign: TextAlign.center, style: BoomText.ui800(11.4 * k, color: const Color(0xFFE21A44))),
           ]),
         ),
       ),
@@ -297,16 +297,16 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text('Mots déjà cités :', style: BoomText.ui800(9.8 * k, color: const Color(0xFF1E1838))),
             SizedBox(height: 8 * k),
-            Wrap(spacing: 5 * k, runSpacing: 6 * k, children: [
+            Wrap(spacing: 4 * k, runSpacing: 6 * k, children: [
               for (final w in words)
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 7 * k, vertical: 3 * k),
+                  padding: EdgeInsets.symmetric(horizontal: 6 * k, vertical: 4 * k),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.85),
                     borderRadius: BorderRadius.circular(12 * k),
                     boxShadow: const [BoxShadow(color: Color(0x14000000), blurRadius: 3, offset: Offset(0, 1))],
                   ),
-                  child: Text(w, style: BoomText.ui600(8.4 * k, color: const Color(0xFF1E1838))),
+                  child: Text(w, style: BoomText.ui600(9.0 * k, color: const Color(0xFF1E1838))),
                 ),
             ]),
           ]),
@@ -335,7 +335,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           angle: -0.05, tailX: 0.4, radius: 20 * k,
           padding: EdgeInsets.fromLTRB(8 * k, 12 * k, 8 * k, 14 * k),
           child: Text('Trop lent...\nÇA VA EXPLOSER !',
-              textAlign: TextAlign.center, style: BoomText.ui800(15.5 * k, color: const Color(0xFFE81E3A), height: 1.15)),
+              textAlign: TextAlign.center, style: BoomText.ui800(17 * k, color: const Color(0xFFE81E3A), height: 1.12)),
         ),
       ),
       Positioned(
@@ -351,9 +351,9 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     final name = ctl.loser?.name ?? '';
     return [
       Positioned(
-        left: r.x(26), width: r.x(198), top: r.y(46), height: r.y(64),
+        left: r.x(18), width: r.x(214), top: r.y(40), height: r.y(76),
         child: Transform.rotate(
-          angle: -0.1,
+          angle: -0.14,
           child: FittedBox(
             child: CartoonTitle('BOOOOM !', fontSize: 80, fill: const [Color(0xFFFFE04A), Color(0xFFF79A12)], outline: const Color(0xFF4A1A10)),
           ),
@@ -544,11 +544,11 @@ class _WavePainter extends CustomPainter {
     const n = 46;
     final pad = s.height * 0.5;
     final usable = s.width - pad * 2;
-    final bw = usable / n * 0.55;
+    final bw = usable / n * 0.68;
     final shader = const LinearGradient(colors: [Color(0xFFFFD21F), Color(0xFFFF9A2A), Color(0xFFE05AE8), Color(0xFF8E6BFF), Color(0xFF3EA2FF)])
         .createShader(Offset.zero & s);
     final p = Paint()..shader = shader;
-    final lv = 0.15 + level * 0.85;
+    final lv = 0.3 + level * 0.9;
     for (var i = 0; i < n; i++) {
       final x = pad + usable * (i + 0.5) / n;
       final env = 1 - ((i - n * 0.32).abs() / (n * 0.7)).clamp(0.0, 1.0) * 0.6;
