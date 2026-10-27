@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../app_routes.dart';
+import '../character/bomb_state.dart';
 import '../design/illustration.dart';
 import '../design/screen_chrome.dart';
 import '../design/tokens.dart';
