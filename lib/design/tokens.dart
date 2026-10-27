@@ -49,8 +49,9 @@ class BoomText {
 
   /// Facteur calibré sur les captures : la maquette a des textes ~20 % plus
   /// grands que les tailles relevées. Lilita One : capitales +9 % de haut,
-  /// largeur -5 % par rapport à Baloo 2 (mesuré) → même facteur conservé.
-  static const uiScale = 1.2;
+  /// largeur -5 % par rapport à Baloo 2 (mesuré) ; recalé sur la largeur
+  /// des textes de la maquette après la 1re capture en Lilita.
+  static const uiScale = 1.26;
 
   // Lilita One n'existe qu'en une seule graisse : on force normal pour éviter
   // le faux gras synthétisé par le moteur de rendu. Les noms ui600/700/800
