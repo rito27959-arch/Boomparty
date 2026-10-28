@@ -41,7 +41,7 @@ void main() {
     expect(v.validateAndCommit('Réfrigérateur !', cat, m).status, AnswerStatus.accepted);
     final frigo = v.validateAndCommit('Frigo !', cat, m);
     expect(frigo.status, AnswerStatus.duplicate);
-    expect(frigo.previousAnswer, 'Réfrigérateur !');
+    expect(frigo.previousAnswer, 'Réfrigérateur');
     expect(v.validateAndCommit('Fourchette !', cat, m).status, AnswerStatus.accepted);
     final el = v.validateAndCommit('Éléphant !', cat, m);
     expect(el.status, AnswerStatus.wrongCategory);
