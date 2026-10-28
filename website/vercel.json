@@ -1,0 +1,9 @@
+{
+  "git": {
+    "deploymentEnabled": {
+      "ci-results": false,
+      "kb-results": false,
+      "smoke-results": false
+    }
+  }
+}
