@@ -1,0 +1,20 @@
+
+::group::✅ Passing tests
+✅ capture 01_accueil
+✅ capture 02_modes_de_jeu
+✅ capture 03_joueurs
+✅ capture 04_categories
+✅ capture 05_jeu_ecoute
+✅ capture 06_bonne_reponse
+✅ capture 07_deja_dit
+✅ capture 08_hors_categorie
+✅ capture 15_repete
+✅ capture 09_trop_lent
+✅ capture 10_explosion
+✅ capture 11_classement
+✅ capture 12_personnalisation
+✅ capture 13_parametres
+✅ capture 14_celebration
+::endgroup::
+
+🎉 15 tests passed.

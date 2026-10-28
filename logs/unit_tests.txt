@@ -1,0 +1,35 @@
+
+::group::✅ Passing tests
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: normalisation identique à la version Python du pipeline
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: la base contient les catégories jouables et des milliers d’alias
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: scénario de la directive : cuisine, frigo = réfrigérateur, éléphant hors catégorie
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: formulations naturelles : articles, pluriels, hésitations
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: télé / télévision / téléviseur = même concept ; casserole ≠ poêle
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: orange : fruit et couleur restent deux concepts
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: erreur de reconnaissance : jamais pénalisante
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: transcription approximative reconnue avec une confiance réduite
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: mot inconnu
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/knowledge_test.dart: défi « trois pays commençant par M »
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: consigne tirée de la base de connaissances
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: bonne réponse : +1 point et la bombe passe au joueur suivant
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: synonyme déjà dit (frigo après réfrigérateur) : refusé, même joueur, sans pénalité
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: mot tapé sans accents : affiché avec ses accents
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: casserole et poêle sont deux réponses distinctes
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: hors catégorie : refusé, aucun point, le tour continue
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: transcription incertaine : on fait répéter, rien n’est mémorisé, le chrono continue
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: hypothèses alternatives de la reconnaissance : la première valide est retenue
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: défi à plusieurs réponses : « trois pays commençant par M »
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: mèche écoulée : explosion, le porteur perd 1 point (minimum 0)
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: mode Extrême : vies, élimination, fin quand il ne reste qu’un joueur
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/engine_test.dart: fin de partie après le nombre de manches, classement trié, mémoire remise à zéro
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: la voix (micro/clavier) alimente le moteur et la bombe réagit
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: synonyme répété → colère + texte « frigo = réfrigérateur », Réessaie → écoute
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: hors catégorie → confusion, retour automatique à l’écoute
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: transcription incertaine → « répète », réflexion puis confusion, aucune pénalité
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: la bombe ne s’écoute jamais : micro coupé pendant qu’elle parle
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: chaîne événement → personnalité → réplique : prénoms et mots insérés
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: séquence complète : panique → explosion → étourdie → fin de partie
+✅ /home/runner/work/Boomparty/Boomparty/test/unit/controller_test.dart: personnalités : jamais deux fois la même réplique d’affilée sur 30 tirages
+::endgroup::
+
+🎉 30 tests passed.

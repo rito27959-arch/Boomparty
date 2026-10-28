@@ -1,0 +1,249 @@
+[
+ {
+  "screen": "01_accueil",
+  "ssim": 0.349,
+  "deltaE_mean": 34.45,
+  "deltaE_p90": 90.3,
+  "edge_f1": 0.511,
+  "deltaE_by_band_top_to_bottom": [
+   27.6,
+   52.4,
+   44.7,
+   46.9,
+   48.2,
+   55.5,
+   32.1,
+   15.8,
+   9.9,
+   10.7
+  ]
+ },
+ {
+  "screen": "02_modes_de_jeu",
+  "ssim": 0.448,
+  "deltaE_mean": 23.92,
+  "deltaE_p90": 68.5,
+  "edge_f1": 0.719,
+  "deltaE_by_band_top_to_bottom": [
+   18.0,
+   17.6,
+   31.8,
+   25.4,
+   21.0,
+   27.4,
+   24.1,
+   26.5,
+   33.6,
+   13.9
+  ]
+ },
+ {
+  "screen": "03_joueurs",
+  "ssim": 0.59,
+  "deltaE_mean": 15.8,
+  "deltaE_p90": 56.7,
+  "edge_f1": 0.543,
+  "deltaE_by_band_top_to_bottom": [
+   15.2,
+   15.5,
+   19.2,
+   17.3,
+   18.8,
+   17.6,
+   18.3,
+   13.0,
+   12.6,
+   10.3
+  ]
+ },
+ {
+  "screen": "04_categories",
+  "ssim": 0.53,
+  "deltaE_mean": 20.34,
+  "deltaE_p90": 47.1,
+  "edge_f1": 0.705,
+  "deltaE_by_band_top_to_bottom": [
+   19.4,
+   9.6,
+   15.2,
+   21.4,
+   20.7,
+   20.2,
+   23.5,
+   20.1,
+   24.4,
+   29.0
+  ]
+ },
+ {
+  "screen": "05_jeu_ecoute",
+  "ssim": 0.338,
+  "deltaE_mean": 28.87,
+  "deltaE_p90": 74.5,
+  "edge_f1": 0.535,
+  "deltaE_by_band_top_to_bottom": [
+   16.2,
+   21.8,
+   24.6,
+   31.5,
+   32.8,
+   45.6,
+   45.6,
+   27.2,
+   22.1,
+   21.2
+  ]
+ },
+ {
+  "screen": "06_bonne_reponse",
+  "ssim": 0.304,
+  "deltaE_mean": 39.04,
+  "deltaE_p90": 89.1,
+  "edge_f1": 0.393,
+  "deltaE_by_band_top_to_bottom": [
+   31.4,
+   27.3,
+   32.5,
+   38.1,
+   51.5,
+   56.9,
+   47.7,
+   29.5,
+   23.1,
+   52.3
+  ]
+ },
+ {
+  "screen": "07_deja_dit",
+  "ssim": 0.433,
+  "deltaE_mean": 24.9,
+  "deltaE_p90": 76.1,
+  "edge_f1": 0.51,
+  "deltaE_by_band_top_to_bottom": [
+   14.6,
+   15.6,
+   37.3,
+   32.2,
+   38.6,
+   49.2,
+   23.8,
+   12.8,
+   13.8,
+   10.5
+  ]
+ },
+ {
+  "screen": "09_trop_lent",
+  "ssim": 0.323,
+  "deltaE_mean": 37.68,
+  "deltaE_p90": 82.8,
+  "edge_f1": 0.468,
+  "deltaE_by_band_top_to_bottom": [
+   43.3,
+   22.0,
+   28.9,
+   35.1,
+   33.8,
+   46.1,
+   41.4,
+   30.3,
+   48.7,
+   47.2
+  ]
+ },
+ {
+  "screen": "10_explosion",
+  "ssim": 0.281,
+  "deltaE_mean": 41.31,
+  "deltaE_p90": 84.4,
+  "edge_f1": 0.474,
+  "deltaE_by_band_top_to_bottom": [
+   37.2,
+   47.0,
+   39.0,
+   44.8,
+   45.0,
+   54.6,
+   54.9,
+   38.9,
+   29.7,
+   22.0
+  ]
+ },
+ {
+  "screen": "11_classement",
+  "ssim": 0.567,
+  "deltaE_mean": 18.42,
+  "deltaE_p90": 51.7,
+  "edge_f1": 0.606,
+  "deltaE_by_band_top_to_bottom": [
+   36.5,
+   34.4,
+   19.6,
+   16.6,
+   18.6,
+   11.9,
+   13.4,
+   15.6,
+   11.6,
+   6.0
+  ]
+ },
+ {
+  "screen": "12_personnalisation",
+  "ssim": 0.368,
+  "deltaE_mean": 29.4,
+  "deltaE_p90": 76.1,
+  "edge_f1": 0.756,
+  "deltaE_by_band_top_to_bottom": [
+   21.9,
+   11.1,
+   23.5,
+   44.2,
+   22.9,
+   44.5,
+   40.8,
+   25.2,
+   44.0,
+   15.9
+  ]
+ },
+ {
+  "screen": "13_parametres",
+  "ssim": 0.691,
+  "deltaE_mean": 10.63,
+  "deltaE_p90": 30.1,
+  "edge_f1": 0.717,
+  "deltaE_by_band_top_to_bottom": [
+   15.8,
+   10.0,
+   21.2,
+   18.6,
+   8.2,
+   8.2,
+   8.5,
+   6.5,
+   6.0,
+   3.4
+  ]
+ },
+ {
+  "screen": "14_celebration",
+  "ssim": 0.284,
+  "deltaE_mean": 43.56,
+  "deltaE_p90": 96.7,
+  "edge_f1": 0.621,
+  "deltaE_by_band_top_to_bottom": [
+   61.2,
+   74.6,
+   62.6,
+   59.5,
+   55.7,
+   51.4,
+   20.9,
+   26.4,
+   16.6,
+   6.6
+  ]
+ }
+]
