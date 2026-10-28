@@ -1,0 +1,33 @@
+name: model-mirror
+# Recopie les poids publics (licence MIT) de Chatterbox Multilingual dans une
+# release du dépôt, pour pouvoir générer les voix hors de Hugging Face.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/model_mirror.yml']
+permissions:
+  contents: write
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Télécharger depuis Hugging Face
+        run: |
+          pip install --quiet huggingface_hub
+          python - <<'PY'
+          from huggingface_hub import snapshot_download
+          p = snapshot_download('ResembleAI/chatterbox', local_dir='mtl',
+              allow_patterns=["ve.pt", "t3_mtl23ls_v2.safetensors", "s3gen.pt", "grapheme_mtl_merged_expanded_v1.json", "conds.pt", "Cangjie5_TC.json", "LICENSE*", "README.md"])
+          print(p)
+          PY
+          ls -la mtl
+      - name: Publier la release chatterbox-mtl
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release view chatterbox-mtl >/dev/null 2>&1 || gh release create chatterbox-mtl --title "Chatterbox Multilingual (copie, MIT)" \
+            --notes "Copie des poids publics de ResembleAI/chatterbox (licence MIT), utilisée pour générer les répliques de la bombe."
+          gh release upload chatterbox-mtl mtl/* --clobber
