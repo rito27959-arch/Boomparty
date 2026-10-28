@@ -225,13 +225,13 @@ class PersonalityEngine {
       ReactionEvent.yourTurn: [
         Line('z_yt1', '{name} ! VITE VITE VITE !', _t),
         Line('z_yt2', 'À TOI {name} !', _t),
-        Line('z_yt3', 'À TOI ! VITE VITE VITE !', _t),
+        Line('z_yt3', 'À toi ! Dépêche-toi !', _t),
       ],
       ReactionEvent.accepted: [
         Line('z_ok1', 'OUIIII ! INCROYABLE !', _cel),
         Line('z_ok2', 'BOUM ! Euh non, VALIDÉ !', _l),
         Line('z_ok3', 'C\'EST ÇA ! C\'EST EXACTEMENT ÇA !', _h),
-        Line('z_ok4', 'Waouh waouh waouh !', _h),
+        Line('z_ok4', 'Waouh ! Incroyable !', _h),
       ],
       ReactionEvent.acceptedFast: [
         Line('z_of1', 'QUOIIII ?! MAIS COMMENT TU AS TROUVÉ ÇA AUSSI VITE ?!', _cel),
@@ -267,7 +267,7 @@ class PersonalityEngine {
         Line('z_hu2', 'Tic tac tic tac ! PLUS VITE !', _p),
       ],
       ReactionEvent.explosion: [
-        Line('z_ex1', 'BOOOOOOOOOOOOM ! HAHAHA !', _x),
+        Line('z_ex1', 'BOUM ! Ha ha ! Trop drôle !', _x),
       ],
       ReactionEvent.roundEnd: [
         Line('z_re_1', 'ENCORE UNE ! ENCORE UNE !', _l),
