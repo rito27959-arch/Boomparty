@@ -1,0 +1,36 @@
+name: voice-lab
+on:
+  push:
+    branches: [main]
+    paths: ['tools/voice/voice_lab.py', '.github/workflows/voice_lab.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Installer Chatterbox (CPU)
+        run: |
+          pip install --quiet torch torchaudio --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet chatterbox-tts huggingface_hub
+          pip list 2>/dev/null | grep -iE "chatterbox|torch" 
+      - name: Générer les échantillons
+        run: python tools/voice/voice_lab.py lab_out 2>&1 | grep -v Warning | tee lab_out_log.txt; mkdir -p lab_out; mv lab_out_log.txt lab_out/log.txt
+      - name: Publier sur la branche voice-lab
+        if: always()
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p lab_out && cd lab_out
+          for f in *.wav; do [ -f "$f" ] && ffmpeg -loglevel error -y -i "$f" -b:a 96k "${f%.wav}.mp3" && rm "$f"; done || true
+          echo "${GITHUB_SHA}" > SOURCE_COMMIT.txt
+          git init -q && git checkout -q -b voice-lab
+          git config user.name "boom-ci" && git config user.email "ci@boomparty.local"
+          git add -A && git commit -qm "Échantillons voix ${GITHUB_SHA}"
+          git push -qf "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}" voice-lab
