@@ -59,7 +59,19 @@ class BoomAnswerMemory {
   int get length => _used.length;
 
   void _commit(AnswerDecision d) {
-    if (d.isAccepted && d.conceptId != null) _used[d.conceptId!] = d.spokenText;
+    if (d.isAccepted && d.conceptId != null) _used[d.conceptId!] = _display(d.spokenText, d.canonicalConcept);
+  }
+
+  /// Formulation affichée : celle du joueur, mais avec les accents du mot
+  /// canonique quand elle n'en diffère que par eux (« refrigerateur » tapé
+  /// sans accents → « réfrigérateur »).
+  static String _display(String spoken, String? canonical) {
+    const n = TextNormalizer();
+    final t = spoken.trim();
+    if (canonical == null || t == canonical) return t;
+    if (n.fold(t) != n.fold(canonical) || t.toLowerCase() == canonical.toLowerCase() && t != t.toLowerCase()) return t;
+    final upper = t.isNotEmpty && t[0] != t[0].toLowerCase();
+    return upper ? canonical[0].toUpperCase() + canonical.substring(1) : canonical;
   }
 
   /// Nouvelle manche indépendante : les concepts redeviennent disponibles.

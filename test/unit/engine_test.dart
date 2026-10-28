@@ -48,6 +48,14 @@ void main() {
     expect(rep.usedWords, ['réfrigérateur']);
   });
 
+  test('mot tapé sans accents : affiché avec ses accents', () {
+    final e = make()..start();
+    e.submit('refrigerateur');
+    expect(e.usedWords, ['réfrigérateur']);
+    final d = e.submit('frigo')!;
+    expect(d.previousAnswer, 'réfrigérateur');
+  });
+
   test('casserole et poêle sont deux réponses distinctes', () {
     final e = make()..start();
     expect(e.submit('casserole')!.status, AnswerStatus.accepted);
