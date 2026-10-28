@@ -41,7 +41,51 @@ def process(x, sr, voice):
 
 
 def visemes(x, sr):
-    """Même algorithme que VisemeTrack.fromSamples : 0=repos 1=é 2=a 3=o 4=m."""
+    """Piste de visèmes des répliques préenregistrées : 0=repos 1=é 2=a 3=o 4=m.
+
+    Ouverture d'après l'énergie (RMS), forme d'après le centre de gravité du
+    spectre comparé à la médiane de la réplique (calibrage par voix) :
+    grave → o, aigu → é, entre les deux → a ; attaque après silence → m.
+    (VisemeTrack.fromSamples, côté Dart, garde une version simplifiée pour la
+    synthèse en direct.)"""
+    hop = round(sr * FRAME_MS / 1000)
+    n = len(x) // hop
+    if n == 0:
+        return ''
+    win = np.hanning(hop)
+    freqs = np.fft.rfftfreq(hop, 1 / sr)
+    rms, cen = [], []
+    for f in range(n):
+        s = x[f * hop:(f + 1) * hop].astype(np.float64)
+        rms.append(math.sqrt(float(np.mean(s * s))))
+        mag = np.abs(np.fft.rfft(s * win))
+        cen.append(float((mag * freqs).sum() / (mag.sum() + 1e-9)))
+    rms = np.array(rms)
+    cen = np.array(cen)
+    peak = rms.max() or 1.0
+    level = rms / peak
+    voiced = level >= 0.08
+    med = float(np.median(cen[voiced])) if voiced.any() else 1.0
+    out = []
+    for f in range(n):
+        if level[f] < 0.08:
+            v = 0
+        elif f > 0 and level[f - 1] < 0.08 and level[f] > 0.25:
+            v = 4
+        elif level[f] < 0.2:
+            v = 1
+        elif cen[f] < 0.8 * med:
+            v = 3
+        elif cen[f] > 1.3 * med:
+            v = 1
+        else:
+            v = 2
+        out.append(v)
+    return ''.join(str(v) for v in out)
+
+
+def visemes_legacy(x, sr):
+    """Ancien algorithme (identique à VisemeTrack.fromSamples)."""
     hop = round(sr * FRAME_MS / 1000)
     n = len(x) // hop
     rms, zcr = [], []

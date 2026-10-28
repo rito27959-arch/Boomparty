@@ -6,7 +6,8 @@
 | Listes d'amorçage et synonymes de jeu (frigo = réfrigérateur…) | Rédigées pour BOOM PARTY (`tools/kb/kb_config.py`) | Propriété du projet | idem |
 | Reconnaissance vocale : streaming zipformer français (int8) | icefall / k2-fsa sherpa-onnx | Apache-2.0 | Pack `boom_asr_fr_v1.zip`, téléchargé au premier lancement |
 | Moteur d'inférence | sherpa-onnx, onnxruntime | Apache-2.0 / MIT | Bibliothèque de l'application |
-| Voix de la bombe : Piper fr_FR siwis medium | Corpus SIWIS (Univ. d'Édimbourg) | CC BY 4.0 : attribution affichée dans `assets/voice/CREDITS.txt` | Répliques fixes prégénérées (`assets/voice/`) et pack `boom_tts_fr_v1.zip` |
+| Voix de la bombe (répliques fixes) : voix du concepteur, utilisée avec son accord, générée avec Chatterbox Multilingual | Resemble AI | MIT (filigrane audio Perth inaudible) | `assets/voice/` |
+| Voix de secours (répliques dynamiques) : Piper fr_FR siwis medium | Corpus SIWIS (Univ. d'Édimbourg) | CC BY 4.0 : attribution affichée dans `assets/voice/CREDITS.txt` | Pack `boom_tts_fr_v1.zip` |
 | espeak-ng-data (phonétisation pour Piper) | espeak-ng | GPL-3.0 | Pack `boom_tts_fr_v1.zip`, fichiers de données non modifiés, distribués séparément de l'application |
 
 ## Sources étudiées mais non intégrées

@@ -1,3 +1,4 @@
-Voix de la bombe : synthèse Piper (modèle fr_FR-siwis-medium), corpus SIWIS
-(https://datashare.is.ed.ac.uk/handle/10283/2353), licence CC BY 4.0.
-Synthèse : sherpa-onnx (Apache-2.0). Traitements (hauteur, robot) : BOOM PARTY.
+Voix de la bombe : voix du concepteur de BOOM PARTY, utilisée avec son accord,
+mise en scène par le modèle de synthèse Chatterbox Multilingual (Resemble AI, licence MIT).
+Chaque fichier porte le filigrane audio inaudible Perth de Resemble AI.
+Voix de secours (répliques dynamiques) : Piper fr_FR siwis, corpus SIWIS, CC BY 4.0.
