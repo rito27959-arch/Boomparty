@@ -1,0 +1,6 @@
+Starting: Intent { cmp=com.boomparty.boom_party/.MainActivity }
+Status: timeout
+LaunchState: UNKNOWN (-1)
+Activity: com.boomparty.boom_party/.MainActivity
+WaitTime: 10502
+Complete

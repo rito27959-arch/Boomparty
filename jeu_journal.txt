@@ -1,0 +1,28 @@
+00_accueil: processus=vivant 3597
+  tap « 'Jouer' » (159,499)
+01_modes: processus=vivant 3597
+  tap « 'Culture générale&#10;Des questions varié' » (161,148)
+02_joueurs: processus=vivant 3597
+  tap « 'Continuer' » (160,575)
+03_categories: processus=vivant 3597
+  tap « 'Objets' » (83,297)
+  tap « 'Lancer la partie (1)' » (160,592)
+04_partie: processus=vivant 3597
+  « Je t'écoute|écoute » introuvable → tap relatif (0.5, 0.92)
+  tap « 'Valider' » (212,273)
+05_reponse_0_table: processus=vivant 3597
+  tap « "Je t'écoute !" » (158,589)
+  tap « 'Valider' » (212,273)
+05_reponse_1_refrigerateur: processus=vivant 3597
+  tap « "Je t'écoute !" » (158,589)
+  tap « 'Valider' » (212,273)
+05_reponse_2_frigo: processus=vivant 3597
+  « Je t'écoute|écoute » introuvable → tap relatif (0.5, 0.92)
+  « ^Valider$ » introuvable
+05_reponse_3_elephant: processus=vivant 3597
+  « Je t'écoute|écoute » introuvable → tap relatif (0.5, 0.92)
+  tap « 'Valider' » (212,273)
+05_reponse_4_chaise: processus=vivant 3597
+06_apres_attente: processus=vivant 3597
+  tap « 'Continuer' » (160,562)
+07_suite: processus=vivant 3597
