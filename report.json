@@ -1,0 +1,434 @@
+[
+ {
+  "file": "v1_classic_1.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "classic",
+  "text": "Ah non ! Pas encore ce mot !",
+  "seconds": 27.3,
+  "audio_s": 2.8
+ },
+ {
+  "file": "v1_classic_2.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "classic",
+  "text": "Excellent ! C'est validé !",
+  "seconds": 19.9,
+  "audio_s": 3.88
+ },
+ {
+  "file": "v1_classic_3.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "classic",
+  "text": "Trop lent… ça va exploser !",
+  "seconds": 17.3,
+  "audio_s": 3.12
+ },
+ {
+  "file": "v1_crazy_1.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "crazy",
+  "text": "NON NON NON ! DÉJÀ DIT !",
+  "seconds": 18.2,
+  "audio_s": 3.44
+ },
+ {
+  "file": "v1_crazy_2.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "crazy",
+  "text": "BOUM ! Euh non… VALIDÉ !",
+  "seconds": 16.7,
+  "audio_s": 2.96
+ },
+ {
+  "file": "v1_crazy_3.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "crazy",
+  "text": "ÇA VA PÉTER ! ÇA VA PÉTER !",
+  "seconds": 18.4,
+  "audio_s": 3.64
+ },
+ {
+  "file": "v1_drama_1.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "drama",
+  "text": "Hélas… ce mot a déjà été prononcé. Quelle tragédie !",
+  "seconds": 26.6,
+  "audio_s": 5.72
+ },
+ {
+  "file": "v1_drama_2.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "drama",
+  "text": "Le public est en larmes. Validé !",
+  "seconds": 18.1,
+  "audio_s": 3.64
+ },
+ {
+  "file": "v1_drama_3.wav",
+  "ref": "cml-tts/fr/10087_11650_000028-0002_enhanced.wav",
+  "profile": "drama",
+  "text": "Le temps s'écoule… inexorablement…",
+  "seconds": 17.9,
+  "audio_s": 3.44
+ },
+ {
+  "file": "v2_classic_1.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "classic",
+  "text": "Ah non ! Pas encore ce mot !",
+  "seconds": 20.4,
+  "audio_s": 4.0
+ },
+ {
+  "file": "v2_classic_2.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "classic",
+  "text": "Excellent ! C'est validé !",
+  "seconds": 18.7,
+  "audio_s": 3.48
+ },
+ {
+  "file": "v2_classic_3.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "classic",
+  "text": "Trop lent… ça va exploser !",
+  "seconds": 16.7,
+  "audio_s": 2.88
+ },
+ {
+  "file": "v2_crazy_1.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "crazy",
+  "text": "NON NON NON ! DÉJÀ DIT !",
+  "seconds": 13.2,
+  "audio_s": 1.92
+ },
+ {
+  "file": "v2_crazy_2.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "crazy",
+  "text": "BOUM ! Euh non… VALIDÉ !",
+  "seconds": 19.4,
+  "audio_s": 3.72
+ },
+ {
+  "file": "v2_crazy_3.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "crazy",
+  "text": "ÇA VA PÉTER ! ÇA VA PÉTER !",
+  "seconds": 49.0,
+  "audio_s": 11.28
+ },
+ {
+  "file": "v2_drama_1.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "drama",
+  "text": "Hélas… ce mot a déjà été prononcé. Quelle tragédie !",
+  "seconds": 18.6,
+  "audio_s": 3.28
+ },
+ {
+  "file": "v2_drama_2.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "drama",
+  "text": "Le public est en larmes. Validé !",
+  "seconds": 20.4,
+  "audio_s": 3.84
+ },
+ {
+  "file": "v2_drama_3.wav",
+  "ref": "cml-tts/fr/10177_10625_000134-0003_enhanced.wav",
+  "profile": "drama",
+  "text": "Le temps s'écoule… inexorablement…",
+  "seconds": 16.2,
+  "audio_s": 2.8
+ },
+ {
+  "file": "v3_classic_1.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Ah non ! Pas encore ce mot !",
+  "seconds": 17.0,
+  "audio_s": 2.92
+ },
+ {
+  "file": "v3_classic_2.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Excellent ! C'est validé !",
+  "seconds": 17.8,
+  "audio_s": 3.28
+ },
+ {
+  "file": "v3_classic_3.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Trop lent… ça va exploser !",
+  "seconds": 16.3,
+  "audio_s": 2.56
+ },
+ {
+  "file": "v3_crazy_1.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "NON NON NON ! DÉJÀ DIT !",
+  "seconds": 20.3,
+  "audio_s": 3.84
+ },
+ {
+  "file": "v3_crazy_2.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "BOUM ! Euh non… VALIDÉ !",
+  "seconds": 21.2,
+  "audio_s": 4.0
+ },
+ {
+  "file": "v3_crazy_3.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "ÇA VA PÉTER ! ÇA VA PÉTER !",
+  "seconds": 17.8,
+  "audio_s": 3.08
+ },
+ {
+  "file": "v3_drama_1.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Hélas… ce mot a déjà été prononcé. Quelle tragédie !",
+  "seconds": 27.8,
+  "audio_s": 5.72
+ },
+ {
+  "file": "v3_drama_2.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Le public est en larmes. Validé !",
+  "seconds": 18.8,
+  "audio_s": 3.32
+ },
+ {
+  "file": "v3_drama_3.wav",
+  "ref": "cml-tts/fr/10179_11051_000005-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Le temps s'écoule… inexorablement…",
+  "seconds": 18.4,
+  "audio_s": 3.32
+ },
+ {
+  "file": "v4_classic_1.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Ah non ! Pas encore ce mot !",
+  "seconds": 19.0,
+  "audio_s": 3.28
+ },
+ {
+  "file": "v4_classic_2.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Excellent ! C'est validé !",
+  "seconds": 20.1,
+  "audio_s": 3.44
+ },
+ {
+  "file": "v4_classic_3.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Trop lent… ça va exploser !",
+  "seconds": 18.3,
+  "audio_s": 3.08
+ },
+ {
+  "file": "v4_crazy_1.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "NON NON NON ! DÉJÀ DIT !",
+  "seconds": 18.5,
+  "audio_s": 3.04
+ },
+ {
+  "file": "v4_crazy_2.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "BOUM ! Euh non… VALIDÉ !",
+  "seconds": 17.5,
+  "audio_s": 2.76
+ },
+ {
+  "file": "v4_crazy_3.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "ÇA VA PÉTER ! ÇA VA PÉTER !",
+  "seconds": 21.6,
+  "audio_s": 4.0
+ },
+ {
+  "file": "v4_drama_1.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Hélas… ce mot a déjà été prononcé. Quelle tragédie !",
+  "seconds": 26.4,
+  "audio_s": 5.04
+ },
+ {
+  "file": "v4_drama_2.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Le public est en larmes. Validé !",
+  "seconds": 20.7,
+  "audio_s": 3.44
+ },
+ {
+  "file": "v4_drama_3.wav",
+  "ref": "cml-tts/fr/12080_11650_000047-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Le temps s'écoule… inexorablement…",
+  "seconds": 18.1,
+  "audio_s": 2.96
+ },
+ {
+  "file": "v5_classic_1.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "classic",
+  "text": "Ah non ! Pas encore ce mot !",
+  "seconds": 16.1,
+  "audio_s": 3.04
+ },
+ {
+  "file": "v5_classic_2.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "classic",
+  "text": "Excellent ! C'est validé !",
+  "seconds": 15.5,
+  "audio_s": 2.96
+ },
+ {
+  "file": "v5_classic_3.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "classic",
+  "text": "Trop lent… ça va exploser !",
+  "seconds": 17.1,
+  "audio_s": 3.2
+ },
+ {
+  "file": "v5_crazy_1.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "crazy",
+  "text": "NON NON NON ! DÉJÀ DIT !",
+  "seconds": 19.1,
+  "audio_s": 3.92
+ },
+ {
+  "file": "v5_crazy_2.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "crazy",
+  "text": "BOUM ! Euh non… VALIDÉ !",
+  "seconds": 19.3,
+  "audio_s": 3.84
+ },
+ {
+  "file": "v5_crazy_3.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "crazy",
+  "text": "ÇA VA PÉTER ! ÇA VA PÉTER !",
+  "seconds": 17.6,
+  "audio_s": 3.4
+ },
+ {
+  "file": "v5_drama_1.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "drama",
+  "text": "Hélas… ce mot a déjà été prononcé. Quelle tragédie !",
+  "seconds": 20.1,
+  "audio_s": 4.08
+ },
+ {
+  "file": "v5_drama_2.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "drama",
+  "text": "Le public est en larmes. Validé !",
+  "seconds": 13.7,
+  "audio_s": 2.32
+ },
+ {
+  "file": "v5_drama_3.wav",
+  "ref": "cml-tts/fr/12205_11650_000004-0002_enhanced.wav",
+  "profile": "drama",
+  "text": "Le temps s'écoule… inexorablement…",
+  "seconds": 15.7,
+  "audio_s": 2.84
+ },
+ {
+  "file": "v6_classic_1.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Ah non ! Pas encore ce mot !",
+  "seconds": 18.0,
+  "audio_s": 3.52
+ },
+ {
+  "file": "v6_classic_2.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Excellent ! C'est validé !",
+  "seconds": 18.2,
+  "audio_s": 3.72
+ },
+ {
+  "file": "v6_classic_3.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "classic",
+  "text": "Trop lent… ça va exploser !",
+  "seconds": 15.2,
+  "audio_s": 2.92
+ },
+ {
+  "file": "v6_crazy_1.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "NON NON NON ! DÉJÀ DIT !",
+  "seconds": 20.2,
+  "audio_s": 4.2
+ },
+ {
+  "file": "v6_crazy_2.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "BOUM ! Euh non… VALIDÉ !",
+  "seconds": 29.8,
+  "audio_s": 6.84
+ },
+ {
+  "file": "v6_crazy_3.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "crazy",
+  "text": "ÇA VA PÉTER ! ÇA VA PÉTER !",
+  "seconds": 16.6,
+  "audio_s": 3.2
+ },
+ {
+  "file": "v6_drama_1.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Hélas… ce mot a déjà été prononcé. Quelle tragédie !",
+  "seconds": 23.1,
+  "audio_s": 4.88
+ },
+ {
+  "file": "v6_drama_2.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Le public est en larmes. Validé !",
+  "seconds": 17.6,
+  "audio_s": 3.48
+ },
+ {
+  "file": "v6_drama_3.wav",
+  "ref": "cml-tts/fr/12977_10625_000037-0001_enhanced.wav",
+  "profile": "drama",
+  "text": "Le temps s'écoule… inexorablement…",
+  "seconds": 14.5,
+  "audio_s": 2.56
+ }
+]
