@@ -1,0 +1,278 @@
+---
+// Démo jouable : la vraie logique du jeu (mêmes mots, mêmes synonymes que
+// l'application, extraits de sa base de connaissances) dans le navigateur.
+interface Props { apk: string }
+const { apk } = Astro.props;
+---
+<section class="demo" id="essayer">
+  <div class="wrap">
+    <p class="eyebrow">Essayez-la maintenant</p>
+    <h2 class="big">Tenez la bombe 30 secondes.</h2>
+    <p class="lede">Citez un maximum d’objets de la maison avant qu’elle explose. Essayez « frigo » après « réfrigérateur »…</p>
+
+    <div class="game" data-state="idle">
+      <div class="g-top">
+        <div class="g-prompt">Cite des <strong>OBJETS</strong> qu’on trouve dans une maison !</div>
+        <div class="g-score"><span class="g-score-n">0</span> pt</div>
+      </div>
+      <div class="g-fuse" aria-hidden="true"><span class="g-fuse-burn"></span><span class="g-fuse-spark"></span></div>
+
+      <div class="g-body">
+        <div class="g-bomb">
+          <img class="g-img" src="/img/listening.webp" width="560" height="667" alt="" />
+          <canvas class="g-boom" width="504" height="600" aria-hidden="true"></canvas>
+        </div>
+        <div class="g-side">
+          <p class="g-bubble" role="status" aria-live="polite">Prêt ? Appuyez sur « Allumer la mèche ».</p>
+          <form class="g-form" autocomplete="off">
+            <label class="sr" for="g-in">Votre réponse</label>
+            <input id="g-in" class="g-in" type="text" placeholder="Tapez un objet…" maxlength="40" disabled />
+            <button class="g-mic" type="button" aria-label="Répondre à la voix" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12Z" /></svg>
+            </button>
+            <button class="g-send" type="submit" disabled>Valider</button>
+          </form>
+          <button class="pill g-start" type="button">Allumer la mèche</button>
+          <ul class="g-used" aria-label="Mots déjà cités"></ul>
+          <label class="g-sound"><input id="g-sound" type="checkbox" checked /> Voix de la bombe</label>
+        </div>
+      </div>
+
+      <div class="g-over" hidden>
+        <p class="g-over-k">BOOOOM !</p>
+        <p class="g-over-t">Vous avez tenu avec <strong class="g-final">0</strong> mot<span class="g-plural">s</span>.</p>
+        <p class="g-over-s">Imaginez à 8, en vous passant le téléphone.</p>
+        <div class="g-over-ctas">
+          <a class="pill pill-xl" href={apk} data-confetti>Télécharger le jeu complet</a>
+          <button class="chev g-again" type="button">Rejouer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  type Data = { ok: Record<string, string>; names: Record<string, string>; other: string[] };
+  const game = document.querySelector<HTMLElement>('.game')!;
+  const img = game.querySelector<HTMLImageElement>('.g-img')!;
+  const boom = game.querySelector<HTMLCanvasElement>('.g-boom')!;
+  const bubble = game.querySelector<HTMLElement>('.g-bubble')!;
+  const form = game.querySelector<HTMLFormElement>('.g-form')!;
+  const input = game.querySelector<HTMLInputElement>('.g-in')!;
+  const send = game.querySelector<HTMLButtonElement>('.g-send')!;
+  const mic = game.querySelector<HTMLButtonElement>('.g-mic')!;
+  const start = game.querySelector<HTMLButtonElement>('.g-start')!;
+  const used = game.querySelector<HTMLElement>('.g-used')!;
+  const scoreEl = game.querySelector<HTMLElement>('.g-score-n')!;
+  const over = game.querySelector<HTMLElement>('.g-over')!;
+  const sound = game.querySelector<HTMLInputElement>('#g-sound')!;
+  const DURATION = 30;
+
+  let data: Data | null = null;
+  const other = new Set<string>();
+  const load = async () => {
+    if (data) return;
+    data = await (await fetch('/data/objets.json')).json();
+    data!.other.forEach((w) => other.add(w));
+  };
+
+  // même normalisation que l'application (tools/kb/normalize.py)
+  const LEADING = ['de la ', "de l' ", 'les ', 'le ', 'la ', "l' ", 'un ', 'une ', 'des ', 'du ', "d' ", 'de ', 'mon ', 'ma ', 'mes ', 'ton ', 'ta ', 'tes ', 'son ', 'sa ', 'ses ', 'ce ', 'cet ', 'cette ', 'ces '];
+  const FILLERS = ['euh', 'heu', 'hum', 'ben', 'bah', 'alors', 'bon', 'ok', 'donc', 'voila', "c' est", 'je dis', 'hein'];
+  const fold = (t: string) =>
+    t.replace(/œ/gi, 'oe').replace(/æ/gi, 'ae').normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase()
+      .replace(/[’`‘]/g, "'").replace(/[^a-z0-9' ]+/g, ' ').replace(/'\s*/g, "' ").replace(/\s+/g, ' ').trim();
+  const norm = (t: string) => {
+    let s = fold(t);
+    for (let changed = true; changed;) {
+      changed = false;
+      for (const f of FILLERS) {
+        if (s === f) return '';
+        if (s.startsWith(f + ' ')) { s = s.slice(f.length + 1); changed = true; }
+        if (s.endsWith(' ' + f)) { s = s.slice(0, -f.length - 1); changed = true; }
+      }
+    }
+    for (const a of LEADING) if (s.startsWith(a) && s.length > a.length) { s = s.slice(a.length).trim(); break; }
+    return s;
+  };
+  const sing = (s: string) => s.split(' ').map((w) => w.length <= 3 ? w : w.endsWith('eaux') ? w.slice(0, -1) : w.endsWith('aux') ? w.slice(0, -3) + 'al' : /[sx]$/.test(w) ? w.slice(0, -1) : w).join(' ');
+
+  // états de la bombe
+  const face = (k: string) => { img.src = `/img/${k}.webp`; img.classList.remove('pop'); void img.offsetWidth; img.classList.add('pop'); };
+  const voices: Record<string, string[]> = {
+    ok: ['c_ok1', 'c_ok2', 'c_ok3', 'c_ok5'], dup: ['c_du1', 'c_du3'], unk: ['c_un1', 'c_un2'],
+    start: ['c_gs2'], hurry: ['c_hu3'], boom: ['c_ex1'], again: ['c_re_1'],
+  };
+  let audio: HTMLAudioElement | null = null;
+  const say = (k: string) => {
+    if (!sound.checked) return;
+    const list = voices[k];
+    audio?.pause();
+    audio = new Audio(`/audio/${list[Math.floor(Math.random() * list.length)]}.mp3`);
+    audio.play().catch(() => {});
+  };
+  const lines: Record<string, string[]> = {
+    ok: ['Excellent ! C’est validé !', 'OUI ! Bien joué !', 'Parfait !', 'Bien vu !'],
+    dup: ['Ah non ! Pas encore ce mot !', 'Hop hop hop ! Celui-là, on l’a déjà !'],
+    unk: ['Je ne connais pas ce mot-là… Essaie autre chose !', 'Ça existe, ça ? Propose autre chose !'],
+  };
+  const pick = (a: string[]) => a[Math.floor(Math.random() * a.length)];
+
+  let memory = new Map<string, string>();
+  let score = 0, left = DURATION, running = false, raf = 0, last = 0, hurried = false;
+
+  const setFuse = () => game.style.setProperty('--left', String(left / DURATION));
+
+  const answer = (raw: string) => {
+    if (!running || !data) return;
+    const n = norm(raw);
+    if (!n) return;
+    const id = data.ok[n] ?? data.ok[sing(n)];
+    if (id) {
+      const name = data.names[id];
+      if (memory.has(id)) {
+        const prev = memory.get(id)!;
+        const syn = sing(norm(prev)) !== sing(n);
+        bubble.textContent = syn ? `« ${raw.trim()} » = « ${prev} ». ${pick(lines.dup)}` : pick(lines.dup);
+        face('angry'); say('dup'); game.dataset.state = 'bad';
+        return;
+      }
+      memory.set(id, name);
+      score++; scoreEl.textContent = String(score);
+      const li = document.createElement('li'); li.textContent = memory.get(id)!; used.prepend(li);
+      bubble.textContent = pick(lines.ok); face(score % 4 === 0 ? 'celebration' : 'happy'); say('ok'); game.dataset.state = 'good';
+      left = Math.min(DURATION, left + 1.5);
+    } else if (other.has(n) || other.has(sing(n))) {
+      bubble.textContent = `« ${raw.trim()} » ? Ce n’est pas un objet de la maison !`; face('confused'); say('unk'); game.dataset.state = 'bad';
+    } else {
+      bubble.textContent = pick(lines.unk); face('confused'); say('unk'); game.dataset.state = 'bad';
+    }
+  };
+
+  const tick = (t: number) => {
+    if (!running) return;
+    const dt = last ? (t - last) / 1000 : 0; last = t;
+    left -= dt; setFuse();
+    if (!hurried && left < 8) { hurried = true; face('panic'); bubble.textContent = 'Trop lent… ça va exploser !'; say('hurry'); }
+    game.classList.toggle('is-hot', left < 8);
+    if (left <= 0) return explode();
+    raf = requestAnimationFrame(tick);
+  };
+
+  const begin = async () => {
+    await load();
+    memory = new Map(); score = 0; left = DURATION; hurried = false; last = 0;
+    scoreEl.textContent = '0'; used.replaceChildren(); over.hidden = true; boom.style.opacity = '0'; img.style.opacity = '1';
+    running = true; game.dataset.state = 'play'; input.disabled = false; send.disabled = false; start.hidden = true;
+    face('listening'); bubble.textContent = 'Installez-vous, ça va chauffer ! À vous !'; say('start');
+    input.focus({ preventScroll: true });
+    setFuse(); raf = requestAnimationFrame(tick);
+  };
+
+  const explode = () => {
+    running = false; cancelAnimationFrame(raf); left = 0; setFuse();
+    input.disabled = true; send.disabled = true; game.classList.remove('is-hot');
+    say('boom'); game.classList.add('is-exploding');
+    const ctx = boom.getContext('2d')!;
+    const frames = Array.from({ length: 12 }, (_, i) => { const im = new Image(); im.src = `/seq/${24 + i}.webp`; return im; });
+    img.style.opacity = '0'; boom.style.opacity = '1';
+    let i = 0;
+    const step = () => {
+      ctx.clearRect(0, 0, 504, 600);
+      if (frames[i].complete) ctx.drawImage(frames[i], 0, 0, 504, 600);
+      if (++i < 12) setTimeout(step, 70);
+      else setTimeout(() => {
+        game.classList.remove('is-exploding');
+        boom.style.opacity = '0'; img.style.opacity = '1'; face('defeated');
+        game.querySelector('.g-final')!.textContent = String(score);
+        game.querySelector<HTMLElement>('.g-plural')!.hidden = score === 1;
+        over.hidden = false; game.dataset.state = 'over';
+      }, 250);
+    };
+    step();
+  };
+
+  form.addEventListener('submit', (e) => { e.preventDefault(); answer(input.value); input.value = ''; input.focus({ preventScroll: true }); });
+  start.addEventListener('click', begin);
+  game.querySelector('.g-again')!.addEventListener('click', () => { say('again'); begin(); });
+
+  // reconnaissance vocale du navigateur, si elle existe (Chrome, Edge, Safari)
+  const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  if (SR) {
+    mic.hidden = false;
+    let rec: any = null;
+    mic.addEventListener('click', () => {
+      if (!running) return;
+      if (rec) { rec.stop(); return; }
+      rec = new SR(); rec.lang = 'fr-FR'; rec.interimResults = false; rec.continuous = true;
+      mic.classList.add('on');
+      rec.onresult = (e: any) => { const r = e.results[e.results.length - 1]; if (r.isFinal) answer(r[0].transcript); };
+      rec.onend = () => { mic.classList.remove('on'); rec = null; };
+      rec.start();
+    });
+  }
+</script>
+
+<style>
+  .demo { background: radial-gradient(120% 80% at 50% 0%, #2a1206 0%, #000 60%); color: #f5f5f7; text-align: center; padding-block: 110px; }
+  .demo .eyebrow { color: var(--spark); }
+  .game {
+    --left: 1; position: relative; margin: 48px auto 0; max-width: 880px; text-align: left;
+    background: linear-gradient(180deg, #1b1b1e, #111113); border: 1px solid rgb(255 255 255 / 0.08); border-radius: 28px;
+    padding: 22px; box-shadow: 0 40px 120px -40px rgb(255 106 19 / 0.45); overflow: hidden;
+  }
+  .game.is-hot { animation: hot 0.25s linear infinite; box-shadow: 0 40px 140px -30px rgb(255 45 20 / 0.7); }
+  .game.is-exploding { animation: quake2 0.09s linear infinite; }
+  @keyframes hot { 50% { transform: translate(1px, -1px); } }
+  @keyframes quake2 { 25% { transform: translate(6px, -4px); } 50% { transform: translate(-7px, 3px); } 75% { transform: translate(4px, 5px); } }
+  .g-top { display: flex; justify-content: space-between; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .g-prompt { font-size: clamp(17px, 2.4vw, 22px); font-weight: 600; min-width: 0; }
+  .g-prompt strong { font-family: var(--brand); font-weight: 400; color: #ff8a2a; font-size: 1.35em; letter-spacing: 0.02em; }
+  .g-score { font-size: 15px; color: var(--muted-dark); white-space: nowrap; }
+  .g-score-n { font-size: 34px; font-weight: 800; color: #fff; font-variant-numeric: tabular-nums; }
+  .g-fuse { position: relative; height: 8px; border-radius: 8px; background: #3a2a20; margin: 14px 0 6px; }
+  .g-fuse-burn { position: absolute; inset: 0 auto 0 0; width: calc(var(--left) * 100%); border-radius: 8px; background: linear-gradient(90deg, #8a4b22, #c47a3a); transition: width 0.1s linear; }
+  .g-fuse-spark { position: absolute; top: 50%; left: calc(var(--left) * 100%); width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: #ffd23f; box-shadow: 0 0 10px 4px #ffd23f, 0 0 26px 10px rgb(255 106 19 / 0.7); animation: crackle 0.15s infinite alternate; }
+  .game[data-state='idle'] .g-fuse-spark, .game[data-state='over'] .g-fuse-spark { display: none; }
+  .g-body { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 22px; align-items: center; }
+  .g-bomb { position: relative; aspect-ratio: 504 / 600; max-width: 360px; width: 100%; margin-inline: auto; }
+  .g-bomb > * { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+  .g-boom { opacity: 0; transform: scale(1.25); }
+  .g-img.pop { animation: pop 0.35s cubic-bezier(.3, 1.6, .5, 1); }
+  @keyframes pop { 0% { transform: scale(0.9) rotate(-3deg); } 100% { transform: none; } }
+  .g-side { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+  .g-bubble { margin: 0; background: #fff; color: #1d1d1f; border-radius: 20px; padding: 14px 18px; font-weight: 600; font-size: 17px; min-height: 3.2em; position: relative; }
+  .g-bubble::before { content: ''; position: absolute; left: -8px; top: 22px; border: 9px solid transparent; border-right-color: #fff; border-left: 0; }
+  .game[data-state='good'] .g-bubble { box-shadow: 0 0 0 3px #39d353; }
+  .game[data-state='bad'] .g-bubble { box-shadow: 0 0 0 3px #ff4757; }
+  .g-form { display: flex; gap: 8px; }
+  .g-in { flex: 1; min-width: 0; width: 100%; font: inherit; font-size: 18px; padding: 13px 16px; border-radius: 14px; border: 1px solid #3a3a3e; background: #000; color: #fff; }
+  .g-in:disabled { opacity: 0.5; }
+  .g-send, .g-mic { font: inherit; font-weight: 700; border: 0; border-radius: 14px; padding: 0 16px; background: #ff7a18; color: #fff; cursor: pointer; }
+  .g-send:disabled { opacity: 0.4; cursor: default; }
+  .g-mic { background: #2c2c30; width: 50px; padding: 0; display: grid; place-items: center; }
+  .g-mic svg { width: 22px; height: 22px; fill: currentColor; }
+  .g-mic.on { background: #ff4757; animation: crackle 0.5s infinite alternate; }
+  .g-start { justify-self: start; font-size: 18px; padding: 13px 26px; }
+  .g-used { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; max-height: 96px; overflow: hidden; }
+  .g-used :global(li) { background: #2c2c30; border-radius: 999px; padding: 4px 11px; font-size: 14px; animation: pop 0.3s; }
+  .g-sound { font-size: 13px; color: var(--muted-dark); display: flex; gap: 6px; align-items: center; }
+  .g-over {
+    position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 8px; text-align: center; padding: 24px;
+    background: radial-gradient(circle, rgb(40 14 4 / 0.92), rgb(0 0 0 / 0.95)); animation: fadein 0.4s;
+  }
+  .g-over[hidden] { display: none; }
+  @keyframes fadein { from { opacity: 0; } }
+  .g-over-k { margin: 0; font-family: var(--brand); font-size: clamp(56px, 10vw, 96px); line-height: 1; background: linear-gradient(180deg, #fff3c4, #ff6a13); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .g-over-t { margin: 0; font-size: 21px; font-weight: 600; }
+  .g-over-s { margin: 0 0 12px; color: var(--muted-dark); }
+  .g-over-ctas { display: flex; flex-wrap: wrap; gap: 14px 24px; justify-content: center; align-items: center; }
+  .g-again { background: none; border: 0; font: inherit; font-size: 19px; color: var(--link-dark); cursor: pointer; }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  @media (max-width: 680px) {
+    .g-body { grid-template-columns: minmax(0, 1fr); }
+    .g-bomb { max-width: 220px; }
+    .g-bubble::before { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .game.is-hot, .game.is-exploding, .g-img.pop { animation: none; } }
+</style>

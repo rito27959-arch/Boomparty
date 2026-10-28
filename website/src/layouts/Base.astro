@@ -43,6 +43,13 @@ const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/B
 
     <main><slot /></main>
 
+    <a class="dock" href={apk} data-confetti aria-label="Télécharger BOOM PARTY pour Android">
+      <img src="/img/happy.webp" width="44" height="52" alt="" />
+      <span><strong>BOOM PARTY</strong><small>Gratuit · Android</small></span>
+      <span class="dock-btn">Télécharger</span>
+    </a>
+    <canvas class="confetti" aria-hidden="true"></canvas>
+
     <footer class="foot">
       <div class="foot-in">
         <p class="foot-note">
@@ -86,6 +93,61 @@ const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/B
       addEventListener('scroll', update, { passive: true });
       addEventListener('resize', update);
       update();
+
+      // barre de téléchargement flottante (téléphone), après l'ouverture
+      const dock = document.querySelector<HTMLElement>('.dock')!;
+      const hero = document.querySelector<HTMLElement>('.sb');
+      const showDock = () => dock.classList.toggle('on', scrollY > (hero ? hero.offsetTop + hero.offsetHeight - innerHeight * 0.5 : innerHeight) && root.scrollHeight - scrollY - innerHeight > 500);
+      addEventListener('scroll', showDock, { passive: true });
+      showDock();
+
+      // confettis au clic sur un bouton de téléchargement
+      const cv = document.querySelector<HTMLCanvasElement>('.confetti')!;
+      const cx = cv.getContext('2d')!;
+      type C = { x: number; y: number; vx: number; vy: number; r: number; s: number; c: string; l: number };
+      let bits: C[] = [];
+      let anim = 0;
+      const colors = ['#ff7a18', '#ffd23f', '#ff4d6d', '#4dabf7', '#9775fa', '#51cf66'];
+      const frame = () => {
+        cx.clearRect(0, 0, cv.width, cv.height);
+        bits = bits.filter((b) => b.l > 0);
+        for (const b of bits) {
+          b.x += b.vx; b.y += b.vy; b.vy += 0.25; b.vx *= 0.99; b.r += b.s; b.l -= 0.008;
+          cx.save(); cx.globalAlpha = Math.min(1, b.l * 2); cx.translate(b.x, b.y); cx.rotate(b.r);
+          cx.fillStyle = b.c; cx.fillRect(-5, -3, 10, 6); cx.restore();
+        }
+        anim = bits.length ? requestAnimationFrame(frame) : 0;
+      };
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest<HTMLElement>('[data-confetti]');
+        if (!a || reduceMotion) return;
+        cv.width = innerWidth; cv.height = innerHeight;
+        const r = a.getBoundingClientRect();
+        for (let i = 0; i < 140; i++) {
+          const ang = -Math.PI / 2 + (Math.random() - 0.5) * 2.4, sp = 6 + Math.random() * 12;
+          bits.push({ x: r.left + r.width / 2, y: r.top + r.height / 2, vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp,
+            r: Math.random() * 6, s: (Math.random() - 0.5) * 0.4, c: colors[i % colors.length], l: 1 });
+        }
+        if (!anim) frame();
+      });
+
+      // chiffres qui défilent quand ils apparaissent
+      const nums = document.querySelectorAll<HTMLElement>('[data-count]');
+      const fmt = new Intl.NumberFormat('fr-FR');
+      const io = new IntersectionObserver((es) => es.forEach((en) => {
+        if (!en.isIntersecting) return;
+        io.unobserve(en.target);
+        const el = en.target as HTMLElement, to = Number(el.dataset.count), t0 = performance.now();
+        if (reduceMotion) return;
+        const step = (t: number) => {
+          const k = Math.min(1, (t - t0) / 1400), v = Math.round(to * (1 - Math.pow(1 - k, 3)));
+          el.textContent = fmt.format(v).replace(/\u202f|\u00a0/g, ' ');
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }), { threshold: 0.6 });
+      nums.forEach((n) => io.observe(n));
     </script>
   </body>
 </html>
@@ -124,6 +186,7 @@ const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/B
     overflow-x: hidden;
   }
   img { max-width: 100%; height: auto; display: block; }
+  [hidden] { display: none !important; }
   a { color: inherit; }
   h1, h2, h3 { text-wrap: balance; margin: 0; }
   :focus-visible { outline: 2px solid var(--spark); outline-offset: 3px; border-radius: 6px; }
@@ -173,6 +236,32 @@ const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/B
     font-size: 17px; padding: 11px 22px; border-radius: 980px;
   }
   .pill:hover { background: #ff8f3a; }
+
+  .pill-xl {
+    font-size: 19px; padding: 15px 30px; position: relative;
+    background: linear-gradient(180deg, #ff9a3d, #ff6a13); box-shadow: 0 10px 40px -8px rgb(255 106 19 / 0.8), inset 0 1px 0 rgb(255 255 255 / 0.35);
+    animation: breathe 2.4s ease-in-out infinite;
+  }
+  .pill-xl:hover { background: linear-gradient(180deg, #ffab55, #ff7a22); transform: translateY(-1px); }
+  @keyframes breathe { 50% { box-shadow: 0 10px 60px -4px rgb(255 106 19 / 1), inset 0 1px 0 rgb(255 255 255 / 0.35); } }
+  @media (prefers-reduced-motion: reduce) { .pill-xl { animation: none; } }
+
+  /* barre flottante (téléphone) */
+  .dock {
+    position: fixed; z-index: 60; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px));
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: none; align-items: center; gap: 10px; padding: 8px 8px 8px 12px;
+    border-radius: 20px; background: rgb(22 22 23 / 0.86); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    color: #fff; text-decoration: none; box-shadow: 0 20px 50px -10px rgb(0 0 0 / 0.6);
+    transform: translateY(140%); transition: transform 0.35s cubic-bezier(.2, .9, .3, 1.2);
+  }
+  .dock.on { transform: none; }
+  .dock img { width: 40px; height: auto; }
+  .dock span:not(.dock-btn) { display: grid; line-height: 1.2; flex: 1; min-width: 0; }
+  .dock strong { font-family: var(--brand); font-weight: 400; font-size: 17px; letter-spacing: 0.02em; }
+  .dock small { color: var(--muted-dark); font-size: 12px; }
+  .dock-btn { background: var(--spark); border-radius: 14px; padding: 10px 16px; font-weight: 700; font-size: 15px; }
+  @media (max-width: 760px) { .dock { display: flex; } }
+  .confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 80; }
 
   /* pied de page */
   .foot { background: var(--pearl); color: var(--muted); font-size: 12px; line-height: 1.5; }

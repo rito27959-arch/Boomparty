@@ -1,0 +1,219 @@
+---
+// Ouverture « à la Apple » : la bombe 3D (36 images rendues dans Blender) est
+// pilotée par le défilement. Elle respire, la mèche s'emballe, elle tremble,
+// puis explose plein écran avant de révéler le bouton de téléchargement.
+interface Props { apk: string }
+const { apk } = Astro.props;
+---
+<section class="sb" id="jeu" aria-label="BOOM PARTY">
+  <div class="sb-stick">
+    <div class="sb-glow" aria-hidden="true"></div>
+    <canvas class="sb-fx" aria-hidden="true"></canvas>
+
+    <div class="sb-stage">
+      <img class="sb-poster" src="/seq/00.webp" width="504" height="600" alt="La bombe de BOOM PARTY, mèche allumée" />
+      <canvas class="sb-bomb" width="504" height="600" aria-hidden="true"></canvas>
+    </div>
+
+    <div class="sb-copy">
+      <div class="sb-line sb-l0" data-in="0" data-out="0.16">
+        <p class="sb-kicker">Le jeu de soirée qui vous écoute</p>
+        <h1 class="sb-title">BOOM PARTY</h1>
+        <div class="sb-ctas">
+          <a class="pill pill-xl" href={apk} data-confetti>Télécharger gratuitement</a>
+          <span class="sb-hint">Faites défiler <span aria-hidden="true">↓</span></span>
+        </div>
+      </div>
+      <p class="sb-line sb-big" data-in="0.17" data-out="0.33">Elle écoute.</p>
+      <p class="sb-line sb-big" data-in="0.34" data-out="0.5">Elle juge.</p>
+      <p class="sb-line sb-big sb-hot" data-in="0.52" data-out="0.7">Elle explose.</p>
+      <div class="sb-line sb-end" data-in="0.74" data-out="2">
+        <h2 class="sb-end-title">À vous de ne pas<br />la garder trop longtemps.</h2>
+        <a class="pill pill-xl" href={apk} data-confetti>Télécharger pour Android</a>
+        <p class="sb-small">Gratuit · Hors ligne · 2 à 12 joueurs</p>
+      </div>
+    </div>
+    <div class="sb-flash" aria-hidden="true"></div>
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('.sb')!;
+  const stick = root.querySelector<HTMLElement>('.sb-stick')!;
+  const bomb = root.querySelector<HTMLCanvasElement>('.sb-bomb')!;
+  const fx = root.querySelector<HTMLCanvasElement>('.sb-fx')!;
+  const flash = root.querySelector<HTMLElement>('.sb-flash')!;
+  const glow = root.querySelector<HTMLElement>('.sb-glow')!;
+  const stage = root.querySelector<HTMLElement>('.sb-stage')!;
+  const poster = root.querySelector<HTMLImageElement>('.sb-poster')!;
+  const lines = [...root.querySelectorAll<HTMLElement>('.sb-line')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const ctx = bomb.getContext('2d')!;
+  const fctx = fx.getContext('2d')!;
+
+  // 0–11 respiration, 12–23 compte à rebours, 24–35 explosion
+  const frames: HTMLImageElement[] = [];
+  let loaded = 0;
+  for (let i = 0; i < 36; i++) {
+    const im = new Image();
+    im.decoding = 'async';
+    im.src = `/seq/${String(i).padStart(2, '0')}.webp`;
+    im.onload = () => { loaded++; if (loaded === 1 || loaded === 36) draw(true); };
+    frames.push(im);
+  }
+
+  type P = { x: number; y: number; vx: number; vy: number; life: number; size: number; hue: number; kind: 0 | 1 };
+  const parts: P[] = [];
+  let lastP = 0;
+  let burstDone = false;
+  let shown = -1;
+
+  const progress = () => {
+    const r = root.getBoundingClientRect();
+    const total = r.height - innerHeight;
+    return total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
+  };
+
+  const frameFor = (p: number, t: number) => {
+    if (p < 0.34) return Math.floor(t / 90) % 12;                         // respire tout seul
+    if (p < 0.6) return 12 + Math.min(11, Math.floor(((p - 0.34) / 0.26) * 24) % 12); // tic-tac de plus en plus vite
+    if (p < 0.74) return 24 + Math.min(11, Math.floor(((p - 0.6) / 0.14) * 12));
+    return 35;
+  };
+
+  const burst = (cx: number, cy: number, n: number) => {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = 4 + Math.random() * 14;
+      parts.push({ x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 3, life: 1, size: 3 + Math.random() * 7,
+        hue: [42, 28, 12, 330, 200, 270][i % 6], kind: i % 3 === 0 ? 1 : 0 });
+    }
+  };
+
+  const sparks = (cx: number, cy: number) => {
+    for (let i = 0; i < 2; i++) {
+      const a = -Math.PI / 2 + (Math.random() - 0.5) * 2.2;
+      const s = 1.5 + Math.random() * 3;
+      parts.push({ x: cx, y: cy, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 0.6, size: 1.5 + Math.random() * 2, hue: 45, kind: 0 });
+    }
+  };
+
+  const resizeFx = () => {
+    const d = Math.min(2, devicePixelRatio || 1);
+    fx.width = innerWidth * d; fx.height = innerHeight * d;
+    fctx.setTransform(d, 0, 0, d, 0, 0);
+  };
+  resizeFx();
+  addEventListener('resize', resizeFx);
+
+  function draw(force = false) {
+    const p = reduce ? 0 : progress();
+    const t = performance.now();
+    const f = frameFor(p, t);
+    const im = frames[f];
+    if ((force || f !== shown) && im.complete && im.naturalWidth) {
+      ctx.clearRect(0, 0, 504, 600);
+      ctx.drawImage(im, 0, 0, 504, 600);
+      shown = f;
+      poster.style.visibility = 'hidden';
+    }
+    // tremblement pendant le compte à rebours
+    const shake = p > 0.36 && p < 0.62 ? ((p - 0.36) / 0.26) * 9 : 0;
+    stage.style.transform = `translate(${(Math.random() - 0.5) * shake}px, ${(Math.random() - 0.5) * shake}px) scale(${1 + Math.max(0, Math.min(1, (p - 0.34) / 0.3)) * 0.18})`;
+    // halo : orange → rouge → blanc
+    const heat = Math.min(1, Math.max(0, (p - 0.3) / 0.32));
+    glow.style.opacity = String(0.55 + heat * 0.45);
+    glow.style.setProperty('--heat', String(heat));
+    // flash au moment de l'explosion
+    const fl = p > 0.6 && p < 0.7 ? 1 - Math.abs(p - 0.625) / 0.075 : 0;
+    flash.style.opacity = String(Math.max(0, fl));
+    stick.classList.toggle('is-boom', p > 0.6 && p < 0.72);
+    // textes
+    for (const l of lines) {
+      const a = Number(l.dataset.in), b = Number(l.dataset.out);
+      const on = p >= a && p < b;
+      const k = on ? Math.min(1, (p - a) / 0.04, (b - p) / 0.04) : 0;
+      const kk = a === 0 ? (p < b ? Math.min(1, (b - p) / 0.04) : 0) : k;
+      l.style.opacity = String(kk);
+      l.style.transform = `translateY(${(1 - kk) * 24}px) scale(${0.96 + kk * 0.04})`;
+      l.style.pointerEvents = kk > 0.5 ? 'auto' : 'none';
+    }
+    // particules
+    const r = stage.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height * 0.55;
+    if (!reduce) {
+      if (p > 0.34 && p < 0.6) sparks(r.left + r.width * 0.66, r.top + r.height * 0.12);
+      if (p >= 0.6 && lastP < 0.6 && !burstDone) { burst(cx, cy, 160); burstDone = true; }
+      if (p < 0.5) burstDone = false;
+    }
+    lastP = p;
+    fctx.clearRect(0, 0, innerWidth, innerHeight);
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const q = parts[i];
+      q.x += q.vx; q.y += q.vy; q.vy += 0.22; q.vx *= 0.985; q.life -= 0.012;
+      if (q.life <= 0 || q.y > innerHeight + 40) { parts.splice(i, 1); continue; }
+      fctx.globalAlpha = Math.min(1, q.life * 1.4);
+      fctx.fillStyle = `hsl(${q.hue} 100% ${q.kind ? 60 : 62}%)`;
+      if (q.kind) { fctx.save(); fctx.translate(q.x, q.y); fctx.rotate(q.life * 8); fctx.fillRect(-q.size, -q.size / 2.5, q.size * 2, q.size / 1.2); fctx.restore(); }
+      else { fctx.beginPath(); fctx.arc(q.x, q.y, q.size / 2, 0, Math.PI * 2); fctx.fill(); }
+    }
+    fctx.globalAlpha = 1;
+  }
+
+  let running = true;
+  new IntersectionObserver(([e]) => { running = e.isIntersecting; if (running) loop(); }).observe(root);
+  function loop() { if (!running) return; draw(); requestAnimationFrame(loop); }
+  loop();
+</script>
+
+<style>
+  .sb { position: relative; height: 420vh; background: var(--night); color: #f5f5f7; }
+  .sb-stick { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: grid; justify-items: center; }
+  .sb-glow {
+    position: absolute; left: 50%; top: 56%; width: min(1100px, 160vw); aspect-ratio: 1; translate: -50% -50%;
+    background: radial-gradient(circle, color-mix(in srgb, #ff7a18 calc(100% - var(--heat, 0) * 100%), #ff2d2d) 0%, rgb(255 80 20 / 0.18) 34%, transparent 62%);
+    filter: blur(10px); opacity: 0.55; pointer-events: none;
+  }
+  .sb-fx { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; }
+  .sb-stick { align-items: end; }
+  .sb-stage {
+    position: relative; width: min(560px, 80vw, calc(60svh * 0.84)); aspect-ratio: 504 / 600; margin-bottom: 4svh; z-index: 1; will-change: transform; transform-origin: 50% 95%;
+  }
+  .is-boom .sb-stage { -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); mask-image: radial-gradient(closest-side, #000 72%, transparent 100%); }
+  .sb-stage > * { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sb-copy { position: absolute; inset: 0; z-index: 4; pointer-events: none; }
+  .sb-line {
+    position: absolute; left: 0; right: 0; top: 9vh; text-align: center; margin: 0;
+    padding-left: var(--gutter-l); padding-right: var(--gutter-r); opacity: 0; will-change: opacity, transform;
+  }
+  .sb-l0 { opacity: 1; }
+  .sb-kicker { margin: 0; font-weight: 600; color: var(--spark); font-size: clamp(15px, 2vw, 19px); }
+  .sb-title {
+    font-family: var(--brand); font-weight: 400; line-height: 0.92; letter-spacing: 0.01em; font-size: clamp(64px, 14vw, 168px);
+    background: linear-gradient(180deg, #fff3c4 5%, #ffb547 40%, #ff6a13 70%, #d92d0f); -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 6px 30px rgb(255 106 19 / 0.35));
+  }
+  .sb-ctas { display: flex; flex-wrap: wrap; gap: 12px 22px; justify-content: center; align-items: center; margin-top: 18px; }
+  .sb-hint { color: var(--muted-dark); font-size: 15px; }
+  .sb-hint span { display: inline-block; animation: nudge 1.4s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateY(4px); } }
+  .sb-big { font-size: clamp(48px, 10vw, 128px); font-weight: 800; letter-spacing: -0.045em; line-height: 1; top: 12vh; }
+  .sb-hot {
+    background: linear-gradient(180deg, #fff 0%, #ffd23f 35%, #ff3d17 80%); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sb-end { top: 50%; translate: 0 -50%; display: grid; justify-items: center; gap: 20px; }
+  .sb-end-title { font-size: clamp(34px, 6.4vw, 72px); font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; }
+  .sb-small { margin: 0; color: var(--muted-dark); font-size: 15px; }
+  .sb-flash { position: absolute; inset: 0; background: radial-gradient(circle at 50% 58%, #fff 0%, #fff6d5 35%, rgb(255 190 80 / 0.6) 70%); opacity: 0; pointer-events: none; z-index: 5; mix-blend-mode: screen; }
+  .is-boom { animation: quake 0.12s linear infinite; }
+  @keyframes quake { 25% { transform: translate(4px, -3px); } 50% { transform: translate(-5px, 2px); } 75% { transform: translate(3px, 4px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .sb { height: auto; }
+    .sb-stick { position: relative; height: auto; padding-block: 40px 0; }
+    .sb-line:not(.sb-l0) { display: none; }
+    .sb-line { position: relative; top: 0; }
+    .sb-stage { margin-top: 20px; }
+    .sb-stick { align-items: start; }
+    .is-boom, .sb-hint span { animation: none; }
+  }
+</style>

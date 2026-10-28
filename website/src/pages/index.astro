@@ -1,5 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
+import ScrollBomb from '../components/ScrollBomb.astro';
+import Demo from '../components/Demo.astro';
 
 const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/BoomParty.apk';
 const apk32 = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/BoomParty-ancien-telephone.apk';
@@ -53,22 +55,8 @@ const skins = ['classique', 'lave', 'galaxie', 'glace', 'ninja', 'bonbon', 'citr
   title="BOOM PARTY"
   description="Le jeu de soirée où une bombe écoute vos réponses, les juge et explose. Hors ligne, en français, de 2 à 12 joueurs."
 >
-  <!-- HÉROS -->
-  <section class="hero on-dark" id="jeu">
-    <div class="wrap hero-in">
-      <p class="eyebrow">Nouveau sur Android</p>
-      <h1 class="hero-name">BOOM PARTY</h1>
-      <p class="hero-line">Elle écoute. Elle juge. Elle explose.</p>
-      <div class="ctas">
-        <a class="pill" href={apk}>Télécharger</a>
-        <a class="chev" href="#comment">Voir comment jouer</a>
-      </div>
-      <div class="hero-art">
-        <div class="glow" aria-hidden="true"></div>
-        <img src="/img/hero.webp" width="1000" height="1000" alt="La bombe de BOOM PARTY, mèche allumée, qui lève le pouce" />
-      </div>
-    </div>
-  </section>
+  <ScrollBomb apk={apk} />
+  <Demo apk={apk} />
 
   <!-- TUILES -->
   <section class="tiles wrap" aria-label="En bref">
@@ -133,9 +121,9 @@ const skins = ['classique', 'lave', 'galaxie', 'glace', 'ninja', 'bonbon', 'citr
       <h2 class="big">Elle connaît vraiment ses mots.</h2>
       <p class="lede">Une base construite à partir de Wikidata, enrichie à la main de synonymes de tous les jours.</p>
       <dl class="stats">
-        <div><dt>notions reconnues</dt><dd>3 027</dd></div>
-        <div><dt>façons de les dire</dt><dd>13 558</dd></div>
-        <div><dt>catégories</dt><dd>21</dd></div>
+        <div><dt>notions reconnues</dt><dd data-count="3027">3 027</dd></div>
+        <div><dt>façons de les dire</dt><dd data-count="13558">13 558</dd></div>
+        <div><dt>catégories</dt><dd data-count="21">21</dd></div>
         <div><dt>joueurs</dt><dd>2–12</dd></div>
       </dl>
       <ul class="cats">
@@ -237,7 +225,7 @@ const skins = ['classique', 'lave', 'galaxie', 'glace', 'ninja', 'bonbon', 'citr
       <h2 class="big">Prêt à jouer avec le feu ?</h2>
       <p class="lede dark">Gratuit. Android 7.0 ou plus récent.</p>
       <div class="ctas">
-        <a class="pill" href={apk}>Télécharger pour Android</a>
+        <a class="pill pill-xl" href={apk} data-confetti>Télécharger pour Android</a>
         <a class="chev" href={apk32}>Ancien téléphone (32 bits)</a>
       </div>
       <ol class="install">
@@ -281,23 +269,6 @@ const skins = ['classique', 'lave', 'galaxie', 'glace', 'ninja', 'bonbon', 'citr
   .lede.dark { color: var(--muted); }
   .fine { margin: 28px auto 0; max-width: 620px; font-size: 14px; color: var(--muted); }
   .ctas { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center; justify-content: center; margin-top: 22px; }
-
-  /* héros */
-  .hero { background: var(--night); color: #f5f5f7; text-align: center; overflow: hidden; }
-  .hero-in { padding-block: 64px 0; }
-  .hero-name {
-    font-family: var(--brand); font-weight: 400; font-size: clamp(64px, 13vw, 132px); line-height: 0.95; letter-spacing: 0.01em;
-    background: linear-gradient(180deg, #ffe08a 10%, var(--spark) 60%, #e0361a); -webkit-background-clip: text; background-clip: text; color: transparent;
-  }
-  .hero-line { font-size: clamp(22px, 3.6vw, 32px); font-weight: 700; letter-spacing: -0.02em; margin: 10px 0 0; }
-  .hero-art { position: relative; width: min(620px, 100%); margin: 26px auto -10px; }
-  .hero-art img { position: relative; animation: bob 3.2s ease-in-out infinite; }
-  .glow {
-    position: absolute; inset: 18% 12% 6%; border-radius: 50%;
-    background: radial-gradient(circle, rgb(255 122 24 / 0.55), rgb(255 122 24 / 0) 68%); filter: blur(10px);
-  }
-  @keyframes bob { 50% { transform: translateY(-10px) rotate(-1deg); } }
-  @media (prefers-reduced-motion: reduce) { .hero-art img { animation: none; } }
 
   /* tuiles */
   .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-block: 12px; }
