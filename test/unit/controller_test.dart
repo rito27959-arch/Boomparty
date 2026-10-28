@@ -93,7 +93,7 @@ void main() {
   test('chaîne événement → personnalité → réplique : prénoms et mots insérés', () {
     final c = make();
     expect(c.reactions.map((r) => r.event), containsAllInOrder([ReactionEvent.gameStart, ReactionEvent.roundStart]));
-    expect(c.reactions[1].text, contains('Emma'));
+    expect(c.reactions[1].text, isNot(contains('{')));
     c.typed('canapé');
     expect(c.reactions.last.event, anyOf(ReactionEvent.accepted, ReactionEvent.acceptedFast));
   });

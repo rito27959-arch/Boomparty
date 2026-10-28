@@ -62,8 +62,21 @@ class PersonalityEngine {
   final List<String> _recent = [];
   static const _memory = 6;
 
+  /// Si vrai, on préfère les répliques sans variable : elles existent en
+  /// version enregistrée (voix expressive), les autres seraient synthétisées
+  /// en direct avec une voix moins naturelle. Le prénom et le mot restent
+  /// affichés à l'écran.
+  bool preferStatic = true;
+
+  List<Line> _pool(ReactionEvent e) {
+    final all = (lines[profile]![e] ?? lines[PersonalityId.classic]![e])!;
+    if (!preferStatic) return all;
+    final statics = [for (final l in all) if (l.isStatic) l];
+    return statics.isEmpty ? all : statics;
+  }
+
   Reaction react(ReactionEvent e, [ReactionContext ctx = const ReactionContext()]) {
-    final pool = (lines[profile]![e] ?? lines[PersonalityId.classic]![e])!;
+    final pool = _pool(e);
     // pondération : les répliques récentes deviennent très improbables
     // la dernière réplique n'est jamais rejouée tout de suite (si le choix existe)
     final last = _recent.isEmpty ? null : _recent.last;
@@ -90,7 +103,7 @@ class PersonalityEngine {
     return Reaction(line: pick, text: _fill(pick.text, ctx), emotion: pick.emotion, event: e);
   }
 
-  int poolSize(ReactionEvent e) => (lines[profile]![e] ?? lines[PersonalityId.classic]![e])!.length;
+  int poolSize(ReactionEvent e) => _pool(e).length;
 
   static String _fill(String t, ReactionContext c) => t
       .replaceAll('{name}', c.name ?? '')
@@ -125,11 +138,15 @@ class PersonalityEngine {
         Line('c_rs1', 'Bon, mes petits génies ! Catégorie : {category} ! {name}, commence !', _t),
         Line('c_rs2', 'Nouvelle manche ! {category} ! {name}, à toi l\'honneur !', _t),
         Line('c_rs3', 'On va voir qui s\'y connaît en {category} ! {name}, vas-y !', _t),
+        Line('c_rs4', 'Nouvelle manche ! Regardez bien la catégorie… et c\'est parti !', _t),
+        Line('c_rs5', 'Allez, on y va ! Bonne chance à tous !', _t),
       ],
       ReactionEvent.yourTurn: [
         Line('c_yt1', 'À toi, {name} !', _t),
         Line('c_yt2', '{name}, c\'est ton tour !', _t),
         Line('c_yt3', 'Allez {name} !', _t),
+        Line('c_yt4', 'À toi !', _t),
+        Line('c_yt5', 'À toi de jouer !', _t),
       ],
       ReactionEvent.accepted: [
         Line('c_ok1', 'Excellent ! C\'est validé !', _h),
@@ -154,11 +171,15 @@ class PersonalityEngine {
       ReactionEvent.duplicateSynonym: [
         Line('c_ds1', 'AHAHA ! Tu pensais vraiment m\'avoir ? {word}, {prev}, c\'est exactement la même chose !', _l),
         Line('c_ds2', 'Bien essayé ! Mais {word} et {prev}, c\'est pareil !', _l),
+        Line('c_ds3', 'Bien essayé ! Mais c\'est exactement la même chose !', _l),
+        Line('c_ds4', 'AHAHA ! Tu pensais vraiment m\'avoir ? C\'est le même mot, déguisé !', _l),
       ],
       ReactionEvent.wrongCategory: [
         Line('c_wc1', '{word} ?! Dans la catégorie {category} ?! Tu es sûr de toi ?', _c),
         Line('c_wc2', 'Mais qu\'est-ce que tu racontes ?! {word}, ça n\'a rien à voir !', _c),
         Line('c_wc3', 'Hmm… {word}, ce n\'est pas vraiment {category} !', _c),
+        Line('c_wc4', 'Hmm… ça ne rentre pas dans la catégorie !', _c),
+        Line('c_wc5', 'Mais qu\'est-ce que tu racontes ?! Ça n\'a rien à voir !', _c),
       ],
       ReactionEvent.unknown: [
         Line('c_un1', 'Je ne connais pas ce mot-là… Essaie autre chose !', _c),
@@ -166,6 +187,7 @@ class PersonalityEngine {
       ],
       ReactionEvent.ambiguous: [
         Line('c_am1', 'Attends… tu veux dire {alt} ?', _th),
+        Line('c_am2', 'Attends… tu veux dire lequel ?', _th),
       ],
       ReactionEvent.recognitionError: [
         Line('c_re1', 'Je n\'ai pas bien entendu ! Répète !', _th),
@@ -187,6 +209,7 @@ class PersonalityEngine {
       ReactionEvent.gameEnd: [
         Line('c_ge1', 'Bravo {name} ! Soirée de légende !', _cel),
         Line('c_ge2', 'Et la victoire revient à {name} ! Bravo !', _cel),
+        Line('c_ge3', 'Bravo au grand gagnant ! Soirée de légende !', _cel),
       ],
     },
     PersonalityId.crazy: {
@@ -197,10 +220,12 @@ class PersonalityEngine {
       ReactionEvent.roundStart: [
         Line('z_rs1', '{category} ! {category} ! {name}, FONCE !', _t),
         Line('z_rs2', 'Catégorie… {category} ! {name}, ne me déçois pas !', _t),
+        Line('z_rs3', 'NOUVELLE MANCHE ! FONCEZ !', _t),
       ],
       ReactionEvent.yourTurn: [
         Line('z_yt1', '{name} ! VITE VITE VITE !', _t),
         Line('z_yt2', 'À TOI {name} !', _t),
+        Line('z_yt3', 'À TOI ! VITE VITE VITE !', _t),
       ],
       ReactionEvent.accepted: [
         Line('z_ok1', 'OUIIII ! INCROYABLE !', _cel),
@@ -220,16 +245,19 @@ class PersonalityEngine {
       ],
       ReactionEvent.duplicateSynonym: [
         Line('z_ds1', 'HAHAHA ! {word}, {prev}, MÊME COMBAT ! Bien tenté !', _l),
+        Line('z_ds2', 'HAHAHA ! MÊME COMBAT ! Bien tenté !', _l),
       ],
       ReactionEvent.wrongCategory: [
         Line('z_wc1', 'UN {word} ?! Mais tu joues à quel jeu exactement ?!', _c),
         Line('z_wc2', '{word} ?! Dans {category} ?! J\'EXPLOSE DE RIRE !', _l),
+        Line('z_wc3', 'Mais tu joues à quel jeu exactement ?!', _c),
       ],
       ReactionEvent.unknown: [
         Line('z_un1', 'C\'est quoi ce mot ?! Tu l\'as inventé ?!', _c),
       ],
       ReactionEvent.ambiguous: [
         Line('z_am1', '{alt} ?! Choisis, choisis !', _th),
+        Line('z_am2', 'Lequel ?! Choisis, choisis !', _th),
       ],
       ReactionEvent.recognitionError: [
         Line('z_re1', 'Hein ?! Quoi ?! Répète !', _th),
@@ -246,6 +274,7 @@ class PersonalityEngine {
       ],
       ReactionEvent.gameEnd: [
         Line('z_ge1', '{name} EST LE ROI DE LA SOIRÉE ! YAAAAH !', _cel),
+        Line('z_ge2', 'ON A UN ROI DE LA SOIRÉE ! YAAAAH !', _cel),
       ],
     },
     PersonalityId.drama: {
@@ -255,10 +284,12 @@ class PersonalityEngine {
       ReactionEvent.roundStart: [
         Line('d_rs1', 'Le destin a choisi… {category}. {name}, la scène est à toi.', _t),
         Line('d_rs2', 'Silence dans la salle… {category} ! {name}, commence.', _t),
+        Line('d_rs3', 'Silence dans la salle… le destin a choisi. Commence.', _t),
       ],
       ReactionEvent.yourTurn: [
         Line('d_yt1', '{name}… le monde entier te regarde.', _t),
         Line('d_yt2', 'À toi, {name}. Ne tremble pas.', _t),
+        Line('d_yt3', 'À toi… ne tremble pas.', _t),
       ],
       ReactionEvent.accepted: [
         Line('d_ok1', 'Magnifique. Tout simplement magnifique.', _h),
@@ -277,16 +308,19 @@ class PersonalityEngine {
       ],
       ReactionEvent.duplicateSynonym: [
         Line('d_ds1', 'Tu croyais me tromper ? {word}… {prev}… c\'est la même chose, voyons !', _l),
+        Line('d_ds2', 'Tu croyais me tromper ? C\'est la même chose, voyons !', _l),
       ],
       ReactionEvent.wrongCategory: [
         Line('d_wc1', 'Mesdames et messieurs… nous assistons actuellement à une catastrophe intellectuelle ! {word} ?!', _c),
         Line('d_wc2', '{word}… dans {category}… mon cœur se brise.', _c),
+        Line('d_wc3', 'Mesdames et messieurs… nous assistons à une catastrophe intellectuelle !', _c),
       ],
       ReactionEvent.unknown: [
         Line('d_un1', 'Ce mot m\'est inconnu… et pourtant j\'ai tout vu.', _c),
       ],
       ReactionEvent.ambiguous: [
         Line('d_am1', 'Un dilemme se pose… {alt} ?', _th),
+        Line('d_am2', 'Un dilemme se pose… lequel choisis-tu ?', _th),
       ],
       ReactionEvent.recognitionError: [
         Line('d_re1', 'Ta voix s\'est perdue dans la nuit… répète.', _th),
@@ -303,6 +337,7 @@ class PersonalityEngine {
       ],
       ReactionEvent.gameEnd: [
         Line('d_ge1', 'Mesdames et messieurs… votre champion : {name} !', _cel),
+        Line('d_ge2', 'Mesdames et messieurs… voici votre champion !', _cel),
       ],
     },
   };
