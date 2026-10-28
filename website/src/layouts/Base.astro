@@ -1,0 +1,186 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/BoomParty.apk';
+---
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content="/img/hero.webp" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="icon" href="/img/hero.webp" type="image/webp" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    />
+  </head>
+  <body>
+    <header class="gnav">
+      <nav class="gnav-in" aria-label="Navigation principale">
+        <a class="wordmark" href="/">BOOM PARTY</a>
+        <ul class="gnav-links">
+          <li><a href="/#jeu">Le jeu</a></li>
+          <li><a href="/#comment">Comment jouer</a></li>
+          <li><a href="/#personnalites">Personnalités</a></li>
+          <li><a href="/#modes">Modes</a></li>
+          <li><a href="/#vie-privee">Vie privée</a></li>
+        </ul>
+        <a class="gnav-cta" href={apk}>Télécharger</a>
+      </nav>
+      <div class="fuse" aria-hidden="true"><span class="fuse-burn"></span><span class="fuse-spark"></span></div>
+    </header>
+
+    <main><slot /></main>
+
+    <footer class="foot">
+      <div class="foot-in">
+        <p class="foot-note">
+          BOOM PARTY fonctionne sur Android 7.0 et versions ultérieures. La reconnaissance vocale hors ligne demande un
+          téléchargement unique d’environ 210 Mo, de préférence en Wi‑Fi. Sans ce pack, le jeu utilise la reconnaissance
+          vocale du téléphone.
+        </p>
+        <div class="foot-cols">
+          <div>
+            <h3>Jouer</h3>
+            <a href={apk}>Télécharger pour Android</a>
+            <a href="/#comment">Comment jouer</a>
+            <a href="/#modes">Modes de jeu</a>
+          </div>
+          <div>
+            <h3>La bombe</h3>
+            <a href="/#personnalites">Personnalités</a>
+            <a href="/#expressions">Expressions</a>
+            <a href="/#skins">Skins</a>
+          </div>
+          <div>
+            <h3>À propos</h3>
+            <a href="/confidentialite">Confidentialité</a>
+            <a href="/confidentialite#licences">Données et licences</a>
+          </div>
+        </div>
+        <p class="foot-legal">
+          Base de mots issue de Wikidata (CC0). Voix de synthèse Piper « siwis » (corpus SIWIS, CC BY 4.0).
+          Reconnaissance vocale sherpa‑onnx (Apache‑2.0). © 2026 BOOM PARTY.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Mèche de progression : elle brûle au fil du défilement.
+      const root = document.documentElement;
+      const update = () => {
+        const max = root.scrollHeight - innerHeight;
+        root.style.setProperty('--burn', String(max > 0 ? Math.min(1, scrollY / max) : 0));
+      };
+      addEventListener('scroll', update, { passive: true });
+      addEventListener('resize', update);
+      update();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  /* Mise en page inspirée des pages produit : grandes bandes plein écran alternant
+     noir, blanc et gris perle, titres très serrés, tuiles à coins arrondis. */
+  :root {
+    --night: #000000;
+    --ink: #1d1d1f;
+    --paper: #ffffff;
+    --pearl: #f5f5f7;
+    --muted: #6e6e73;
+    --muted-dark: #a1a1a6;
+    --spark: #ff7a18;
+    --spark-hot: #ffd23f;
+    --link: #d9480f;
+    --link-dark: #ff9a4d;
+    --display: 'Plus Jakarta Sans', -apple-system, 'Segoe UI', Roboto, sans-serif;
+    --brand: 'Lilita One', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --gutter-l: max(22px, env(safe-area-inset-left, 0px));
+    --gutter-r: max(22px, env(safe-area-inset-right, 0px));
+    color-scheme: light;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--display);
+    font-size: 17px;
+    line-height: 1.47;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  img { max-width: 100%; height: auto; display: block; }
+  a { color: inherit; }
+  h1, h2, h3 { text-wrap: balance; margin: 0; }
+  :focus-visible { outline: 2px solid var(--spark); outline-offset: 3px; border-radius: 6px; }
+
+  .wrap { max-width: 1024px; margin-inline: auto; padding-left: var(--gutter-l); padding-right: var(--gutter-r); }
+
+  /* barre de navigation translucide */
+  .gnav { position: sticky; top: 0; z-index: 50; }
+  .gnav-in {
+    height: 48px; display: flex; align-items: center; gap: 28px;
+    padding-left: var(--gutter-l); padding-right: var(--gutter-r);
+    background: rgb(22 22 23 / 0.8); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    color: #e8e8ed;
+  }
+  .wordmark { font-family: var(--brand); font-size: 19px; letter-spacing: 0.02em; text-decoration: none; color: #fff; white-space: nowrap; }
+  .gnav-links { display: flex; gap: 26px; list-style: none; margin: 0 auto; padding: 0; font-size: 12.5px; }
+  .gnav-links a { text-decoration: none; opacity: 0.86; }
+  .gnav-links a:hover { opacity: 1; }
+  .gnav-cta {
+    font-size: 12.5px; font-weight: 600; text-decoration: none; color: #fff; white-space: nowrap;
+    background: var(--spark); padding: 5px 13px; border-radius: 980px; margin-left: auto;
+  }
+  @media (max-width: 760px) { .gnav-links { display: none; } }
+
+  /* la mèche */
+  .fuse { position: relative; height: 3px; background: rgb(255 255 255 / 0.06); }
+  .fuse-burn {
+    position: absolute; inset: 0 auto 0 0; width: calc(var(--burn, 0) * 100%);
+    background: linear-gradient(90deg, #6b3b1f, var(--spark));
+  }
+  .fuse-spark {
+    position: absolute; top: 50%; left: calc(var(--burn, 0) * 100%); width: 10px; height: 10px; margin: -5px 0 0 -5px;
+    border-radius: 50%; background: var(--spark-hot);
+    box-shadow: 0 0 6px 2px var(--spark-hot), 0 0 16px 6px rgb(255 122 24 / 0.6);
+    animation: crackle 0.18s infinite alternate;
+  }
+  @keyframes crackle { to { transform: scale(1.35); opacity: 0.85; } }
+  @media (prefers-reduced-motion: reduce) { .fuse-spark { animation: none; } }
+
+  /* liens d'action « › » */
+  .chev { color: var(--link); text-decoration: none; font-size: 19px; }
+  .chev::after { content: ' ›'; }
+  .chev:hover { text-decoration: underline; }
+  .on-dark .chev { color: var(--link-dark); }
+  .pill {
+    display: inline-block; background: var(--spark); color: #fff; text-decoration: none; font-weight: 600;
+    font-size: 17px; padding: 11px 22px; border-radius: 980px;
+  }
+  .pill:hover { background: #ff8f3a; }
+
+  /* pied de page */
+  .foot { background: var(--pearl); color: var(--muted); font-size: 12px; line-height: 1.5; }
+  .foot-in { max-width: 1024px; margin-inline: auto; padding: 22px var(--gutter-r) 30px var(--gutter-l); display: grid; gap: 18px; }
+  .foot-note { margin: 0; padding-bottom: 16px; border-bottom: 1px solid #d2d2d7; }
+  .foot-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 18px; }
+  .foot-cols h3 { font-size: 12px; color: var(--ink); font-weight: 600; margin-bottom: 8px; }
+  .foot-cols a { display: block; text-decoration: none; margin-bottom: 6px; }
+  .foot-cols a:hover { text-decoration: underline; }
+  .foot-legal { margin: 0; padding-top: 16px; border-top: 1px solid #d2d2d7; }
+</style>

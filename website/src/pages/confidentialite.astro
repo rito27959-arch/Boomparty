@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+const updated = '28 octobre 2026';
+---
+<Base title="Confidentialité — BOOM PARTY" description="Quelles données BOOM PARTY utilise, et pourquoi.">
+  <article class="doc wrap">
+    <p class="eyebrow">Confidentialité</p>
+    <h1>Politique de confidentialité</h1>
+    <p class="updated">Dernière mise à jour : {updated}</p>
+
+    <p class="intro">
+      BOOM PARTY est un jeu de soirée qui écoute les réponses des joueurs. Cette page explique ce que l’application fait
+      de votre voix et des autres données, en termes simples.
+    </p>
+
+    <h2>Le micro et votre voix</h2>
+    <ul>
+      <li>Le micro sert uniquement à reconnaître les réponses pendant une manche.</li>
+      <li>Avec le pack voix hors ligne installé, la reconnaissance se fait entièrement sur le téléphone. Le son n’est envoyé à aucun serveur.</li>
+      <li>Aucun enregistrement n’est conservé : le son est analysé en mémoire puis effacé.</li>
+      <li>
+        Sans le pack voix, l’application utilise la reconnaissance vocale fournie par votre téléphone (par exemple celle de
+        Google). Celle‑ci peut traiter le son selon les règles de son éditeur.
+      </li>
+      <li>Le micro ne s’active que pendant une partie, et il est coupé quand la bombe parle.</li>
+    </ul>
+
+    <h2>Données enregistrées sur le téléphone</h2>
+    <ul>
+      <li>Vos réglages (volume, voix, personnalité, vibrations, sous‑titres).</li>
+      <li>Les prénoms des joueurs saisis dans l’application.</li>
+      <li>Vos pièces et les skins débloqués.</li>
+      <li>Un cache des répliques vocales générées, pour éviter de les recalculer.</li>
+    </ul>
+    <p>Ces données restent sur l’appareil. Désinstaller l’application les supprime.</p>
+
+    <h2>Publicité</h2>
+    <p>
+      L’application affiche des publicités via Google AdMob, au plus une toutes les deux parties et jamais pendant une
+      manche. AdMob peut collecter des identifiants de l’appareil et des informations techniques pour diffuser et mesurer
+      les annonces. Les annonces sont limitées aux contenus tout public. Voir la
+      <a href="https://policies.google.com/technologies/ads" rel="noopener">politique publicitaire de Google</a>.
+    </p>
+
+    <h2>Téléchargement des packs voix</h2>
+    <p>
+      Les packs de reconnaissance et de synthèse vocales sont téléchargés depuis GitHub. Comme pour toute page web,
+      GitHub reçoit l’adresse IP de l’appareil au moment du téléchargement. Aucune autre donnée n’est transmise.
+    </p>
+
+    <h2>Ce que BOOM PARTY ne fait pas</h2>
+    <ul>
+      <li>Pas de compte à créer, pas d’adresse e‑mail demandée.</li>
+      <li>Pas de vente de données.</li>
+      <li>Pas d’accès aux contacts, aux photos ni à la localisation.</li>
+    </ul>
+
+    <h2>Enfants</h2>
+    <p>
+      BOOM PARTY est un jeu familial dont les contenus sont filtrés. L’application ne demande aucune information
+      personnelle sur l’âge ou l’identité des joueurs.
+    </p>
+
+    <h2 id="licences">Données et licences</h2>
+    <ul>
+      <li>Base de mots : Wikidata (CC0), complétée par des listes rédigées pour le jeu.</li>
+      <li>Reconnaissance vocale : modèle zipformer français (Apache‑2.0), moteur sherpa‑onnx (Apache‑2.0).</li>
+      <li>Voix de la bombe : Piper « siwis », corpus SIWIS de l’Université d’Édimbourg (CC BY 4.0).</li>
+      <li>Données de prononciation espeak‑ng (GPL‑3.0), distribuées sans modification dans le pack voix.</li>
+    </ul>
+
+    <h2>Contact</h2>
+    <p>
+      Pour toute question sur vos données, ouvrez une demande sur
+      <a href="https://github.com/rito27959-arch/Boomparty/issues" rel="noopener">la page du projet</a>.
+    </p>
+  </article>
+</Base>
+
+<style>
+  .doc { max-width: 720px; padding-block: 72px 96px; }
+  .eyebrow { margin: 0 0 6px; font-weight: 600; color: var(--link); }
+  h1 { font-size: clamp(34px, 6vw, 48px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; }
+  .updated { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+  .intro { font-size: 21px; font-weight: 500; line-height: 1.4; margin: 28px 0 8px; }
+  h2 { font-size: 24px; font-weight: 700; letter-spacing: -0.015em; margin: 44px 0 10px; }
+  p, li { color: #424245; }
+  ul { padding-left: 20px; display: grid; gap: 8px; margin: 0; }
+  a { color: var(--link); }
+</style>

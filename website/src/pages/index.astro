@@ -1,0 +1,414 @@
+---
+import Base from '../layouts/Base.astro';
+
+const apk = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/BoomParty.apk';
+const apk32 = 'https://github.com/rito27959-arch/Boomparty/releases/download/apk/BoomParty-ancien-telephone.apk';
+
+const personalities = [
+  {
+    id: 'classic', name: 'BOOM CLASSIC', tone: 'Moqueuse, bonne joueuse.', img: 'happy',
+    lines: [
+      { text: 'Hop hop hop ! Celui-là, on l’a déjà !', audio: 'c_du3' },
+      { text: 'Excellent ! C’est validé !', audio: 'c_ok1' },
+    ],
+  },
+  {
+    id: 'crazy', name: 'BOOM CRAZY', tone: 'Imprévisible et survoltée.', img: 'laughing',
+    lines: [
+      { text: 'NON NON NON ! DÉJÀ DIT !', audio: 'z_du1' },
+      { text: 'BOUM ! Euh non, VALIDÉ !', audio: 'z_ok2' },
+    ],
+  },
+  {
+    id: 'drama', name: 'BOOM DRAMA', tone: 'Tout est une tragédie.', img: 'thinking',
+    lines: [
+      { text: 'Hélas… ce mot a déjà été prononcé. Quelle tragédie !', audio: 'd_du1' },
+      { text: 'Le public est en larmes. Validé !', audio: 'd_ok2' },
+    ],
+  },
+];
+
+const expressions = [
+  ['listening', 'Elle écoute'], ['thinking', 'Elle réfléchit'], ['happy', 'Bonne réponse'],
+  ['laughing', 'Elle se moque'], ['angry', 'Déjà dit !'], ['confused', 'Hors sujet'],
+  ['panic', 'Trop lent'], ['celebration', 'Victoire'], ['defeated', 'Après le boom'],
+];
+
+const modes = [
+  { key: 'culture', name: 'Culture générale', fuse: '25 à 45 s', note: 'Le mode pour commencer.' },
+  { key: 'fou', name: 'Complètement fou', fuse: '20 à 40 s', note: 'Catégories et défis qui s’enchaînent.' },
+  { key: 'amis', name: 'Entre amis', fuse: '25 à 45 s', note: 'Pour les longues soirées.' },
+  { key: 'reflexes', name: 'Réflexes', fuse: '12 à 25 s', note: 'Pas le temps de réfléchir.' },
+  { key: 'extreme', name: 'Extrême', fuse: '8 à 18 s', note: 'Trois vies. Le dernier debout gagne.' },
+];
+
+const categories = [
+  ['animaux', 'Animaux'], ['pays', 'Pays'], ['objets', 'Objets'], ['nourriture', 'Nourriture'], ['metiers', 'Métiers'],
+  ['sports', 'Sports'], ['films', 'Films'], ['musique', 'Musique'], ['vehicules', 'Véhicules'], ['autres', 'Et plus'],
+];
+
+const skins = ['classique', 'lave', 'galaxie', 'glace', 'ninja', 'bonbon', 'citrouille', 'acier', 'arc'];
+---
+<Base
+  title="BOOM PARTY"
+  description="Le jeu de soirée où une bombe écoute vos réponses, les juge et explose. Hors ligne, en français, de 2 à 12 joueurs."
+>
+  <!-- HÉROS -->
+  <section class="hero on-dark" id="jeu">
+    <div class="wrap hero-in">
+      <p class="eyebrow">Nouveau sur Android</p>
+      <h1 class="hero-name">BOOM PARTY</h1>
+      <p class="hero-line">Elle écoute. Elle juge. Elle explose.</p>
+      <div class="ctas">
+        <a class="pill" href={apk}>Télécharger</a>
+        <a class="chev" href="#comment">Voir comment jouer</a>
+      </div>
+      <div class="hero-art">
+        <div class="glow" aria-hidden="true"></div>
+        <img src="/img/hero.webp" width="1000" height="1000" alt="La bombe de BOOM PARTY, mèche allumée, qui lève le pouce" />
+      </div>
+    </div>
+  </section>
+
+  <!-- TUILES -->
+  <section class="tiles wrap" aria-label="En bref">
+    <article class="tile tile-light">
+      <h2>Frigo.<br />Réfrigérateur.<br />Même chose.</h2>
+      <p>Elle reconnaît les synonymes. Impossible de tricher en redisant un mot autrement.</p>
+      <img src="/img/angry.webp" width="560" height="667" alt="La bombe fâchée" loading="lazy" />
+    </article>
+    <article class="tile tile-dark on-dark">
+      <h2>Trois caractères.<br />Zéro pitié.</h2>
+      <p>Classic, Crazy ou Drama. Elle parle, rit et se moque, sans jamais vexer personne.</p>
+      <a class="chev" href="#personnalites">Les écouter</a>
+      <img src="/img/laughing.webp" width="560" height="667" alt="La bombe qui éclate de rire" loading="lazy" />
+    </article>
+    <article class="tile tile-dark on-dark">
+      <h2>Pas de réseau ?<br />Pas de problème.</h2>
+      <p>Une fois les voix installées, tout tourne sur le téléphone, même en mode avion.</p>
+      <a class="chev" href="#vie-privee">En savoir plus</a>
+      <img src="/img/listening.webp" width="560" height="667" alt="La bombe qui tend l’oreille" loading="lazy" />
+    </article>
+    <article class="tile tile-light">
+      <h2>Un téléphone.<br />Jusqu’à 12 joueurs.</h2>
+      <p>On se passe la bombe en cercle. Celui qui la tient quand elle explose perd la manche.</p>
+      <a class="chev" href="#modes">Voir les modes</a>
+      <img src="/img/celebration.webp" width="560" height="667" alt="La bombe qui fait la fête" loading="lazy" />
+    </article>
+  </section>
+
+  <!-- COMMENT JOUER -->
+  <section class="how" id="comment">
+    <div class="wrap">
+      <p class="eyebrow dark">Comment jouer</p>
+      <h2 class="big">Une manche dure le temps d’une mèche.</h2>
+      <ol class="steps">
+        <li>
+          <div class="phone"><img src="/img/ecran_jeu_ecoute.webp" width="560" height="1305" alt="Écran de jeu : « Cite des OBJETS qu’on trouve dans une maison »" loading="lazy" /></div>
+          <h3>La bombe donne la catégorie</h3>
+          <p>« Cite des objets qu’on trouve dans une maison ! » La mèche s’allume. Sa durée reste secrète.</p>
+        </li>
+        <li>
+          <div class="phone"><img src="/img/ecran_bonne_reponse.webp" width="560" height="1531" alt="Écran : bonne réponse, +1 point" loading="lazy" /></div>
+          <h3>Vous répondez à voix haute</h3>
+          <p>Bonne réponse : +1 point, et la bombe passe au joueur suivant.</p>
+        </li>
+        <li>
+          <div class="phone"><img src="/img/ecran_deja_dit.webp" width="560" height="1546" alt="Écran : Oups, ce mot a déjà été dit" loading="lazy" /></div>
+          <h3>Déjà dit ? Hors sujet ?</h3>
+          <p>Elle refuse et vous gardez la bombe. Le chrono, lui, continue.</p>
+        </li>
+        <li>
+          <div class="phone"><img src="/img/ecran_explosion.webp" width="560" height="1022" alt="Écran : BOOOOM, Max perd 1 point" loading="lazy" /></div>
+          <h3>BOOOOM.</h3>
+          <p>Celui qui la tient perd un point. Manche suivante, nouvelle catégorie.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CHIFFRES -->
+  <section class="numbers on-dark">
+    <div class="wrap">
+      <h2 class="big">Elle connaît vraiment ses mots.</h2>
+      <p class="lede">Une base construite à partir de Wikidata, enrichie à la main de synonymes de tous les jours.</p>
+      <dl class="stats">
+        <div><dt>notions reconnues</dt><dd>3 027</dd></div>
+        <div><dt>façons de les dire</dt><dd>13 558</dd></div>
+        <div><dt>catégories</dt><dd>21</dd></div>
+        <div><dt>joueurs</dt><dd>2–12</dd></div>
+      </dl>
+      <ul class="cats">
+        {categories.map(([k, label]) => (
+          <li><img src={`/img/cat_${k}.webp`} width="200" height="200" alt="" loading="lazy" /><span>{label}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- PERSONNALITÉS -->
+  <section class="persons" id="personnalites">
+    <div class="wrap">
+      <p class="eyebrow dark">Personnalités</p>
+      <h2 class="big">Choisissez qui va vous juger.</h2>
+      <div class="person-grid">
+        {personalities.map((p) => (
+          <article class={`person person-${p.id}`}>
+            <img src={`/img/${p.img}.webp`} width="560" height="667" alt="" loading="lazy" />
+            <h3>{p.name}</h3>
+            <p class="tone">{p.tone}</p>
+            <ul class="lines">
+              {p.lines.map((l) => (
+                <li>
+                  <button class="play" type="button" data-audio={`/audio/${l.audio}.mp3`} aria-label={`Écouter : ${l.text}`}>
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path class="i-play" d="M8 5.5v13l11-6.5z" /><path class="i-stop" d="M7 7h10v10H7z" /></svg>
+                  </button>
+                  <q>{l.text}</q>
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <p class="fine">Voix réelles du jeu, générées hors ligne. Quatre timbres au choix : classique, drôle, sérieuse ou robot.</p>
+    </div>
+  </section>
+
+  <!-- EXPRESSIONS -->
+  <section class="faces" id="expressions">
+    <div class="wrap">
+      <h2 class="big">Modelée et animée en 3D.</h2>
+      <p class="lede dark">Treize animations et cinq formes de bouche synchronisées avec sa voix.</p>
+    </div>
+    <ul class="face-rail" tabindex="0" aria-label="Expressions de la bombe">
+      {expressions.map(([k, label]) => (
+        <li><img src={`/img/${k}.webp`} width="560" height="667" alt="" loading="lazy" /><span>{label}</span></li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- MODES -->
+  <section class="modes" id="modes">
+    <div class="wrap">
+      <p class="eyebrow dark">Modes de jeu</p>
+      <h2 class="big">Plus la mèche est courte,<br />plus ça crie.</h2>
+      <div class="mode-table" role="table" aria-label="Comparatif des modes">
+        {modes.map((m) => (
+          <div class="mode" role="row">
+            <img src={`/img/mode_${m.key}.webp`} width="300" height="300" alt="" loading="lazy" />
+            <h3 role="cell">{m.name}</h3>
+            <p class="fuse-time" role="cell"><span>Mèche</span>{m.fuse}</p>
+            <p class="mode-note" role="cell">{m.note}</p>
+          </div>
+        ))}
+      </div>
+      <p class="fine">Les défis comme « trois pays commençant par M » arrivent régulièrement au fil des manches.</p>
+    </div>
+  </section>
+
+  <!-- SKINS -->
+  <section class="skins" id="skins">
+    <div class="wrap">
+      <h2 class="big">Une bombe à votre image.</h2>
+      <p class="lede dark">Neuf skins à débloquer avec les pièces gagnées en jouant.</p>
+      <ul class="skin-row">
+        {skins.map((s) => (<li><img src={`/img/skin_${s}.webp`} width="320" height="320" alt={`Skin ${s}`} loading="lazy" /></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- VIE PRIVÉE -->
+  <section class="privacy on-dark" id="vie-privee">
+    <div class="wrap privacy-in">
+      <svg class="lock" viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="21" width="30" height="21" rx="5" /><path d="M15 21v-6a9 9 0 0 1 18 0v6" fill="none" stroke-width="4" /></svg>
+      <h2 class="big">Votre voix ne quitte pas votre téléphone.</h2>
+      <p class="lede">
+        La reconnaissance vocale et la voix de la bombe tournent directement sur l’appareil. Aucun enregistrement n’est
+        conservé, rien n’est envoyé à un serveur pour jouer.
+      </p>
+      <a class="chev" href="/confidentialite">Politique de confidentialité</a>
+    </div>
+  </section>
+
+  <!-- TÉLÉCHARGER -->
+  <section class="get" id="telecharger">
+    <div class="wrap get-in">
+      <img src="/img/talking.webp" width="560" height="667" alt="" loading="lazy" />
+      <h2 class="big">Prêt à jouer avec le feu ?</h2>
+      <p class="lede dark">Gratuit. Android 7.0 ou plus récent.</p>
+      <div class="ctas">
+        <a class="pill" href={apk}>Télécharger pour Android</a>
+        <a class="chev" href={apk32}>Ancien téléphone (32 bits)</a>
+      </div>
+      <ol class="install">
+        <li>Ouvrez le lien dans Chrome sur votre téléphone.</li>
+        <li>Touchez le fichier téléchargé, puis autorisez l’installation depuis cette source.</li>
+        <li>Au premier lancement, acceptez l’accès au micro.</li>
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Lecteur des répliques : un seul son à la fois, démarré par un clic.
+  let current: HTMLAudioElement | null = null;
+  let currentBtn: HTMLElement | null = null;
+  const stop = () => {
+    current?.pause();
+    currentBtn?.classList.remove('is-playing');
+    current = null;
+    currentBtn = null;
+  };
+  document.querySelectorAll<HTMLButtonElement>('.play').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (currentBtn === btn) return stop();
+      stop();
+      const a = new Audio(btn.dataset.audio);
+      current = a;
+      currentBtn = btn;
+      btn.classList.add('is-playing');
+      a.addEventListener('ended', stop);
+      a.play().catch(stop);
+    });
+  });
+</script>
+
+<style>
+  .eyebrow { margin: 0 0 6px; font-size: 17px; font-weight: 600; color: var(--spark); }
+  .eyebrow.dark { color: var(--link); }
+  .big { font-size: clamp(34px, 6vw, 56px); line-height: 1.07; font-weight: 800; letter-spacing: -0.03em; }
+  .lede { max-width: 640px; margin: 16px auto 0; font-size: clamp(17px, 2.2vw, 21px); color: var(--muted-dark); font-weight: 500; }
+  .lede.dark { color: var(--muted); }
+  .fine { margin: 28px auto 0; max-width: 620px; font-size: 14px; color: var(--muted); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 14px 26px; align-items: center; justify-content: center; margin-top: 22px; }
+
+  /* héros */
+  .hero { background: var(--night); color: #f5f5f7; text-align: center; overflow: hidden; }
+  .hero-in { padding-block: 64px 0; }
+  .hero-name {
+    font-family: var(--brand); font-weight: 400; font-size: clamp(64px, 13vw, 132px); line-height: 0.95; letter-spacing: 0.01em;
+    background: linear-gradient(180deg, #ffe08a 10%, var(--spark) 60%, #e0361a); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-line { font-size: clamp(22px, 3.6vw, 32px); font-weight: 700; letter-spacing: -0.02em; margin: 10px 0 0; }
+  .hero-art { position: relative; width: min(620px, 100%); margin: 26px auto -10px; }
+  .hero-art img { position: relative; animation: bob 3.2s ease-in-out infinite; }
+  .glow {
+    position: absolute; inset: 18% 12% 6%; border-radius: 50%;
+    background: radial-gradient(circle, rgb(255 122 24 / 0.55), rgb(255 122 24 / 0) 68%); filter: blur(10px);
+  }
+  @keyframes bob { 50% { transform: translateY(-10px) rotate(-1deg); } }
+  @media (prefers-reduced-motion: reduce) { .hero-art img { animation: none; } }
+
+  /* tuiles */
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-block: 12px; }
+  .tile {
+    border-radius: 22px; text-align: center; padding: 44px 26px 0; display: flex; flex-direction: column; align-items: center;
+    gap: 10px; overflow: hidden; min-height: 560px;
+  }
+  .tile h2 { font-size: clamp(28px, 3.6vw, 40px); line-height: 1.08; font-weight: 800; letter-spacing: -0.025em; }
+  .tile p { margin: 0; max-width: 34ch; font-size: 17px; }
+  .tile img { width: min(400px, 92%); margin-top: auto; margin-bottom: -18px; }
+  .tile-light { background: var(--pearl); }
+  .tile-light p { color: var(--muted); }
+  .tile-dark { background: #111113; color: #f5f5f7; }
+  .tile-dark p { color: var(--muted-dark); }
+  @media (max-width: 760px) { .tiles { grid-template-columns: minmax(0, 1fr); } .tile { min-height: 0; } }
+
+  /* comment jouer */
+  .how { text-align: center; padding-block: 96px 80px; }
+  .steps { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; text-align: left; counter-reset: s; }
+  .steps li { counter-increment: s; min-width: 0; }
+  .steps h3 { font-size: 19px; font-weight: 700; margin-top: 18px; letter-spacing: -0.01em; }
+  .steps h3::before { content: counter(s); display: inline-grid; place-items: center; width: 24px; height: 24px; margin-right: 8px; border-radius: 50%; background: var(--ink); color: #fff; font-size: 13px; vertical-align: 2px; }
+  .steps p { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+  .phone {
+    border-radius: 30px; padding: 7px; background: #1d1d1f; box-shadow: 0 30px 50px -30px rgb(0 0 0 / 0.5);
+    aspect-ratio: 9 / 19; overflow: hidden; max-width: 100%;
+  }
+  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 23px; }
+  @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 460px) { .steps { grid-template-columns: minmax(0, 1fr); } .phone { max-width: 260px; } }
+
+  /* chiffres */
+  .numbers { background: var(--night); color: #f5f5f7; text-align: center; padding-block: 96px; }
+  .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; margin: 56px 0 0; }
+  .stats div { display: flex; flex-direction: column-reverse; gap: 4px; }
+  .stats dd {
+    margin: 0; font-size: clamp(36px, 6vw, 64px); font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
+    background: linear-gradient(180deg, #fff, #ffb37a); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stats dt { color: var(--muted-dark); font-size: 15px; }
+  .cats { list-style: none; padding: 0; margin: 64px 0 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+  .cats li { display: grid; justify-items: center; gap: 6px; font-size: 14px; color: #d2d2d7; }
+  .cats img { width: 76px; }
+  @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 32px; } .cats { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  /* personnalités */
+  .persons { background: var(--pearl); text-align: center; padding-block: 96px; }
+  .person-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 52px; text-align: left; }
+  .person { background: var(--paper); border-radius: 22px; padding: 22px 22px 26px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .person img { width: 160px; margin: 0 auto 6px; }
+  .person h3 { font-family: var(--brand); font-weight: 400; font-size: 26px; letter-spacing: 0.02em; }
+  .person-classic h3 { color: #e8590c; }
+  .person-crazy h3 { color: #c2255c; }
+  .person-drama h3 { color: #5f3dc4; }
+  .tone { margin: 0 0 8px; color: var(--muted); }
+  .lines { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+  .lines li { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 10px; align-items: center; font-size: 15px; }
+  .lines q { quotes: '« ' ' »'; }
+  .play { width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--ink); color: #fff; cursor: pointer; display: grid; place-items: center; padding: 0; }
+  .play svg { width: 16px; height: 16px; fill: currentColor; }
+  .play .i-stop { display: none; }
+  .play.is-playing { background: var(--spark); }
+  .play.is-playing .i-play { display: none; }
+  .play.is-playing .i-stop { display: block; }
+  @media (max-width: 860px) { .person-grid { grid-template-columns: minmax(0, 1fr); max-width: 460px; margin-inline: auto; } }
+
+  /* expressions */
+  .faces { text-align: center; padding-block: 96px 80px; overflow: hidden; }
+  .face-rail {
+    list-style: none; margin: 48px 0 0; padding: 0 var(--gutter-r) 12px var(--gutter-l);
+    display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+  }
+  .face-rail::-webkit-scrollbar { display: none; }
+  .face-rail li {
+    flex: 0 0 auto; width: 250px; scroll-snap-align: center; background: var(--pearl); border-radius: 22px; padding: 18px 12px 16px;
+    display: grid; gap: 8px; justify-items: center; font-weight: 600; font-size: 15px;
+  }
+  .face-rail li:first-child { margin-left: auto; }
+  .face-rail li:last-child { margin-right: auto; }
+  .face-rail img { width: 220px; }
+
+  /* modes */
+  .modes { text-align: center; padding-block: 96px; background: var(--pearl); }
+  .mode-table { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; margin-top: 52px; }
+  .mode { background: var(--paper); border-radius: 20px; padding: 20px 14px 22px; display: grid; justify-items: center; gap: 4px; align-content: start; }
+  .mode img { width: 92px; }
+  .mode h3 { font-size: 17px; font-weight: 700; margin-top: 6px; }
+  .fuse-time { margin: 8px 0 0; font-size: 26px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; display: grid; }
+  .fuse-time span { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  .mode-note { margin: 6px 0 0; font-size: 14px; color: var(--muted); }
+  @media (max-width: 900px) { .mode-table { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 460px) { .mode-table { grid-template-columns: minmax(0, 1fr); } }
+
+  /* skins */
+  .skins { text-align: center; padding-block: 96px; }
+  .skin-row { list-style: none; padding: 0; margin: 48px 0 0; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 8px; }
+  .skin-row img { transition: transform 0.25s; }
+  .skin-row img:hover { transform: translateY(-6px) rotate(-3deg); }
+  @media (max-width: 760px) { .skin-row { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+
+  /* vie privée */
+  .privacy { background: var(--night); color: #f5f5f7; text-align: center; padding-block: 110px; }
+  .privacy-in { display: grid; justify-items: center; gap: 14px; }
+  .lock { width: 52px; height: 52px; fill: var(--spark); stroke: var(--spark); }
+  .privacy .lede { margin-top: 0; }
+
+  /* télécharger */
+  .get { text-align: center; padding-block: 90px 100px; }
+  .get-in { display: grid; justify-items: center; }
+  .get-in > img { width: 200px; margin-bottom: 10px; }
+  .install { margin: 36px auto 0; padding: 0; list-style: none; counter-reset: i; display: grid; gap: 10px; text-align: left; max-width: 460px; color: var(--muted); font-size: 15px; }
+  .install li { counter-increment: i; display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 8px; }
+  .install li::before { content: counter(i); width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--muted); display: grid; place-items: center; font-size: 12px; font-weight: 700; }
+</style>
