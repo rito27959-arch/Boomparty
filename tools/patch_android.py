@@ -34,3 +34,26 @@ for g in (root / 'android/app/build.gradle.kts', root / 'android/app/build.gradl
         if t2 != t:
             g.write_text(t2)
             print('minSdk = 24 :', g.name)
+
+# Règles R8 : en release, R8 supprimait la base Room de WorkManager (tirée par
+# AdMob) → plantage au lancement « Failed to create an instance of WorkDatabase ».
+pro = root / 'android/app/proguard-rules.pro'
+rules = """# BOOM PARTY — classes instanciées par réflexion
+-keep class * extends androidx.room.RoomDatabase { <init>(); }
+-keep class androidx.work.impl.WorkDatabase_Impl { *; }
+-keep class androidx.work.** { *; }
+-keep class androidx.room.** { *; }
+-dontwarn androidx.work.**
+"""
+if not pro.exists() or 'WorkDatabase_Impl' not in pro.read_text():
+    pro.write_text((pro.read_text() if pro.exists() else '') + rules)
+    print('proguard-rules.pro écrit')
+for g in (root / 'android/app/build.gradle.kts',):
+    if g.exists():
+        t = g.read_text()
+        if 'proguard-rules.pro' not in t:
+            t = t.replace('signingConfig = signingConfigs.getByName("debug")',
+                          'signingConfig = signingConfigs.getByName("debug")\n'
+                          '            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")', 1)
+            g.write_text(t)
+            print('proguardFiles ajouté :', g.name)
