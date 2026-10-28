@@ -56,6 +56,8 @@ class GameController extends ChangeNotifier {
   /// Toutes les réactions de la partie (tests, statistiques).
   final List<Reaction> reactions = [];
   double _phaseT = 0;
+  double _speakingFor = 0;
+  static const maxSpeakingSeconds = 12.0;
   bool _slowPending = false;
 
   static const correctPause = 1.3;
@@ -139,6 +141,9 @@ class GameController extends ChangeNotifier {
     _phaseT += dt;
     engine.tick(dt);
     speaker.lipSync.tick();
+    // garde-fou : si la bombe semble parler trop longtemps, on rouvre le micro
+    _speakingFor = speaking ? _speakingFor + dt : 0;
+    if (_speakingFor > maxSpeakingSeconds && input.muted) input.muted = false;
     if (phase == Phase.correct && _phaseT >= correctPause) {
       _set(_slowPending ? Phase.tooSlow : Phase.listening);
       _slowPending = false;

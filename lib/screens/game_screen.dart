@@ -373,6 +373,9 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   List<Widget> _tooSlow(RefScale r) {
     final k = r.k;
     return [
+      // secours clavier : toucher l'écran pour écrire la réponse (le chrono continue)
+      if (ctl.phase == Phase.tooSlow)
+        Positioned.fill(child: GestureDetector(behavior: HitTestBehavior.translucent, onTap: () => _typeAnswer(context))),
       _Header(r: r, player: ctl.player, twoLines: false, avatarX: 66, textX: 87, y: 30, showGear: false),
       Positioned(
         left: r.x(22), width: r.x(172), top: r.y(58),

@@ -74,7 +74,7 @@ try:
     tap_text(r'^Continuer$', fallback=(0.5, 0.93))
     shot('03_categories')
     tap_text(r'^Objets$', fallback=(0.75, 0.42))
-    tap_text(r'Lancer la partie', fallback=(0.5, 0.94), wait=6)
+    tap_text(r'Lancer la partie', fallback=(0.5, 0.94), wait=2.5)
     shot('04_partie')
     for i, w in enumerate(['table', 'refrigerateur', 'frigo', 'elephant', 'chaise']):
         type_answer(w)

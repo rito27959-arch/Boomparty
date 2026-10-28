@@ -91,24 +91,32 @@ class SpeechEngine implements ReactionSpeaker {
     track ??= VisemeTrack.fromText(r.text);
     if (token != _token) return;
 
-    await _player.stop();
     isSpeaking.value = true;
     lipSync.start(track);
-    if (file != null) {
-      await _player.setVolume(volume);
-      if (file.startsWith('assets/')) {
-        await _player.play(AssetSource(file.substring('assets/'.length)));
+    try {
+      await _player.stop();
+      if (file != null) {
+        await _player.setVolume(volume);
+        final done = _player.onPlayerComplete.first;
+        if (file.startsWith('assets/')) {
+          await _player.play(AssetSource(file.substring('assets/'.length)));
+        } else {
+          await _player.play(DeviceFileSource(file));
+        }
+        // fin de lecture, ou au plus tard durée prévue + marge
+        await Future.any<void>([done, Future<void>.delayed(Duration(milliseconds: track.durationMs + 1500))]);
       } else {
-        await _player.play(DeviceFileSource(file));
+        await Future<void>.delayed(Duration(milliseconds: track.durationMs));
       }
-      await _player.onPlayerComplete.first.timeout(Duration(milliseconds: track.durationMs + 1500), onTimeout: () {});
-    } else {
-      await Future<void>.delayed(Duration(milliseconds: track.durationMs));
-    }
-    if (token == _token) {
-      lipSync.stop();
-      isSpeaking.value = false;
-      _currentPriority = 0;
+    } catch (e) {
+      debugPrint('Lecture de la réplique impossible : $e');
+    } finally {
+      // toujours rendre la parole : sinon le micro resterait coupé
+      if (token == _token) {
+        lipSync.stop();
+        isSpeaking.value = false;
+        _currentPriority = 0;
+      }
     }
   }
 
