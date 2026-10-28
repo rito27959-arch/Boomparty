@@ -12,6 +12,7 @@ for t in 5 15 30; do
   adb exec-out screencap -p > "$OUT/ecran_${t}s.png"
   adb shell pidof "$PKG" > "$OUT/pid_${t}s.txt" || echo "PAS DE PROCESSUS" > "$OUT/pid_${t}s.txt"
 done
+python3 tools/smoke_play.py "$OUT" || true
 adb logcat -d > "$OUT/logcat_complet.txt"
 adb logcat -d -b crash > "$OUT/logcat_crash.txt"
 grep -E "AndroidRuntime|FATAL|flutter|DEBUG|libc|E/|Exception|boom" "$OUT/logcat_complet.txt" | head -400 > "$OUT/logcat_filtre.txt"
